@@ -1,0 +1,45 @@
+﻿<Window x:Class="CourseProjectWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CourseProjectWPF"
+        mc:Ignorable="d"
+        Title="TO-DO Manager" Height="900" Width="1600" WindowState="Maximized">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0" Background="#F4F6F8">
+            <ListView Name="PagesListView" Background="#F4F6F8" BorderThickness="0" Margin="20 40 0 0"
+                      SelectionChanged="PagesListView_OnSelectionChanged">
+                <ListViewItem>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="Resources/inbox.png" Style="{StaticResource ImageStyle}" />
+                        <TextBlock Text="Inbox" Style="{StaticResource TextBlockStyle}" />
+                    </StackPanel>
+                </ListViewItem>
+                <ListViewItem Margin="0 5 0 0">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="Resources/today.png" Style="{StaticResource ImageStyle}" />
+                        <TextBlock Text="Today" Style="{StaticResource TextBlockStyle}" />
+                    </StackPanel>
+                </ListViewItem>
+                <ListViewItem Margin="0 5 0 0">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="Resources/upcoming.png" Style="{StaticResource ImageStyle}" />
+                        <TextBlock Text="Upcoming" Style="{StaticResource TextBlockStyle}" />
+                    </StackPanel>
+                </ListViewItem>
+                <ListViewItem Margin="0 5 0 0">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="Resources/logbook.png" Style="{StaticResource ImageStyle}" />
+                        <TextBlock Text="Logbook" Style="{StaticResource TextBlockStyle}" />
+                    </StackPanel>
+                </ListViewItem>
+            </ListView>
+        </StackPanel>
+        <Frame Name="PagesFrame" Grid.Column="1" NavigationUIVisibility="Hidden" />
+    </Grid>
+</Window>

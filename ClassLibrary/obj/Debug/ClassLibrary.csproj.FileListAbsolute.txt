@@ -1,0 +1,12 @@
+C:\Maksym\C#\CourseProjectWPF\ClassLibrary\bin\Debug\ClassLibrary.dll
+C:\Maksym\C#\CourseProjectWPF\ClassLibrary\bin\Debug\ClassLibrary.pdb
+C:\Maksym\C#\CourseProjectWPF\ClassLibrary\obj\Debug\ClassLibrary.csprojAssemblyReference.cache
+C:\Maksym\C#\CourseProjectWPF\ClassLibrary\obj\Debug\ClassLibrary.csproj.CoreCompileInputs.cache
+C:\Maksym\C#\CourseProjectWPF\ClassLibrary\obj\Debug\ClassLibrary.dll
+C:\Maksym\C#\CourseProjectWPF\ClassLibrary\obj\Debug\ClassLibrary.pdb
+C:\Maksym\C#\CourseProjectWPF\ClassLibrary\bin\Debug\ClassLibrary.dll.config
+C:\Maksym\C#\CourseProjectWPF\ClassLibrary\bin\Debug\EntityFramework.dll
+C:\Maksym\C#\CourseProjectWPF\ClassLibrary\bin\Debug\EntityFramework.SqlServer.dll
+C:\Maksym\C#\CourseProjectWPF\ClassLibrary\bin\Debug\EntityFramework.xml
+C:\Maksym\C#\CourseProjectWPF\ClassLibrary\bin\Debug\EntityFramework.SqlServer.xml
+C:\Maksym\C#\CourseProjectWPF\ClassLibrary\obj\Debug\ClassLibrary.csproj.CopyComplete
