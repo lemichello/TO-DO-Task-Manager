@@ -57,10 +57,16 @@ namespace CourseProjectWPF
             if (itemWindow.ToDelete)
             {
                 MainWindow.RemoveToDoItem(item);
+                _parent.UpdateUpcomingPage();
+
                 return;
             }
 
-            if (itemWindow.DialogResult == false) return;
+            if (itemWindow.DialogResult == false)
+            {
+                _parent.UpdateUpcomingPage();
+                return;
+            }
 
             MainWindow.ReplaceToDoItem(itemWindow.Item);
             _parent.UpdateUpcomingPage();
@@ -68,6 +74,10 @@ namespace CourseProjectWPF
 
         private void ToDoItem_OnChecked(object sender, RoutedEventArgs e)
         {
+            var item = ((FrameworkElement)sender).DataContext;
+
+            MainWindow.RemoveToDoItem(item as ToDoItem);
+            _parent.UpdateUpcomingPage();
         }
 
         private void FillCollection()

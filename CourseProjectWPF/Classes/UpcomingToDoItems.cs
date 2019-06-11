@@ -27,10 +27,12 @@ namespace CourseProjectWPF.Classes
                 // There's no remaining days for current month.
                 else
                 {
+                    // Getting next name of the next month and increasing counter.
                     Date = DateTime.Now.AddDays(8).ToString("MMMM");
                     increaser++;
                 }
             }
+            // 
             else if (!addToDays)
                 Date = DateTime.Now.AddMonths(increaser).ToString("MMMM");
             else
@@ -69,7 +71,7 @@ namespace CourseProjectWPF.Classes
             long begin, end;
 
             // Current month has remaining days.
-            if (WeekDay != "")
+            if (WeekDay != null)
             {
                 var lastMonthDay = new DateTime(DateTime.Now.Year, DateTime.Now.Month,
                     DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
