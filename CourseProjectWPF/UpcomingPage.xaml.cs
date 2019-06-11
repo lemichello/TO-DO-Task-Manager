@@ -77,6 +77,8 @@ namespace CourseProjectWPF
             var item = ((FrameworkElement)sender).DataContext;
 
             MainWindow.RemoveToDoItem(item as ToDoItem);
+            MainWindow.AddToLogbook(item as ToDoItem);
+
             _parent.UpdateUpcomingPage();
         }
 
