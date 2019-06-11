@@ -54,6 +54,8 @@ namespace CourseProjectWPF.Classes
             var item = ((FrameworkElement) sender).DataContext;
 
             MainWindow.RemoveToDoItem(_toDoItemsCollection[_toDoItemsListView.Items.IndexOf(item)]);
+            MainWindow.AddToLogbook(_toDoItemsCollection[_toDoItemsListView.Items.IndexOf(item)]);
+
             _toDoItemsCollection.RemoveAt(_toDoItemsListView.Items.IndexOf(item));
         }
 

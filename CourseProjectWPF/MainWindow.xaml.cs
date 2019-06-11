@@ -139,7 +139,8 @@ namespace CourseProjectWPF
                 var item = new ToDoItem
                 {
                     Id     = int.Parse(reader["ID"].ToString()),
-                    Header = reader["Header"].ToString(), Notes = reader["Notes"].ToString()
+                    Header = reader["Header"].ToString(),
+                    Notes = reader["Notes"].ToString()
                 };
 
                 if (reader["Date"].ToString() != "")
@@ -149,6 +150,27 @@ namespace CourseProjectWPF
                     item.Deadline = DateTime.Parse(reader["Deadline"].ToString());
 
                 toDoItemsCollection.Add(item);
+            }
+        }
+
+        public static void AddToLogbook(ToDoItem item)
+        {
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                const string command = "INSERT INTO LogbookItems(ID, Header, CompleteDate) VALUES(@id, @header, @date)";
+
+                connection.Open();
+
+                using (var cmd = new SQLiteCommand(command, connection))
+                {
+                    cmd.Prepare();
+
+                    cmd.Parameters.AddWithValue("@id", item.Id);
+                    cmd.Parameters.AddWithValue("@header", item.Header);
+                    cmd.Parameters.AddWithValue("@date", GetMilliseconds(DateTime.Today));
+
+                    cmd.ExecuteNonQuery();
+                }
             }
         }
 

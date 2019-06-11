@@ -7,10 +7,26 @@
       mc:Ignorable="d"
       Title="LogbookPage" d:DesignHeight="450" d:DesignWidth="800">
 
-    <StackPanel Margin="50 60 0 0">
-        <StackPanel Orientation="Horizontal">
+    <DockPanel Margin="50 60 0 0">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
             <Image Source="Resources/logbook.png" Width="40" Height="40" />
             <Label Content="Logbook" Margin="10 0 0 0" FontWeight="Bold" FontSize="30" />
         </StackPanel>
-    </StackPanel>
+        <ListView Name="ToDoItemsListView" Margin="0 20 0 0" BorderThickness="0"
+                  SelectionChanged="ToDoItemsListView_OnSelectionChanged">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Margin="0 5" Orientation="Horizontal">
+                        <TextBlock Margin="0 0 10 0" Text="{Binding Date,StringFormat=d}" Foreground="Green" FontSize="15"/>
+                        <TextBlock Text="{Binding Header}" FontSize="17" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Focusable" Value="false"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+    </DockPanel>
 </Page>
