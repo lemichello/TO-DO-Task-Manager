@@ -41,7 +41,9 @@ namespace CourseProjectWPF
 
             if (itemWindow.DialogResult == false) return;
 
-            MainWindow.AddToDoItem(itemWindow.Item);
+            itemWindow.Item.Id = MainWindow.AddToDoItem(itemWindow.Item);
+
+            MainWindow.AddTagsToItem(itemWindow.Item.Id, itemWindow.SelectedTags);
 
             _parent.UpdateUpcomingPage();
         }
@@ -69,6 +71,8 @@ namespace CourseProjectWPF
             if (itemWindow.DialogResult == false) return;
 
             MainWindow.ReplaceToDoItem(itemWindow.Item);
+            MainWindow.ReplaceToDoItemTags(itemWindow.Item.Id, itemWindow.SelectedTags);
+
             _parent.UpdateUpcomingPage();
         }
 
@@ -76,6 +80,7 @@ namespace CourseProjectWPF
         {
             var item = ((FrameworkElement) sender).DataContext;
 
+            MainWindow.RemoveTagsFromToDoItem((item as ToDoItem).Id);
             MainWindow.RemoveToDoItem(item as ToDoItem);
             MainWindow.AddToLogbook(item as ToDoItem);
 

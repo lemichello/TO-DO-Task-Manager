@@ -1,6 +1,5 @@
 C:\Maksym\C#\CourseProjectWPF\ClassLibrary\bin\Debug\ClassLibrary.dll
 C:\Maksym\C#\CourseProjectWPF\ClassLibrary\bin\Debug\ClassLibrary.pdb
-C:\Maksym\C#\CourseProjectWPF\ClassLibrary\obj\Debug\ClassLibrary.csprojAssemblyReference.cache
 C:\Maksym\C#\CourseProjectWPF\ClassLibrary\obj\Debug\ClassLibrary.csproj.CoreCompileInputs.cache
 C:\Maksym\C#\CourseProjectWPF\ClassLibrary\obj\Debug\ClassLibrary.dll
 C:\Maksym\C#\CourseProjectWPF\ClassLibrary\obj\Debug\ClassLibrary.pdb
@@ -22,3 +21,4 @@ C:\Users\user.itstep\Source\Repos\WPF-Course-Project\ClassLibrary\obj\Debug\Clas
 C:\Users\user.itstep\Source\Repos\WPF-Course-Project\ClassLibrary\obj\Debug\ClassLibrary.csproj.CopyComplete
 C:\Users\user.itstep\Source\Repos\WPF-Course-Project\ClassLibrary\obj\Debug\ClassLibrary.dll
 C:\Users\user.itstep\Source\Repos\WPF-Course-Project\ClassLibrary\obj\Debug\ClassLibrary.pdb
+C:\Maksym\C#\CourseProjectWPF\ClassLibrary\obj\Debug\ClassLibrary.csprojAssemblyReference.cache

@@ -78,6 +78,9 @@
     <Compile Include="LogbookPage.xaml.cs">
       <DependentUpon>LogbookPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TagWindow.xaml.cs">
+      <DependentUpon>TagWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TodayPage.xaml.cs">
       <DependentUpon>TodayPage.xaml</DependentUpon>
     </Compile>
@@ -107,6 +110,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="TagWindow.xaml" />
     <Page Include="TodayPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -5,30 +5,55 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:CourseProjectWPF"
         mc:Ignorable="d"
-        Title="Editing TO-DO Task" Height="439.623" Width="600" WindowStartupLocation="CenterScreen"
+        Title="Editing TO-DO Task" Height="470" Width="600" WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
-    <StackPanel>
-        <StackPanel.Resources>
-            <Style x:Key="ControlStyle" TargetType="Control">
-                <Setter Property="Margin" Value="5" />
-                <Setter Property="Height" Value="30" />
-            </Style>
-            <Style x:Key="LabelStyle" TargetType="Label" BasedOn="{StaticResource ControlStyle}">
-                <Setter Property="FontSize" Value="17" />
-            </Style>
-            <Style x:Key="TextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource ControlStyle}">
-                <Setter Property="FontSize" Value="20" />
-            </Style>
-        </StackPanel.Resources>
-        <Label Content="Header" Style="{StaticResource LabelStyle}" />
-        <TextBox Name="HeaderText" Style="{StaticResource TextBoxStyle}" />
-        <Label Content="Notes" Style="{StaticResource LabelStyle}" />
-        <TextBox Name="NotesText" Style="{StaticResource TextBoxStyle}" />
-        <Label Content="Date" Style="{StaticResource LabelStyle}" />
-        <DatePicker Name="PickedDate" Style="{StaticResource ControlStyle}" />
-        <Label Content="Deadline" Style="{StaticResource LabelStyle}" />
-        <DatePicker Name="PickedDeadline" Style="{StaticResource ControlStyle}" />
-        <Button Content="Save" FontSize="16" Style="{StaticResource ControlStyle}" Click="Save_OnClick" />
-        <Button Content="Delete" FontSize="16" Style="{StaticResource ControlStyle}" Click="Delete_OnClick" />
-    </StackPanel>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200*" />
+            <ColumnDefinition Width="400*" />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0">
+            <TextBlock Text="Tags" FontSize="20" HorizontalAlignment="Center" />
+            <ListBox Name="TagsListBox" BorderThickness="0" Height="297" SelectionMode="Multiple" FontSize="20"
+                     Margin="0 17 0 0">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Text}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <Button Content="Add tag" HorizontalAlignment="Center" Width="100" Margin="0 5"
+                    Click="AddButton_OnCLick" />
+            <Button Content="Edit tag" HorizontalAlignment="Center" Width="100" Margin="0 5"
+                    Click="EditButton_OnClick" />
+            <Button Content="Delete tag" HorizontalAlignment="Center" Width="100" Margin="0 5"
+                    Click="DeleteButton_OnClick" />
+        </StackPanel>
+        <StackPanel Grid.Column="1">
+            <StackPanel.Resources>
+                <Style x:Key="ControlStyle" TargetType="Control">
+                    <Setter Property="Margin" Value="5" />
+                    <Setter Property="Height" Value="30" />
+                </Style>
+                <Style x:Key="LabelStyle" TargetType="Label" BasedOn="{StaticResource ControlStyle}">
+                    <Setter Property="FontSize" Value="17" />
+                </Style>
+                <Style x:Key="TextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource ControlStyle}">
+                    <Setter Property="FontSize" Value="20" />
+                </Style>
+            </StackPanel.Resources>
+            <Label Content="Header" Style="{StaticResource LabelStyle}" />
+            <TextBox Name="HeaderText" Style="{StaticResource TextBoxStyle}" />
+            <Label Content="Notes" Style="{StaticResource LabelStyle}" />
+            <TextBox Name="NotesText" Style="{StaticResource TextBoxStyle}" />
+            <Label Content="Date" Style="{StaticResource LabelStyle}" />
+            <DatePicker Name="PickedDate" Style="{StaticResource ControlStyle}" />
+            <Label Content="Deadline" Style="{StaticResource LabelStyle}" />
+            <DatePicker Name="PickedDeadline" Style="{StaticResource ControlStyle}" />
+            <Button Content="Save" FontSize="16" Style="{StaticResource ControlStyle}" Click="Save_OnClick"
+                    Margin="5 20 5 0" />
+            <Button Content="Delete" FontSize="16" Style="{StaticResource ControlStyle}" Click="Delete_OnClick"
+                    Margin="5 10 5 0" />
+        </StackPanel>
+    </Grid>
 </Window>

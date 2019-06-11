@@ -12,7 +12,7 @@ namespace CourseProjectWPF
     {
         private readonly ObservableCollection<ToDoItem> _toDoItemsCollection;
         private readonly string                         _connectionString;
-        private readonly MainWindow _parent;
+        private readonly MainWindow                     _parent;
 
         public LogbookPage(MainWindow window)
         {
@@ -20,7 +20,7 @@ namespace CourseProjectWPF
 
             _toDoItemsCollection = new ObservableCollection<ToDoItem>();
             _connectionString    = ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
-            _parent = window;
+            _parent              = window;
 
             FillCollection();
 
@@ -51,7 +51,7 @@ namespace CourseProjectWPF
             if (itemWindow.DialogResult == false) return;
 
             itemWindow.Item.CompleteDay = _toDoItemsCollection[index].CompleteDay;
-            
+
             ReplaceToDoItem(itemWindow.Item);
             _parent.UpdateLogbookPage();
         }
@@ -137,17 +137,17 @@ namespace CourseProjectWPF
             {
                 const string command =
                     "REPLACE INTO LogbookItems(ID, Header, Notes, Date, Deadline, CompleteDay) VALUES (@id, @header, @notes, @date, @deadline, @completeDay)";
-                
+
                 connection.Open();
 
                 using (var cmd = new SQLiteCommand(command, connection))
                 {
                     cmd.Prepare();
-                    
+
                     cmd.Parameters.AddWithValue("@id", item.Id);
                     cmd.Parameters.AddWithValue("@header", item.Header);
                     cmd.Parameters.AddWithValue("@notes", item.Notes);
-                    
+
                     cmd.Parameters.AddWithValue("@date",
                         item.Date != DateTime.MinValue
                             ? ((long) (item.Date - DateTime.MinValue).TotalMilliseconds).ToString()

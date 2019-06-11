@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data.SQLite;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using ClassLibrary.Classes;
 
 namespace CourseProjectWPF
@@ -191,6 +193,77 @@ namespace CourseProjectWPF
         public void UpdateLogbookPage()
         {
             PagesFrame.Content = new LogbookPage(this);
+        }
+
+        public static void AddTagsToItem(long itemId, IEnumerable<Tag> tags)
+        {
+            if (tags == null) return;
+
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                const string command = "INSERT INTO ItemsTags(ItemID, TagID) VALUES (@itemId, @tagId)";
+
+                connection.Open();
+
+                foreach (var i in tags)
+                {
+                    using (var cmd = new SQLiteCommand(command, connection))
+                    {
+                        cmd.Prepare();
+
+                        cmd.Parameters.AddWithValue("@itemId", itemId);
+                        cmd.Parameters.AddWithValue("@tagId", i.Id);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+        public static void ReplaceToDoItemTags(long itemId, IEnumerable<Tag> tags)
+        {
+            RemoveTagsFromToDoItem(itemId);
+
+            AddTagsToItem(itemId, tags);
+        }
+
+        public static void RemoveTagsFromToDoItem(long itemId)
+        {
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                const string command = "DELETE FROM ItemsTags WHERE ItemID=@id";
+
+                connection.Open();
+
+                using (var cmd = new SQLiteCommand(command, connection))
+                {
+                    cmd.Prepare();
+
+                    cmd.Parameters.AddWithValue("@id", itemId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        // Removes all connections of tag from ItemsTags.
+        public static void RemoveTagConnections(long id)
+        {
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                const string command = "DELETE FROM ItemsTags WHERE TagID=@id";
+
+                connection.Open();
+
+                using (var cmd = new SQLiteCommand(command, connection))
+                {
+                    cmd.Prepare();
+
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
     }
 }

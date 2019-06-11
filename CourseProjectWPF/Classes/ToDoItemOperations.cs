@@ -41,6 +41,7 @@ namespace CourseProjectWPF.Classes
             if (itemWindow.DialogResult == false) return;
 
             MainWindow.ReplaceToDoItem(itemWindow.Item);
+            MainWindow.ReplaceToDoItemTags(itemWindow.Item.Id, itemWindow.SelectedTags);
 
             if (IsCorrect(itemWindow.Item))
                 _toDoItemsCollection[index] = itemWindow.Item;
@@ -50,10 +51,12 @@ namespace CourseProjectWPF.Classes
 
         public void Checked(object sender)
         {
-            var item = ((FrameworkElement) sender).DataContext;
+            var item     = ((FrameworkElement) sender).DataContext;
+            var toDoItem = _toDoItemsCollection[_toDoItemsListView.Items.IndexOf(item)];
 
-            MainWindow.RemoveToDoItem(_toDoItemsCollection[_toDoItemsListView.Items.IndexOf(item)]);
-            MainWindow.AddToLogbook(_toDoItemsCollection[_toDoItemsListView.Items.IndexOf(item)]);
+            MainWindow.RemoveTagsFromToDoItem(toDoItem.Id);
+            MainWindow.RemoveToDoItem(toDoItem);
+            MainWindow.AddToLogbook(toDoItem);
 
             _toDoItemsCollection.RemoveAt(_toDoItemsListView.Items.IndexOf(item));
         }
@@ -74,6 +77,8 @@ namespace CourseProjectWPF.Classes
 
             if (IsCorrect(itemWindow.Item))
                 _toDoItemsCollection.Add(itemWindow.Item);
+
+            MainWindow.AddTagsToItem(itemWindow.Item.Id, itemWindow.SelectedTags);
         }
 
         protected abstract bool IsCorrect(ToDoItem item);
