@@ -21,8 +21,7 @@ namespace CourseProjectWPF.Classes
         {
             var index = _toDoItemsListView.SelectedIndex;
 
-            if (index == -1)
-                return;
+            if (index == -1) return;
 
             var itemWindow = new ToDoItemWindow(_toDoItemsCollection[index]);
 

@@ -16,9 +16,9 @@ namespace CourseProjectWPF
     /// </summary>
     public partial class UpcomingPage : Page
     {
-        private readonly string                         _connectionString;
+        private readonly string                  _connectionString;
         private readonly List<UpcomingToDoItems> _upcomingItemsCollection;
-        private readonly MainWindow _parent;
+        private readonly MainWindow              _parent;
 
         public UpcomingPage(MainWindow window)
         {
@@ -26,13 +26,13 @@ namespace CourseProjectWPF
 
             _upcomingItemsCollection = new List<UpcomingToDoItems>();
             _connectionString        = ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
-            _parent = window;
-            
+            _parent                  = window;
+
             FillCollection();
 
             UpcomingListView.ItemsSource = _upcomingItemsCollection;
         }
-        
+
         private void AddButton_OnClick(object sender, RoutedEventArgs e)
         {
             var itemWindow = new ToDoItemWindow();
@@ -42,16 +42,20 @@ namespace CourseProjectWPF
             if (itemWindow.DialogResult == false) return;
 
             MainWindow.AddToDoItem(itemWindow.Item);
-            
+
             _parent.UpdateUpcomingPage();
         }
 
         private void ToDoItemsListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var listView = (ListView) e.Source;
-            var item = listView.SelectedItem as ToDoItem;
+
+            if (listView.SelectedIndex == -1) return;
+
+            var item       = listView.SelectedItem as ToDoItem;
             var itemWindow = new ToDoItemWindow(item);
 
+            listView.SelectedIndex = -1;
             itemWindow.ShowDialog();
 
             if (itemWindow.ToDelete)
@@ -62,11 +66,7 @@ namespace CourseProjectWPF
                 return;
             }
 
-            if (itemWindow.DialogResult == false)
-            {
-                _parent.UpdateUpcomingPage();
-                return;
-            }
+            if (itemWindow.DialogResult == false) return;
 
             MainWindow.ReplaceToDoItem(itemWindow.Item);
             _parent.UpdateUpcomingPage();
@@ -74,7 +74,7 @@ namespace CourseProjectWPF
 
         private void ToDoItem_OnChecked(object sender, RoutedEventArgs e)
         {
-            var item = ((FrameworkElement)sender).DataContext;
+            var item = ((FrameworkElement) sender).DataContext;
 
             MainWindow.RemoveToDoItem(item as ToDoItem);
             MainWindow.AddToLogbook(item as ToDoItem);
@@ -87,7 +87,7 @@ namespace CourseProjectWPF
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 connection.Open();
-                
+
                 // Fill next 7 days by TO-DO items.
                 for (var i = 1; i <= 7; i++)
                 {

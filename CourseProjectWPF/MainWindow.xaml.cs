@@ -38,7 +38,7 @@ namespace CourseProjectWPF
                     break;
 
                 case 3:
-                    PagesFrame.Content = new LogbookPage();
+                    PagesFrame.Content = new LogbookPage(this);
                     break;
             }
         }
@@ -140,7 +140,7 @@ namespace CourseProjectWPF
                 {
                     Id     = int.Parse(reader["ID"].ToString()),
                     Header = reader["Header"].ToString(),
-                    Notes = reader["Notes"].ToString()
+                    Notes  = reader["Notes"].ToString()
                 };
 
                 if (reader["Date"].ToString() != "")
@@ -157,7 +157,8 @@ namespace CourseProjectWPF
         {
             using (var connection = new SQLiteConnection(_connectionString))
             {
-                const string command = "INSERT INTO LogbookItems(ID, Header, CompleteDate) VALUES(@id, @header, @date)";
+                const string command =
+                    "INSERT INTO LogbookItems(ID, Header, Notes, Date, Deadline, CompleteDay) VALUES(@id, @header, @notes, @date, @deadline, @completeDay)";
 
                 connection.Open();
 
@@ -167,21 +168,29 @@ namespace CourseProjectWPF
 
                     cmd.Parameters.AddWithValue("@id", item.Id);
                     cmd.Parameters.AddWithValue("@header", item.Header);
-                    cmd.Parameters.AddWithValue("@date", GetMilliseconds(DateTime.Today));
+                    cmd.Parameters.AddWithValue("@notes", item.Notes);
+                    cmd.Parameters.AddWithValue("@date", GetMilliseconds(item.Date));
+                    cmd.Parameters.AddWithValue("@deadline", GetMilliseconds(item.Deadline));
+                    cmd.Parameters.AddWithValue("@completeDay", DateTime.Today.ToShortDateString());
 
                     cmd.ExecuteNonQuery();
                 }
             }
         }
 
-        private static string GetMilliseconds(DateTime time)
+        private static string GetMilliseconds(DateTime item)
         {
-            return ((long) (time.Date - DateTime.MinValue).TotalMilliseconds).ToString();
+            return ((long) (item.Date - DateTime.MinValue).TotalMilliseconds).ToString();
         }
 
         public void UpdateUpcomingPage()
         {
             PagesFrame.Content = new UpcomingPage(this);
+        }
+
+        public void UpdateLogbookPage()
+        {
+            PagesFrame.Content = new LogbookPage(this);
         }
     }
 }

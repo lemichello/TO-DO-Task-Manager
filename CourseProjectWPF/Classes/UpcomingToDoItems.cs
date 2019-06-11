@@ -32,7 +32,6 @@ namespace CourseProjectWPF.Classes
                     increaser++;
                 }
             }
-            // 
             else if (!addToDays)
                 Date = DateTime.Now.AddMonths(increaser).ToString("MMMM");
             else
@@ -82,7 +81,7 @@ namespace CourseProjectWPF.Classes
             else
             {
                 var beginDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(monthIncreaser);
-                var endDate = new DateTime(beginDate.Year, beginDate.Month, 
+                var endDate = new DateTime(beginDate.Year, beginDate.Month,
                     DateTime.DaysInMonth(beginDate.Year, beginDate.Month));
 
                 begin = (long) (beginDate - DateTime.MinValue).TotalMilliseconds;

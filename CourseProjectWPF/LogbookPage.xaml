@@ -17,16 +17,12 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Margin="0 5" Orientation="Horizontal">
-                        <TextBlock Margin="0 0 10 0" Text="{Binding Date,StringFormat=d}" Foreground="Green" FontSize="15"/>
-                        <TextBlock Text="{Binding Header}" FontSize="17" />
+                        <CheckBox Unchecked="ToDoItem_OnUnchecked" IsChecked="True" Margin="0 8" />
+                        <TextBlock Text="{Binding CompleteDay}" FontSize="15" Foreground="Blue" Margin="10 5 0 0" />
+                        <TextBlock Text="{Binding Header}" FontSize="20" Margin="10 0 0 0" />
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="Focusable" Value="false"/>
-                </Style>
-            </ListView.ItemContainerStyle>
         </ListView>
     </DockPanel>
 </Page>

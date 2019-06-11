@@ -9,5 +9,6 @@ namespace ClassLibrary.Classes
         public string Notes { get; set; }
         public DateTime Date { get; set; }
         public DateTime Deadline { get; set; }
+        public string CompleteDay { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data.SQLite;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace CourseProjectWPF
@@ -10,14 +11,16 @@ namespace CourseProjectWPF
     public partial class LogbookPage : Page
     {
         private readonly ObservableCollection<ToDoItem> _toDoItemsCollection;
-        private readonly string _connectionString;
+        private readonly string                         _connectionString;
+        private readonly MainWindow _parent;
 
-        public LogbookPage()
+        public LogbookPage(MainWindow window)
         {
             InitializeComponent();
 
             _toDoItemsCollection = new ObservableCollection<ToDoItem>();
-            _connectionString = ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
+            _connectionString    = ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
+            _parent = window;
 
             FillCollection();
 
@@ -26,7 +29,31 @@ namespace CourseProjectWPF
 
         private void ToDoItemsListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            var index = ToDoItemsListView.SelectedIndex;
 
+            if (index == -1) return;
+
+            var itemWindow = new ToDoItemWindow(_toDoItemsCollection[index]);
+
+            ToDoItemsListView.SelectedItem = null;
+
+            itemWindow.ShowDialog();
+
+            if (itemWindow.ToDelete)
+            {
+                DeleteToDoItem(_toDoItemsCollection[index]);
+                _toDoItemsCollection.RemoveAt(index);
+
+                return;
+            }
+
+            // User closed a window.
+            if (itemWindow.DialogResult == false) return;
+
+            itemWindow.Item.CompleteDay = _toDoItemsCollection[index].CompleteDay;
+            
+            ReplaceToDoItem(itemWindow.Item);
+            _parent.UpdateLogbookPage();
         }
 
         private void FillCollection()
@@ -43,25 +70,97 @@ namespace CourseProjectWPF
                     {
                         while (reader.Read())
                         {
-                            var item = new ToDoItem
-                            {
-                                Id = int.Parse(reader["ID"].ToString()),
-                                Header = reader["Header"].ToString()
-                            };
+                            var item = CreateToDoItem(reader);
 
-                            if (reader["CompleteDate"].ToString() != "")
-                                item.Date = DateTime.MinValue.AddMilliseconds(long.Parse(reader["CompleteDate"].ToString()));
-
-                            _toDoItemsCollection.Insert(0, item);
+                            _toDoItemsCollection.Add(item);
                         }
                     }
                 }
             }
         }
 
-        private void ToDoItem_OnUnChecked(object sender, System.Windows.RoutedEventArgs e)
+        private static ToDoItem CreateToDoItem(SQLiteDataReader reader)
         {
+            var item = new ToDoItem
+            {
+                Id     = int.Parse(reader["ID"].ToString()),
+                Header = reader["Header"].ToString(),
+                Notes  = reader["Notes"].ToString()
+            };
 
+            if (reader["Date"].ToString() != "")
+                item.Date = DateTime.MinValue.AddMilliseconds(long.Parse(reader["Date"].ToString()));
+
+            if (reader["Deadline"].ToString() != "")
+                item.Deadline =
+                    DateTime.MinValue.AddMilliseconds(long.Parse(reader["Deadline"].ToString()));
+
+            item.CompleteDay = reader["CompleteDay"].ToString();
+
+            return item;
+        }
+
+        private void ToDoItem_OnUnchecked(object sender, RoutedEventArgs e)
+        {
+            var selectedItem = ((FrameworkElement) sender).DataContext;
+            var index        = ToDoItemsListView.Items.IndexOf(selectedItem);
+            var toDoItem     = _toDoItemsCollection[index];
+
+            DeleteToDoItem(toDoItem);
+
+            MainWindow.AddToDoItem(toDoItem);
+            _toDoItemsCollection.RemoveAt(index);
+        }
+
+        private void DeleteToDoItem(ToDoItem item)
+        {
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                connection.Open();
+
+                const string command = "DELETE FROM LogbookItems WHERE ID=@id";
+
+                using (var cmd = new SQLiteCommand(command, connection))
+                {
+                    cmd.Prepare();
+
+                    cmd.Parameters.AddWithValue("@id", item.Id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        private void ReplaceToDoItem(ToDoItem item)
+        {
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                const string command =
+                    "REPLACE INTO LogbookItems(ID, Header, Notes, Date, Deadline, CompleteDay) VALUES (@id, @header, @notes, @date, @deadline, @completeDay)";
+                
+                connection.Open();
+
+                using (var cmd = new SQLiteCommand(command, connection))
+                {
+                    cmd.Prepare();
+                    
+                    cmd.Parameters.AddWithValue("@id", item.Id);
+                    cmd.Parameters.AddWithValue("@header", item.Header);
+                    cmd.Parameters.AddWithValue("@notes", item.Notes);
+                    
+                    cmd.Parameters.AddWithValue("@date",
+                        item.Date != DateTime.MinValue
+                            ? ((long) (item.Date - DateTime.MinValue).TotalMilliseconds).ToString()
+                            : "");
+
+                    cmd.Parameters.AddWithValue("@deadline",
+                        item.Deadline != DateTime.MinValue ? item.Deadline.ToShortDateString() : "");
+
+                    cmd.Parameters.AddWithValue("@completeDay", item.CompleteDay);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
     }
 }
