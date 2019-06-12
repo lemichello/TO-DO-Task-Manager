@@ -12,20 +12,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" Background="#F4F6F8">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5 20 0 20">
-                <TextBox Name="SearchTextBox" Width="150" Height="25" />
-                <Button Content="Search" Width="50" Height="25" Margin="5 0 0 0" Click="Search_OnClick"/>
-                <Expander Name="SearchExpander" Margin="15 0 0 0">
-                    <ListBox Name="FoundToDoItems">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Text}" />
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </Expander>
-            </StackPanel>
-            <ListView Name="PagesListView" Background="#F4F6F8" BorderThickness="0" Margin="20 30 0 0"
+            <ListView Name="PagesListView" Background="#F4F6F8" BorderThickness="0" Margin="20 50 0 0"
                       SelectionChanged="PagesListView_OnSelectionChanged">
                 <ListViewItem>
                     <StackPanel Orientation="Horizontal">
