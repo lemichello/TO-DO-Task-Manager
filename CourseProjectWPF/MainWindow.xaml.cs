@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data.SQLite;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using ClassLibrary.Classes;
@@ -205,9 +206,9 @@ namespace CourseProjectWPF
 
                 connection.Open();
 
-                foreach (var i in tags)
+                using (var cmd = new SQLiteCommand(command, connection))
                 {
-                    using (var cmd = new SQLiteCommand(command, connection))
+                    foreach (var i in tags)
                     {
                         cmd.Prepare();
 
@@ -264,6 +265,47 @@ namespace CourseProjectWPF
                     cmd.ExecuteNonQuery();
                 }
             }
+        }
+
+        private void Search_OnClick(object sender, System.Windows.RoutedEventArgs e)
+        {
+            var enteredTags = SearchTextBox.Text.Split(new[] { ' ' },
+                StringSplitOptions.RemoveEmptyEntries);
+
+            if (enteredTags.Length == 0)
+            {
+                MessageBox.Show("You need to enter at least one tag to search");
+                return;
+            }
+
+            FoundToDoItems.Items.Clear();
+        }
+
+        private bool FillFoundListBox(string[] tags)
+        {
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                const string command = "SELECT * FROM Tags WHERE Text LIKE %@tagText%";
+                string searchCommand = "SELECT * FROM ToDoItems WHERE ";
+
+                using (var cmd = new SQLiteCommand(command, connection))
+                {
+                    foreach (var i in tags)
+                    {
+                        cmd.Prepare();
+
+                        cmd.Parameters.AddWithValue("@tagText", i);
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (!reader.HasRows)
+                                return false;
+                        }
+                    }
+                }
+            }
+
+            return true;
         }
     }
 }

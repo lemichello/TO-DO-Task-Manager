@@ -16,7 +16,6 @@ C:\Users\user.itstep\Source\Repos\WPF-Course-Project\ClassLibrary\bin\Debug\Enti
 C:\Users\user.itstep\Source\Repos\WPF-Course-Project\ClassLibrary\bin\Debug\EntityFramework.SqlServer.dll
 C:\Users\user.itstep\Source\Repos\WPF-Course-Project\ClassLibrary\bin\Debug\EntityFramework.xml
 C:\Users\user.itstep\Source\Repos\WPF-Course-Project\ClassLibrary\bin\Debug\EntityFramework.SqlServer.xml
-C:\Users\user.itstep\Source\Repos\WPF-Course-Project\ClassLibrary\obj\Debug\ClassLibrary.csprojAssemblyReference.cache
 C:\Users\user.itstep\Source\Repos\WPF-Course-Project\ClassLibrary\obj\Debug\ClassLibrary.csproj.CoreCompileInputs.cache
 C:\Users\user.itstep\Source\Repos\WPF-Course-Project\ClassLibrary\obj\Debug\ClassLibrary.csproj.CopyComplete
 C:\Users\user.itstep\Source\Repos\WPF-Course-Project\ClassLibrary\obj\Debug\ClassLibrary.dll
