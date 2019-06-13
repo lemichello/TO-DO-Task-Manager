@@ -35,7 +35,7 @@ namespace CourseProjectWPF
         {
             using (var connection = new SQLiteConnection(_connectionString))
             {
-                const string command = "SELECT * FROM ToDoItems WHERE Date=@date";
+                const string command = "SELECT * FROM ToDoItems WHERE Date<=@todayDate";
 
                 connection.Open();
 
@@ -43,7 +43,7 @@ namespace CourseProjectWPF
                 {
                     cmd.Prepare();
 
-                    cmd.Parameters.AddWithValue("@date",
+                    cmd.Parameters.AddWithValue("@todayDate",
                         ((long) (DateTime.Today - DateTime.MinValue).TotalMilliseconds).ToString());
 
                     using (var reader = cmd.ExecuteReader())
