@@ -5,10 +5,11 @@ using System.Configuration;
 using System.Data.SQLite;
 using System.Windows;
 using System.Windows.Controls;
+using CourseProjectWPF.Classes;
 
 namespace CourseProjectWPF
 {
-    public partial class LogbookPage : Page
+    public partial class LogbookPage
     {
         private readonly ObservableCollection<ToDoItem> _toDoItemsCollection;
         private readonly string                         _connectionString;
@@ -100,6 +101,7 @@ namespace CourseProjectWPF
             return item;
         }
 
+        // Recover ToDoItem from Logbook page.
         private void ToDoItem_OnUnchecked(object sender, RoutedEventArgs e)
         {
             var selectedItem = ((FrameworkElement) sender).DataContext;
@@ -108,7 +110,7 @@ namespace CourseProjectWPF
 
             DeleteToDoItem(toDoItem);
 
-            MainWindow.AddToDoItem(toDoItem);
+            DatabaseOperations.AddToDoItem(toDoItem);
             _toDoItemsCollection.RemoveAt(index);
         }
 
@@ -144,23 +146,28 @@ namespace CourseProjectWPF
                 {
                     cmd.Prepare();
 
-                    cmd.Parameters.AddWithValue("@id", item.Id);
-                    cmd.Parameters.AddWithValue("@header", item.Header);
-                    cmd.Parameters.AddWithValue("@notes", item.Notes);
-
-                    cmd.Parameters.AddWithValue("@date",
-                        item.Date != DateTime.MinValue
-                            ? ((long) (item.Date - DateTime.MinValue).TotalMilliseconds).ToString()
-                            : "");
-
-                    cmd.Parameters.AddWithValue("@deadline",
-                        item.Deadline != DateTime.MinValue ? item.Deadline.ToShortDateString() : "");
-
-                    cmd.Parameters.AddWithValue("@completeDay", item.CompleteDay);
+                    FillCommandParameters(item, cmd);
 
                     cmd.ExecuteNonQuery();
                 }
             }
+        }
+
+        private static void FillCommandParameters(ToDoItem item, SQLiteCommand cmd)
+        {
+            cmd.Parameters.AddWithValue("@id", item.Id);
+            cmd.Parameters.AddWithValue("@header", item.Header);
+            cmd.Parameters.AddWithValue("@notes", item.Notes);
+
+            cmd.Parameters.AddWithValue("@date",
+                item.Date != DateTime.MinValue
+                    ? ((long) (item.Date - DateTime.MinValue).TotalMilliseconds).ToString()
+                    : "");
+
+            cmd.Parameters.AddWithValue("@deadline",
+                item.Deadline != DateTime.MinValue ? item.Deadline.ToShortDateString() : "");
+
+            cmd.Parameters.AddWithValue("@completeDay", item.CompleteDay);
         }
     }
 }

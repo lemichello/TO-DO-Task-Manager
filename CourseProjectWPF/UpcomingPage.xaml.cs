@@ -41,9 +41,9 @@ namespace CourseProjectWPF
 
             if (itemWindow.DialogResult == false) return;
 
-            itemWindow.Item.Id = MainWindow.AddToDoItem(itemWindow.Item);
+            itemWindow.Item.Id = DatabaseOperations.AddToDoItem(itemWindow.Item);
 
-            MainWindow.AddTagsToItem(itemWindow.Item.Id, itemWindow.SelectedTags);
+            DatabaseOperations.AddTagsToItem(itemWindow.Item.Id, itemWindow.SelectedTags);
 
             _parent.UpdateUpcomingPage();
         }
@@ -62,7 +62,7 @@ namespace CourseProjectWPF
 
             if (itemWindow.ToDelete)
             {
-                MainWindow.RemoveToDoItem(item);
+                DatabaseOperations.RemoveToDoItem(item);
                 _parent.UpdateUpcomingPage();
 
                 return;
@@ -70,8 +70,8 @@ namespace CourseProjectWPF
 
             if (itemWindow.DialogResult == false) return;
 
-            MainWindow.ReplaceToDoItem(itemWindow.Item);
-            MainWindow.ReplaceToDoItemTags(itemWindow.Item.Id, itemWindow.SelectedTags);
+            DatabaseOperations.ReplaceToDoItem(itemWindow.Item);
+            DatabaseOperations.ReplaceToDoItemTags(itemWindow.Item.Id, itemWindow.SelectedTags);
 
             _parent.UpdateUpcomingPage();
         }
@@ -80,9 +80,9 @@ namespace CourseProjectWPF
         {
             var item = ((FrameworkElement) sender).DataContext;
 
-            MainWindow.RemoveTagsFromToDoItem((item as ToDoItem).Id);
-            MainWindow.RemoveToDoItem(item as ToDoItem);
-            MainWindow.AddToLogbook(item as ToDoItem);
+            DatabaseOperations.RemoveTagsFromToDoItem(((ToDoItem) item).Id);
+            DatabaseOperations.RemoveToDoItem(item as ToDoItem);
+            DatabaseOperations.AddToDoItemToLogbook(item as ToDoItem);
 
             _parent.UpdateUpcomingPage();
         }

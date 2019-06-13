@@ -31,7 +31,7 @@ namespace CourseProjectWPF.Classes
 
             if (itemWindow.ToDelete)
             {
-                MainWindow.RemoveToDoItem(_toDoItemsCollection[index]);
+                DatabaseOperations.RemoveToDoItem(_toDoItemsCollection[index]);
                 _toDoItemsCollection.RemoveAt(index);
 
                 return;
@@ -40,8 +40,8 @@ namespace CourseProjectWPF.Classes
             // User closed a window.
             if (itemWindow.DialogResult == false) return;
 
-            MainWindow.ReplaceToDoItem(itemWindow.Item);
-            MainWindow.ReplaceToDoItemTags(itemWindow.Item.Id, itemWindow.SelectedTags);
+            DatabaseOperations.ReplaceToDoItem(itemWindow.Item);
+            DatabaseOperations.ReplaceToDoItemTags(itemWindow.Item.Id, itemWindow.SelectedTags);
 
             if (IsCorrect(itemWindow.Item))
                 _toDoItemsCollection[index] = itemWindow.Item;
@@ -54,9 +54,9 @@ namespace CourseProjectWPF.Classes
             var item     = ((FrameworkElement) sender).DataContext;
             var toDoItem = _toDoItemsCollection[_toDoItemsListView.Items.IndexOf(item)];
 
-            MainWindow.RemoveTagsFromToDoItem(toDoItem.Id);
-            MainWindow.RemoveToDoItem(toDoItem);
-            MainWindow.AddToLogbook(toDoItem);
+            DatabaseOperations.RemoveTagsFromToDoItem(toDoItem.Id);
+            DatabaseOperations.RemoveToDoItem(toDoItem);
+            DatabaseOperations.AddToDoItemToLogbook(toDoItem);
 
             _toDoItemsCollection.RemoveAt(_toDoItemsListView.Items.IndexOf(item));
         }
@@ -73,12 +73,12 @@ namespace CourseProjectWPF.Classes
 
             if (itemWindow.DialogResult == false) return;
 
-            itemWindow.Item.Id = MainWindow.AddToDoItem(itemWindow.Item);
+            itemWindow.Item.Id = DatabaseOperations.AddToDoItem(itemWindow.Item);
 
             if (IsCorrect(itemWindow.Item))
                 _toDoItemsCollection.Add(itemWindow.Item);
 
-            MainWindow.AddTagsToItem(itemWindow.Item.Id, itemWindow.SelectedTags);
+            DatabaseOperations.AddTagsToItem(itemWindow.Item.Id, itemWindow.SelectedTags);
         }
 
         protected abstract bool IsCorrect(ToDoItem item);

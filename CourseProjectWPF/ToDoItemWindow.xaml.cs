@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using ClassLibrary.Classes;
+using CourseProjectWPF.Classes;
 
 namespace CourseProjectWPF
 {
@@ -14,6 +15,7 @@ namespace CourseProjectWPF
     {
         private readonly ObservableCollection<Tag> _tagsList;
         private readonly string                    _connectionString;
+        
         public ToDoItem Item { get; }
         public bool ToDelete { get; private set; }
         public List<Tag> SelectedTags { get; private set; }
@@ -88,7 +90,7 @@ namespace CourseProjectWPF
         private void Delete_OnClick(object sender, RoutedEventArgs e)
         {
             ToDelete = true;
-            MainWindow.RemoveTagsFromToDoItem(Item.Id);
+            DatabaseOperations.RemoveTagsFromToDoItem(Item.Id);
 
             Close();
         }
@@ -196,11 +198,9 @@ namespace CourseProjectWPF
 
         private long AddTag(string text)
         {
-            long id;
-
             using (var connection = new SQLiteConnection(_connectionString))
             {
-                var command = "INSERT INTO Tags(Text) VALUES (@text)";
+                const string command = "INSERT INTO Tags(Text) VALUES (@text)";
 
                 connection.Open();
 
@@ -213,15 +213,8 @@ namespace CourseProjectWPF
                     cmd.ExecuteNonQuery();
                 }
 
-                command = "SELECT last_insert_rowid()";
-
-                using (var cmd = new SQLiteCommand(command, connection))
-                {
-                    id = (long) cmd.ExecuteScalar();
-                }
+                return DatabaseOperations.GetLastWrittenId(connection);
             }
-
-            return id;
         }
 
         private void ReplaceTag(Tag tag)
@@ -246,7 +239,7 @@ namespace CourseProjectWPF
 
         private void RemoveTagFromDatabase(long id)
         {
-            MainWindow.RemoveTagConnections(id);
+            DatabaseOperations.RemoveTagConnections(id);
 
             using (var connection = new SQLiteConnection(_connectionString))
             {

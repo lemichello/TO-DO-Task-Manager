@@ -58,7 +58,7 @@ namespace CourseProjectWPF.Classes
 
                 using (var reader = cmd.ExecuteReader())
                 {
-                    MainWindow.FillCollection(reader, ToDoItems);
+                    DatabaseOperations.FillCollection(reader, ToDoItems);
                 }
             }
         }
@@ -71,22 +71,9 @@ namespace CourseProjectWPF.Classes
 
             // Current month has remaining days.
             if (WeekDay != null)
-            {
-                var lastMonthDay = new DateTime(DateTime.Now.Year, DateTime.Now.Month,
-                    DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
-
-                begin = (long) (DateTime.Today.AddDays(8) - DateTime.MinValue).TotalMilliseconds;
-                end   = (long) (lastMonthDay - DateTime.MinValue).TotalMilliseconds;
-            }
+                FillByRemainingDays(out begin, out end);
             else
-            {
-                var beginDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(monthIncreaser);
-                var endDate = new DateTime(beginDate.Year, beginDate.Month,
-                    DateTime.DaysInMonth(beginDate.Year, beginDate.Month));
-
-                begin = (long) (beginDate - DateTime.MinValue).TotalMilliseconds;
-                end   = (long) (endDate - DateTime.MinValue).TotalMilliseconds;
-            }
+                FillByNextMonth(monthIncreaser, out begin, out end);
 
             using (var cmd = new SQLiteCommand(command, connection))
             {
@@ -97,9 +84,28 @@ namespace CourseProjectWPF.Classes
 
                 using (var reader = cmd.ExecuteReader())
                 {
-                    MainWindow.FillCollection(reader, ToDoItems);
+                    DatabaseOperations.FillCollection(reader, ToDoItems);
                 }
             }
+        }
+
+        private static void FillByNextMonth(int monthIncreaser, out long begin, out long end)
+        {
+            var beginDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(monthIncreaser);
+            var endDate = new DateTime(beginDate.Year, beginDate.Month,
+                DateTime.DaysInMonth(beginDate.Year, beginDate.Month));
+
+            begin = (long) (beginDate - DateTime.MinValue).TotalMilliseconds;
+            end   = (long) (endDate - DateTime.MinValue).TotalMilliseconds;
+        }
+
+        private static void FillByRemainingDays(out long begin, out long end)
+        {
+            var lastMonthDay = new DateTime(DateTime.Now.Year, DateTime.Now.Month,
+                DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+
+            begin = (long) (DateTime.Today.AddDays(8) - DateTime.MinValue).TotalMilliseconds;
+            end   = (long) (lastMonthDay - DateTime.MinValue).TotalMilliseconds;
         }
     }
 }

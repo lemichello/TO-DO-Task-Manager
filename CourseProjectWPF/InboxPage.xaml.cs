@@ -59,7 +59,7 @@ namespace CourseProjectWPF
                 {
                     using (var reader = cmd.ExecuteReader())
                     {
-                        MainWindow.FillCollection(reader, _toDoItemsCollection);
+                        DatabaseOperations.FillCollection(reader, _toDoItemsCollection);
                     }
                 }
             }
