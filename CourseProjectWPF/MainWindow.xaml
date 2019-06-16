@@ -8,11 +8,32 @@
         Title="TO-DO Manager" Height="900" Width="1600" WindowState="Maximized">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="330" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" Background="#F4F6F8">
-            <ListView Name="PagesListView" Background="#F4F6F8" BorderThickness="0" Margin="20 50 0 0"
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="230" />
+                    <ColumnDefinition Width="90" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="5 20 0 0">
+                    <TextBox Name="SearchTextBox" Width="150" Height="25" ToolTip="Search TO-DO Items by tags"
+                             FontSize="15" />
+                    <Button Content="Search" Width="45" Height="25" Margin="5 0 0 0" Click="Search_OnClick" />
+                </StackPanel>
+                <Expander Grid.Column="1" Name="SearchExpander" HorizontalAlignment="Center" Margin="0 20 0 0">
+                    <ListBox Name="FoundToDoItems" Margin="0 5 5 0"
+                             SelectionChanged="FoundToDoItems_OnSelectionChanged">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Header}" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Expander>
+            </Grid>
+            <ListView Name="PagesListView" Background="#F4F6F8" BorderThickness="0" Margin="20 30 0 0"
                       SelectionChanged="PagesListView_OnSelectionChanged">
                 <ListViewItem>
                     <StackPanel Orientation="Horizontal">
