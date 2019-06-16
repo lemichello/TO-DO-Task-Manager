@@ -14,6 +14,6 @@ Tasks will appear in the Upcoming page when their date values are bigger than to
 Tasks will appear in Logbook page when User will check them in any remaining pages mentioned above. Users can bring back tasks from this page to another, according to its date value by unchecking it.
 
 ### Another:
-There's also a possibility to add tags to tasks. You can also search your tasks by tags, separating them with spaces.
+There's also a possibility to add tags to tasks. You can search your tasks by tags, separating them with spaces.
 
 That's all. Thanks for reading.
