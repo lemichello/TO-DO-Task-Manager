@@ -1,5 +1,4 @@
 # TO-DO Task Manager
-TO-DO Task Manager
 Hi, this is a TO-DO Task Manager, which will help you to manage your tasks.
 
 ## Characteristics of Inbox page:
