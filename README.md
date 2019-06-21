@@ -1,5 +1,4 @@
 # TO-DO Task Manager
-TO-DO Task Manager
 Hi, this is a TO-DO Task Manager, which will help you to manage your tasks.
 
 ## Characteristics of Inbox page:
@@ -15,6 +14,6 @@ Tasks will appear in the Upcoming page when their date values are bigger than to
 Tasks will appear in Logbook page when User will check them in any remaining pages mentioned above. Users can bring back tasks from this page to another, according to its date value by unchecking it.
 
 ### Another:
-There's also a possibility to add tags to tasks, which will help you to navigate by them in the future search function.
+There's also a possibility to add tags to tasks. You can search your tasks by tags, separating them with spaces.
 
 That's all. Thanks for reading.
