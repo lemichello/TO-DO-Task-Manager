@@ -5,10 +5,24 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:CourseProjectWPF"
         mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="" Height="130" Width="200" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Blue.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
     <StackPanel>
-        <TextBlock Text="Enter new text of tag" HorizontalAlignment="Center" FontSize="18" />
-        <TextBox Name="TagTextBox" Margin="10" />
-        <Button Content="Confirm" Width="100" HorizontalAlignment="Center" Click="Confirm_OnClick" />
+        <TextBox Name="TagTextBox" Margin="10" Style="{StaticResource MaterialDesignTextBox}"
+                 materialDesign:HintAssist.Hint="Tag text" />
+        <Button Content="Confirm" Width="100" HorizontalAlignment="Center" Click="Confirm_OnClick"
+                Style="{StaticResource MaterialDesignRaisedButton}" />
     </StackPanel>
 </Window>

@@ -4,9 +4,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:CourseProjectWPF"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="Editing TO-DO Task" Height="470" Width="600" WindowStartupLocation="CenterScreen"
+        Title="Editing TO-DO Task" Height="520" Width="600" WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Blue.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200*" />
@@ -15,7 +28,7 @@
         <StackPanel Grid.Column="0">
             <TextBlock Text="Tags" FontSize="20" HorizontalAlignment="Center" />
             <ListBox Name="TagsListBox" BorderThickness="0" Height="297" SelectionMode="Multiple" FontSize="20"
-                     Margin="0 17 0 0">
+                     Margin="0 17 0 0" Style="{StaticResource MaterialDesignListBox}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Text}" />
@@ -23,37 +36,25 @@
                 </ListBox.ItemTemplate>
             </ListBox>
             <Button Content="Add tag" HorizontalAlignment="Center" Width="100" Margin="0 5"
-                    Click="AddButton_OnCLick" />
+                    Click="AddButton_OnCLick" Style="{StaticResource MaterialDesignRaisedButton}" />
             <Button Content="Edit tag" HorizontalAlignment="Center" Width="100" Margin="0 5"
-                    Click="EditButton_OnClick" />
+                    Click="EditButton_OnClick" Style="{StaticResource MaterialDesignRaisedButton}" />
             <Button Content="Delete tag" HorizontalAlignment="Center" Width="100" Margin="0 5"
-                    Click="DeleteButton_OnClick" />
+                    Click="DeleteButton_OnClick" Style="{StaticResource MaterialDesignRaisedButton}" />
         </StackPanel>
         <StackPanel Grid.Column="1">
-            <StackPanel.Resources>
-                <Style x:Key="ControlStyle" TargetType="Control">
-                    <Setter Property="Margin" Value="5" />
-                    <Setter Property="Height" Value="30" />
-                </Style>
-                <Style x:Key="LabelStyle" TargetType="Label" BasedOn="{StaticResource ControlStyle}">
-                    <Setter Property="FontSize" Value="17" />
-                </Style>
-                <Style x:Key="TextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource ControlStyle}">
-                    <Setter Property="FontSize" Value="20" />
-                </Style>
-            </StackPanel.Resources>
-            <Label Content="Header" Style="{StaticResource LabelStyle}" />
-            <TextBox Name="HeaderText" Style="{StaticResource TextBoxStyle}" />
-            <Label Content="Notes" Style="{StaticResource LabelStyle}" />
-            <TextBox Name="NotesText" Style="{StaticResource TextBoxStyle}" />
-            <Label Content="Date" Style="{StaticResource LabelStyle}" />
-            <DatePicker Name="PickedDate" Style="{StaticResource ControlStyle}" />
-            <Label Content="Deadline" Style="{StaticResource LabelStyle}" />
-            <DatePicker Name="PickedDeadline" Style="{StaticResource ControlStyle}" />
-            <Button Content="Save" FontSize="16" Style="{StaticResource ControlStyle}" Click="Save_OnClick"
-                    Margin="5 20 5 0" />
-            <Button Content="Delete" FontSize="16" Style="{StaticResource ControlStyle}" Click="Delete_OnClick"
-                    Margin="5 10 5 0" />
+            <TextBox Name="HeaderText" Margin="5" Height="30" Style="{StaticResource MaterialDesignTextBox}"
+                     materialDesign:HintAssist.Hint="Header" />
+            <TextBox Name="NotesText" Margin="5" Height="30" Style="{StaticResource MaterialDesignTextBox}"
+                     materialDesign:HintAssist.Hint="Notes" />
+            <Label Content="Date" FontSize="17" Margin="5" Height="30" Style="{StaticResource MaterialDesignLabel}" />
+            <DatePicker Name="PickedDate" Margin="5" Height="30" Style="{StaticResource MaterialDesignDatePicker}" />
+            <Label Content="Deadline" FontSize="17" Margin="5" Height="30" Style="{StaticResource MaterialDesignLabel}" />
+            <DatePicker Name="PickedDeadline" Margin="5" Height="30" Style="{StaticResource MaterialDesignDatePicker}" />
+            <Button Content="Save" FontSize="16" Height="30" Click="Save_OnClick"
+                    Margin="5 20 5 0" Style="{StaticResource MaterialDesignRaisedButton}" />
+            <Button Content="Delete" FontSize="16" Height="30" Click="Delete_OnClick"
+                    Margin="5 10 5 0" Style="{StaticResource MaterialDesignRaisedButton}" />
         </StackPanel>
     </Grid>
 </Window>

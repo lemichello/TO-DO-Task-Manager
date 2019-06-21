@@ -5,26 +5,41 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CourseProjectWPF"
         mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="TO-DO Manager" Height="900" Width="1600" WindowState="Maximized">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Blue.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="330" />
+            <ColumnDefinition Width="350" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0" Background="#F4F6F8">
-            <Grid>
+            <Grid Margin="5 20 0 0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="230" />
+                    <ColumnDefinition Width="250" />
                     <ColumnDefinition Width="90" />
                 </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="5 20 0 0">
-                    <TextBox Name="SearchTextBox" Width="150" Height="25" ToolTip="Search TO-DO Items by tags"
-                             FontSize="15" />
-                    <Button Content="Search" Width="45" Height="25" Margin="5 0 0 0" Click="Search_OnClick" />
+                <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="5 0 0 0">
+                    <TextBox Name="SearchTextBox" Width="150" Height="25"
+                             materialDesign:HintAssist.Hint="Tags" />
+                    <Button Content="Search" Width="75" Height="25" Margin="10 0 0 0" Click="Search_OnClick" />
                 </StackPanel>
-                <Expander Grid.Column="1" Name="SearchExpander" HorizontalAlignment="Center" Margin="0 20 0 0">
-                    <ListBox Name="FoundToDoItems" Margin="0 5 5 0"
-                             SelectionChanged="FoundToDoItems_OnSelectionChanged">
+                <Expander Grid.Column="1" Name="SearchExpander"
+                          Style="{StaticResource MaterialDesignExpander}" Margin="5 0 0 0">
+                    <ListBox Name="FoundToDoItems"
+                             SelectionChanged="FoundToDoItems_OnSelectionChanged"
+                             Style="{StaticResource MaterialDesignListBox}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Header}" />
@@ -34,7 +49,8 @@
                 </Expander>
             </Grid>
             <ListView Name="PagesListView" Background="#F4F6F8" BorderThickness="0" Margin="20 30 0 0"
-                      SelectionChanged="PagesListView_OnSelectionChanged">
+                      SelectionChanged="PagesListView_OnSelectionChanged"
+                      Style="{StaticResource MaterialDesignListView}">
                 <ListViewItem>
                     <StackPanel Orientation="Horizontal">
                         <Image Source="Resources/inbox.png" Style="{StaticResource ImageStyle}" />

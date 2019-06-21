@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data.SQLite;
 using System.Windows;
@@ -33,7 +32,6 @@ namespace CourseProjectWPF
 
         private void ToDoItem_OnChecked(object sender, RoutedEventArgs e)
         {
-            // TODO: Add to Logbook
             _toDoItemOperations.Checked(sender);
         }
 

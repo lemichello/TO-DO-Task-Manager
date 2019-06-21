@@ -82,3 +82,8 @@ C:\Maksym\C#\CourseProjectWPF\CourseProjectWPF\obj\Debug\TagWindow.g.cs
 C:\Maksym\C#\CourseProjectWPF\CourseProjectWPF\obj\Debug\TagWindow.baml
 C:\Users\user.itstep\Source\Repos\WPF-Course-Project\CourseProjectWPF\obj\Debug\TagWindow.g.cs
 C:\Users\user.itstep\Source\Repos\WPF-Course-Project\CourseProjectWPF\obj\Debug\TagWindow.baml
+C:\Maksym\C#\CourseProjectWPF\CourseProjectWPF\bin\Debug\MaterialDesignColors.dll
+C:\Maksym\C#\CourseProjectWPF\CourseProjectWPF\bin\Debug\MaterialDesignThemes.Wpf.dll
+C:\Maksym\C#\CourseProjectWPF\CourseProjectWPF\bin\Debug\MaterialDesignColors.pdb
+C:\Maksym\C#\CourseProjectWPF\CourseProjectWPF\bin\Debug\MaterialDesignThemes.Wpf.pdb
+C:\Maksym\C#\CourseProjectWPF\CourseProjectWPF\bin\Debug\MaterialDesignThemes.Wpf.xml

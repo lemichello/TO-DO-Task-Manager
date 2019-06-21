@@ -1,26 +1,41 @@
 ﻿<Page x:Class="CourseProjectWPF.TodayPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:CourseProjectWPF"
-      mc:Ignorable="d" 
+      mc:Ignorable="d"
       d:DesignHeight="450" d:DesignWidth="800"
       Title="TodayPage">
-
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Blue.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
     <DockPanel Margin="50 60 0 0">
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
             <Image Source="Resources/today.png" Width="40" Height="40" />
-            <Label Content="Today" Margin="10 0 0 0" FontWeight="Bold" FontSize="30" />
+            <Label Content="Today" Margin="10 0 0 0" FontWeight="Bold" FontSize="30"
+                   Style="{StaticResource MaterialDesignLabel}" />
         </StackPanel>
-        <Button DockPanel.Dock="Bottom" Margin="0 0 50 20" Style="{StaticResource AddButtonStyle}"
+        <Button DockPanel.Dock="Bottom" Margin="0 0 50 20" Content="+" Height="30"
+                Style="{StaticResource MaterialDesignRaisedButton}"
                 Click="AddButton_OnClick" />
         <ListView Name="ToDoItemsListView" Margin="0 20 0 0" BorderThickness="0"
-                  SelectionChanged="ToDoItemsListView_OnSelectionChanged">
+                  SelectionChanged="ToDoItemsListView_OnSelectionChanged"
+                  Style="{StaticResource MaterialDesignListView}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Margin="0 5" Orientation="Horizontal">
-                        <CheckBox Checked="ToDoItem_OnChecked" Margin="0 10 10 0" />
+                        <CheckBox Checked="ToDoItem_OnChecked" Margin="0 10 10 0"
+                                  Style="{StaticResource MaterialDesignCheckBox}" />
                         <StackPanel>
                             <TextBlock Text="{Binding Header}" FontSize="17" />
                             <TextBlock Text="{Binding Notes}" FontSize="13" Foreground="Silver" />

@@ -43,6 +43,14 @@
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="MaterialDesignColors, Version=1.2.0.1418, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\MaterialDesignColors.1.2.0-ci1418\lib\net45\MaterialDesignColors.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MaterialDesignThemes.Wpf, Version=2.6.0.1444, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\MaterialDesignThemes.2.6.0-ci1444\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
