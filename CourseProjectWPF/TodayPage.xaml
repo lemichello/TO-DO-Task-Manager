@@ -25,9 +25,9 @@
             <Label Content="Today" Margin="10 0 0 0" FontWeight="Bold" FontSize="30"
                    Style="{StaticResource MaterialDesignLabel}" />
         </StackPanel>
-        <Button DockPanel.Dock="Bottom" Margin="0 0 50 20" Content="+" Height="30"
-                Style="{StaticResource MaterialDesignRaisedButton}"
-                Click="AddButton_OnClick" />
+        <Button DockPanel.Dock="Bottom" Height="60" Width="60" FontSize="19" Margin="0 0 50 20" Content="+"
+                Click="AddButton_OnClick" Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                HorizontalAlignment="Right"/>
         <ListView Name="ToDoItemsListView" Margin="0 20 0 0" BorderThickness="0"
                   SelectionChanged="ToDoItemsListView_OnSelectionChanged"
                   Style="{StaticResource MaterialDesignListView}">

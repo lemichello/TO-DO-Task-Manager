@@ -25,8 +25,9 @@
             <Label Content="Upcoming" Margin="10 0 0 0" FontWeight="Bold" FontSize="30"
                    Style="{StaticResource MaterialDesignLabel}" />
         </StackPanel>
-        <Button DockPanel.Dock="Bottom" Margin="0 0 50 20" Content="+" Height="30"
-                Click="AddButton_OnClick" Style="{StaticResource MaterialDesignRaisedButton}" />
+        <Button DockPanel.Dock="Bottom" Height="60" Width="60" FontSize="19" Margin="0 0 50 20" Content="+"
+                Click="AddButton_OnClick" Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                HorizontalAlignment="Right"/>
         <ListView Name="UpcomingListView" Margin="0 20 0 0" BorderThickness="0"
                   Style="{StaticResource MaterialDesignListView}">
             <ListView.ItemTemplate>
