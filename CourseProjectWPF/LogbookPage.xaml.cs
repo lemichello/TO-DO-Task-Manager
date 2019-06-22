@@ -104,6 +104,16 @@ namespace CourseProjectWPF
         // Recover ToDoItem from Logbook page.
         private void ToDoItem_OnUnchecked(object sender, RoutedEventArgs e)
         {
+            var result = MessageBox.Show("This TO-DO is already logged. " +
+                                         "Are you sure you want to mark it as incomplete?",
+                "Question", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.No)
+            {
+                ((CheckBox) sender).IsChecked = true;
+                return;
+            }
+
             var selectedItem = ((FrameworkElement) sender).DataContext;
             var index        = ToDoItemsListView.Items.IndexOf(selectedItem);
             var toDoItem     = _toDoItemsCollection[index];

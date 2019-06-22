@@ -25,7 +25,7 @@
             <ColumnDefinition Width="200*" />
             <ColumnDefinition Width="400*" />
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0">
+        <StackPanel Grid.Column="0" Background="#F4F6F8">
             <TextBlock Text="Tags" FontSize="20" HorizontalAlignment="Center" />
             <ListBox Name="TagsListBox" BorderThickness="0" Height="297" SelectionMode="Multiple" FontSize="20"
                      Margin="0 17 0 0" Style="{StaticResource MaterialDesignListBox}">
@@ -42,10 +42,10 @@
             <Button Content="Delete tag" HorizontalAlignment="Center" Width="100" Margin="0 5"
                     Click="DeleteButton_OnClick" Style="{StaticResource MaterialDesignRaisedButton}" />
         </StackPanel>
-        <StackPanel Grid.Column="1">
-            <TextBox Name="HeaderText" Margin="5" Height="30" Style="{StaticResource MaterialDesignTextBox}"
+        <StackPanel Grid.Column="1" Background="{DynamicResource MaterialDesignPaper}">
+            <TextBox Name="HeaderText" Margin="5" FontSize="14" Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                      materialDesign:HintAssist.Hint="Header" />
-            <TextBox Name="NotesText" Margin="5" Height="30" Style="{StaticResource MaterialDesignTextBox}"
+            <TextBox Name="NotesText" Margin="5" FontSize="14" Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                      materialDesign:HintAssist.Hint="Notes" />
             <Label Content="Date" FontSize="17" Margin="5" Height="30" Style="{StaticResource MaterialDesignLabel}" />
             <DatePicker Name="PickedDate" Margin="5" Height="30" Style="{StaticResource MaterialDesignDatePicker}" />

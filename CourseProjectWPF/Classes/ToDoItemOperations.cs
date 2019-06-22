@@ -2,6 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 using ClassLibrary.Classes;
 
 namespace CourseProjectWPF.Classes
@@ -49,18 +50,45 @@ namespace CourseProjectWPF.Classes
                 _toDoItemsCollection.RemoveAt(index);
         }
 
-        public void Checked(object sender)
+        private void Timer_OnTick(object sender, EventArgs e)
         {
-            var item     = ((FrameworkElement) sender).DataContext;
-            var toDoItem = _toDoItemsCollection[_toDoItemsListView.Items.IndexOf(item)];
+            var timer = (DispatcherTimer) sender;
+            var toDoItem = (ToDoItem) timer.Tag;
 
             DatabaseOperations.RemoveTagsFromToDoItem(toDoItem.Id);
             DatabaseOperations.RemoveToDoItem(toDoItem);
             DatabaseOperations.AddToDoItemToLogbook(toDoItem);
+            
+            _toDoItemsCollection.Remove(toDoItem);
+            
+            toDoItem.Timer.Stop();
+        }
+        
+        public void Checked(object sender)
+        {
+            var item     = ((FrameworkElement) sender).DataContext;
+            var toDoItem = _toDoItemsCollection[_toDoItemsListView.Items.IndexOf(item)];
+            var timer = new DispatcherTimer
+            {
+                Interval = new TimeSpan(0, 0, 2)
+            };
+            
+            timer.Tick += Timer_OnTick;
+            timer.Tag = toDoItem;
 
-            _toDoItemsCollection.RemoveAt(_toDoItemsListView.Items.IndexOf(item));
+            toDoItem.Timer = timer;
+            
+            timer.Start();
         }
 
+        public void Unchecked(object sender)
+        {
+            var item     = ((FrameworkElement) sender).DataContext;
+            var toDoItem = _toDoItemsCollection[_toDoItemsListView.Items.IndexOf(item)];
+            
+            toDoItem.Timer.Stop();
+        }
+        
         public void Add()
         {
             var itemWindow = new ToDoItemWindow();

@@ -31,9 +31,10 @@
                     <ColumnDefinition Width="90" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="5 0 0 0">
-                    <TextBox Name="SearchTextBox" Width="150" Height="25"
-                             materialDesign:HintAssist.Hint="Tags" />
-                    <Button Content="Search" Width="75" Height="25" Margin="10 0 0 0" Click="Search_OnClick" />
+                    <TextBox Name="SearchTextBox" Width="150"
+                             materialDesign:HintAssist.Hint="Tags"
+                             Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                    <Button Content="Search" Width="75" Height="25" Margin="10 15 0 0" Click="Search_OnClick" />
                 </StackPanel>
                 <Expander Grid.Column="1" Name="SearchExpander"
                           Style="{StaticResource MaterialDesignExpander}" Margin="5 0 0 0">
@@ -77,6 +78,7 @@
                 </ListViewItem>
             </ListView>
         </StackPanel>
-        <Frame Name="PagesFrame" Grid.Column="1" NavigationUIVisibility="Hidden" />
+        <Frame Name="PagesFrame" Grid.Column="1" NavigationUIVisibility="Hidden"
+               Background="{DynamicResource MaterialDesignPaper}" />
     </Grid>
 </Window>

@@ -32,9 +32,14 @@ namespace CourseProjectWPF
 
         private void ToDoItem_OnChecked(object sender, RoutedEventArgs e)
         {
-            _toDoItemOperations.Checked(sender);
+           _toDoItemOperations.Checked(sender);
         }
 
+        private void ToDoItem_OnUnchecked(object sender, RoutedEventArgs e)
+        {
+            _toDoItemOperations.Unchecked(sender);
+        }
+        
         private void AddButton_OnClick(object sender, RoutedEventArgs e)
         {
             _toDoItemOperations.Add();

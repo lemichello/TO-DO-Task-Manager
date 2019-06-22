@@ -1,4 +1,5 @@
 using System;
+using System.Windows.Threading;
 
 namespace ClassLibrary.Classes
 {
@@ -10,5 +11,6 @@ namespace ClassLibrary.Classes
         public DateTime Date { get; set; }
         public DateTime Deadline { get; set; }
         public string CompleteDay { get; set; }
+        public DispatcherTimer Timer { get; set; }
     }
 }

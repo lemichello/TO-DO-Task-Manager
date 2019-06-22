@@ -43,7 +43,8 @@
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Margin="0 5" Orientation="Horizontal">
-                                        <CheckBox Checked="ToDoItem_OnChecked" Margin="0 10 10 0"
+                                        <CheckBox Checked="ToDoItem_OnChecked" Unchecked="ToDoItem_OnUnchecked"
+                                                  Margin="0 10 10 0"
                                                   Style="{StaticResource MaterialDesignCheckBox}" />
                                         <StackPanel>
                                             <TextBlock Text="{Binding Header}" FontSize="17" />

@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data.SQLite;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 using ClassLibrary.Classes;
 using CourseProjectWPF.Classes;
 
@@ -35,7 +36,7 @@ namespace CourseProjectWPF
         {
             using (var connection = new SQLiteConnection(_connectionString))
             {
-                const string command = "SELECT * FROM ToDoItems WHERE Date<=@todayDate";
+                const string command = "SELECT * FROM ToDoItems WHERE Date<=@todayDate AND Date NOT LIKE ''";
 
                 connection.Open();
 
@@ -67,6 +68,11 @@ namespace CourseProjectWPF
         private void ToDoItem_OnChecked(object sender, RoutedEventArgs e)
         {
             _toDoItemOperations.Checked(sender);
+        }
+        
+        private void ToDoItem_OnUnchecked(object sender, RoutedEventArgs e)
+        {
+            _toDoItemOperations.Unchecked(sender);
         }
     }
 }

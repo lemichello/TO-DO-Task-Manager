@@ -7,6 +7,7 @@ using System.Data.SQLite;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
+using System.Windows.Threading;
 using CourseProjectWPF.Classes;
 
 namespace CourseProjectWPF
@@ -78,13 +79,49 @@ namespace CourseProjectWPF
 
         private void ToDoItem_OnChecked(object sender, RoutedEventArgs e)
         {
-            var item = ((FrameworkElement) sender).DataContext;
+            /*var item = ((FrameworkElement) sender).DataContext;
 
             DatabaseOperations.RemoveTagsFromToDoItem(((ToDoItem) item).Id);
             DatabaseOperations.RemoveToDoItem(item as ToDoItem);
             DatabaseOperations.AddToDoItemToLogbook(item as ToDoItem);
 
+            _parent.UpdateUpcomingPage();*/
+            
+            var item     = ((FrameworkElement) sender).DataContext;
+            var toDoItem = (ToDoItem) item;
+            var timer = new DispatcherTimer
+            {
+                Interval = new TimeSpan(0, 0, 2)
+            };
+            
+            timer.Tick += Timer_OnTick;
+            timer.Tag  =  toDoItem;
+
+            toDoItem.Timer = timer;
+            
+            timer.Start();
+        }
+        
+        private void ToDoItem_OnUnchecked(object sender, RoutedEventArgs e)
+        {
+            var item     = ((FrameworkElement) sender).DataContext;
+            var toDoItem = (ToDoItem) item;
+            
+            toDoItem.Timer.Stop();
+        }
+
+        private void Timer_OnTick(object sender, EventArgs e)
+        {
+            var timer    = (DispatcherTimer) sender;
+            var toDoItem = (ToDoItem) timer.Tag;
+            
+            DatabaseOperations.RemoveTagsFromToDoItem(toDoItem.Id);
+            DatabaseOperations.RemoveToDoItem(toDoItem);
+            DatabaseOperations.AddToDoItemToLogbook(toDoItem);
+
             _parent.UpdateUpcomingPage();
+            
+            toDoItem.Timer.Stop();
         }
 
         private void FillCollection()
