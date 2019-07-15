@@ -11,6 +11,7 @@ namespace DAO.Entities
         [Required] public string Notes { get; set; }
         public DateTime Date { get; set; }
         public DateTime Deadline { get; set; }
+        public DateTime CompleteDate { get; set; }
         [ForeignKey("UserOf")] public int UserId { get; set; }
         
         public virtual User UserOf { get; set; }
