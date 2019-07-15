@@ -11,7 +11,7 @@ namespace DAO.Repositories
 
         public TagsRepository()
         {
-            _context = new EfContext();
+            _context = ContextSingleton.GetInstance();
         }
         
         public IEnumerable<Tag> Get()

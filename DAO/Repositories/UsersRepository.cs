@@ -11,7 +11,7 @@ namespace DAO.Repositories
 
         public UsersRepository()
         {
-            _context = new EfContext();
+            _context = ContextSingleton.GetInstance();
         }
         
         public IEnumerable<User> Get()

@@ -12,7 +12,7 @@ namespace DAO.Repositories
 
         public ToDoItemsRepository()
         {
-            _context = new EfContext();
+            _context = ContextSingleton.GetInstance();
         }
         
         public IEnumerable<ToDoItem> Get()
