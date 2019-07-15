@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core;
 using System.Linq;
 using DAO.Entities;
 
@@ -50,6 +51,30 @@ namespace DAO.Repositories
                 return false;
             }
 
+            return true;
+        }
+
+        public bool Update(ToDoItem item)
+        {
+            try
+            {
+                var found = _context.ToDoItems.FirstOrDefault(i => i.Id == item.Id) ??
+                            throw new ArgumentNullException($"Not found item with Id = {item.Id}");
+
+                found.Header = item.Header;
+                found.Notes = item.Notes;
+                found.Date = item.Date;
+                found.Deadline = item.Deadline;
+
+                _context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                ErrorHandler.Handle(e);
+                
+                return false;
+            }
+            
             return true;
         }
     }

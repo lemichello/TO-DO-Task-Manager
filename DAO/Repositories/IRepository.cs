@@ -7,5 +7,6 @@ namespace DAO.Repositories
         IEnumerable<T> Get();
         bool Add(T item);
         bool Remove(T item);
+        bool Update(T item);
     }
 }

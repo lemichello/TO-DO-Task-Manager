@@ -19,11 +19,11 @@ namespace DAO.Repositories
             return _context.Users.AsEnumerable();
         }
 
-        public bool Add(User item)
+        public bool Add(User tag)
         {
             try
             {
-                _context.Users.Add(item);
+                _context.Users.Add(tag);
                 _context.SaveChanges();
             }
             catch (Exception e)
@@ -36,11 +36,34 @@ namespace DAO.Repositories
             return true;
         }
 
-        public bool Remove(User item)
+        public bool Remove(User tag)
         {
             try
             {
-                _context.Users.Remove(item);
+                _context.Users.Remove(tag);
+                _context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                ErrorHandler.Handle(e);
+
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool Update(User tag)
+        {
+            try
+            {
+                var found = _context.Users.FirstOrDefault(i => i.Id == tag.Id) ??
+                            throw new ArgumentNullException($"Not found user with Id = {tag.Id} and " +
+                                                            $"ItemId = {tag.Id}");
+
+                found.Login = tag.Login;
+                found.Password  = tag.Password;
+
                 _context.SaveChanges();
             }
             catch (Exception e)
