@@ -75,5 +75,10 @@ namespace DAO.Repositories
 
             return true;
         }
+
+        public void SaveChanges()
+        {
+            _context.SaveChanges();
+        }
     }
 }

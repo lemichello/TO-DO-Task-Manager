@@ -8,5 +8,6 @@ namespace DAO.Repositories
         bool Add(T item);
         bool Remove(T item);
         bool Update(T item);
+        void SaveChanges();
     }
 }
