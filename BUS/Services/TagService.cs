@@ -37,7 +37,7 @@ namespace BUS.Services
 
             return _tagRepository.Remove(foundItem);
         }
-        
+
         public void Update(TagModel tag)
         {
             var foundItem = _tagRepository.Get().First(i => i.Id == tag.Id);
@@ -87,6 +87,37 @@ namespace BUS.Services
                     Id   = i.TagOf.Id,
                     Text = i.TagOf.Text
                 });
+        }
+
+        public IEnumerable<ToDoItemModel> GetItemsByTags(IEnumerable<string> tags)
+        {
+            var allItems = _itemTagRepository.Get().ToList().Where(i => i.TagOf.UserId == _userId).ToList();
+            var itemsCount = new Dictionary<ToDoItem, int>();
+            var tagTexts  = tags.ToList();
+
+            foreach (var text in tagTexts)
+            {
+                foreach (var item in allItems)
+                {
+                    if (itemsCount.ContainsKey(item.ItemOf) && item.TagOf.Text == text)
+                        itemsCount[item.ItemOf]++;
+                    else if (item.TagOf.Text == text)
+                        itemsCount[item.ItemOf] = 1;
+                }
+            }
+
+            // Selecting ToDoItems, which has all searching-tags (their are equal to searching-tags length).
+            var foundItems = itemsCount.Where(i => i.Value == tagTexts.Count).Select(i => i.Key).ToList();
+
+            return foundItems.Select(i => new ToDoItemModel
+            {
+                Id          = i.Id,
+                Header      = i.Header,
+                Notes       = i.Notes,
+                Date        = i.Date,
+                Deadline    = i.Deadline,
+                CompleteDay = i.CompleteDate
+            });
         }
     }
 }
