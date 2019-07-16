@@ -3,11 +3,11 @@ using System.Runtime.CompilerServices;
 
 namespace BUS.Models
 {
-    public class TagModel
+    public class TagModel : INotifyPropertyChanged
     {
-        private long _id;
+        private int _id;
 
-        public long Id
+        public int Id
         {
             get => _id;
             set
