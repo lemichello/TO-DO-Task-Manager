@@ -53,30 +53,6 @@ namespace DAO.Repositories
             return true;
         }
 
-        public bool Update(ItemTag itemTag)
-        {
-            try
-            {
-                var found = _context.ItemsTags.FirstOrDefault(i => i.TagId == itemTag.TagId &&
-                                                                   i.ItemId == itemTag.ItemId) ??
-                            throw new ArgumentNullException($"Not found itemTag with TagId = {itemTag.TagId} and " +
-                                                            $"ItemId = {itemTag.ItemId}");
-
-                found.ItemId   = itemTag.ItemId;
-                found.TagId    = itemTag.TagId;
-
-                _context.SaveChanges();
-            }
-            catch (Exception e)
-            {
-                ErrorHandler.Handle(e);
-
-                return false;
-            }
-
-            return true;
-        }
-
         public void SaveChanges()
         {
             _context.SaveChanges();

@@ -53,29 +53,6 @@ namespace DAO.Repositories
             return true;
         }
 
-        public bool Update(User tag)
-        {
-            try
-            {
-                var found = _context.Users.FirstOrDefault(i => i.Id == tag.Id) ??
-                            throw new ArgumentNullException($"Not found user with Id = {tag.Id} and " +
-                                                            $"ItemId = {tag.Id}");
-
-                found.Login = tag.Login;
-                found.Password  = tag.Password;
-
-                _context.SaveChanges();
-            }
-            catch (Exception e)
-            {
-                ErrorHandler.Handle(e);
-
-                return false;
-            }
-
-            return true;
-        }
-
         public void SaveChanges()
         {
             _context.SaveChanges();
