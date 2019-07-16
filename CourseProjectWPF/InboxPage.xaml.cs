@@ -1,9 +1,10 @@
-﻿using System.Collections.ObjectModel;
-using System.Configuration;
-using System.Data.SQLite;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using ClassLibrary.Classes;
+using BUS.Models;
+using BUS.Services;
 using CourseProjectWPF.Classes;
 
 namespace CourseProjectWPF
@@ -13,58 +14,53 @@ namespace CourseProjectWPF
     /// </summary>
     public partial class InboxPage : Page
     {
-        private readonly ObservableCollection<ToDoItem> _toDoItemsCollection;
-        private readonly string                         _connectionString;
-        private readonly InboxToDoItemOperations        _toDoItemOperations;
+        private readonly ObservableCollection<ToDoItemModel> _toDoItemsCollection;
+        private readonly ToDoItemService                     _service;
+        private readonly ToDoItemOperations                  _operations;
+        private readonly int                                 _userId;
 
         public InboxPage()
         {
             InitializeComponent();
 
-            _toDoItemsCollection = new ObservableCollection<ToDoItem>();
+            _userId              = 1;
+            _toDoItemsCollection = new ObservableCollection<ToDoItemModel>();
+            _service             = new ToDoItemService(_userId);
+            _operations          = new InboxToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, _userId);
 
-            _connectionString = ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
             FillCollection();
 
             ToDoItemsListView.ItemsSource = _toDoItemsCollection;
-            _toDoItemOperations           = new InboxToDoItemOperations(ToDoItemsListView, _toDoItemsCollection);
         }
 
         private void ToDoItem_OnChecked(object sender, RoutedEventArgs e)
         {
-           _toDoItemOperations.Checked(sender);
+            _operations.Checked(sender);
         }
 
         private void ToDoItem_OnUnchecked(object sender, RoutedEventArgs e)
         {
-            _toDoItemOperations.Unchecked(sender);
+            _operations.Unchecked(sender);
         }
-        
+
         private void AddButton_OnClick(object sender, RoutedEventArgs e)
         {
-            _toDoItemOperations.Add();
+            _operations.Add();
         }
 
         private void ToDoItemsListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            _toDoItemOperations.Selected();
+            _operations.Selected();
         }
 
         private void FillCollection()
         {
-            using (var connection = new SQLiteConnection(_connectionString))
+            var collection = _service.Get(item => item.Date == DateTime.MinValue.AddYears(1753) &&
+                                                  item.CompleteDay == DateTime.MinValue.AddYears(1753)).ToList();
+
+            foreach (var i in collection)
             {
-                const string command = "SELECT * FROM ToDoItems WHERE Date=''";
-
-                connection.Open();
-
-                using (var cmd = new SQLiteCommand(command, connection))
-                {
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        DatabaseOperations.FillCollection(reader, _toDoItemsCollection);
-                    }
-                }
+                _toDoItemsCollection.Add(i);
             }
         }
     }

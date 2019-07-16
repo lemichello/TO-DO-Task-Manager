@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Configuration;
-using System.Data.SQLite;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Threading;
-using ClassLibrary.Classes;
+using BUS.Models;
+using BUS.Services;
 using CourseProjectWPF.Classes;
 
 namespace CourseProjectWPF
@@ -15,43 +14,34 @@ namespace CourseProjectWPF
     /// </summary>
     public partial class TodayPage : Page
     {
-        private readonly ObservableCollection<ToDoItem> _toDoItemsCollection;
-        private readonly string                         _connectionString;
-        private readonly TodayToDoItemOperations        _toDoItemOperations;
+        private readonly ObservableCollection<ToDoItemModel> _toDoItemsCollection;
+        private readonly TodayToDoItemOperations             _toDoItemOperations;
+        private readonly ToDoItemService                     _service;
+        private readonly int _userId;
 
         public TodayPage()
         {
             InitializeComponent();
 
-            _toDoItemsCollection = new ObservableCollection<ToDoItem>();
+            _userId = 1;
+            _toDoItemsCollection = new ObservableCollection<ToDoItemModel>();
+            _service = new ToDoItemService(_userId);
 
-            _connectionString = ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
             FillCollection();
 
             ToDoItemsListView.ItemsSource = _toDoItemsCollection;
-            _toDoItemOperations           = new TodayToDoItemOperations(ToDoItemsListView, _toDoItemsCollection);
+            _toDoItemOperations =
+                new TodayToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, _userId);
         }
 
         private void FillCollection()
         {
-            using (var connection = new SQLiteConnection(_connectionString))
+            var collection = _service.Get(item => item.Date == DateTime.Today &&
+                                                  item.CompleteDay == DateTime.MinValue.AddYears(1753)).ToList();
+
+            foreach (var i in collection)
             {
-                const string command = "SELECT * FROM ToDoItems WHERE Date<=@todayDate AND Date NOT LIKE ''";
-
-                connection.Open();
-
-                using (var cmd = new SQLiteCommand(command, connection))
-                {
-                    cmd.Prepare();
-
-                    cmd.Parameters.AddWithValue("@todayDate",
-                        ((long) (DateTime.Today - DateTime.MinValue).TotalMilliseconds).ToString());
-
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        DatabaseOperations.FillCollection(reader, _toDoItemsCollection);
-                    }
-                }
+                _toDoItemsCollection.Add(i);
             }
         }
 
@@ -69,7 +59,7 @@ namespace CourseProjectWPF
         {
             _toDoItemOperations.Checked(sender);
         }
-        
+
         private void ToDoItem_OnUnchecked(object sender, RoutedEventArgs e)
         {
             _toDoItemOperations.Unchecked(sender);

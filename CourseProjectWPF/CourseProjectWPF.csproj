@@ -81,7 +81,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Classes\DatabaseOperations.cs" />
     <Compile Include="Classes\ToDoItemOperations.cs" />
     <Compile Include="Classes\UpcomingToDoItems.cs" />
     <Compile Include="LogbookPage.xaml.cs">
@@ -149,15 +148,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AppDatabase.sqlite" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\inbox.png" />
     <Resource Include="Resources\logbook.png" />
     <Resource Include="Resources\today.png" />
     <Resource Include="Resources\upcoming.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BUS\BUS.csproj">
+      <Project>{274f4796-bd44-42ca-a499-12065c72de38}</Project>
+      <Name>BUS</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ClassLibrary\ClassLibrary.csproj">
       <Project>{d550504f-dd85-467f-bd05-dd3b82404bd0}</Project>
       <Name>ClassLibrary</Name>

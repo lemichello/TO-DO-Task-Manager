@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.ObjectModel;
-using System.Configuration;
-using System.Data.SQLite;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using ClassLibrary.Classes;
-using CourseProjectWPF.Classes;
+using BUS.Models;
+using BUS.Services;
 
 namespace CourseProjectWPF
 {
@@ -14,13 +13,15 @@ namespace CourseProjectWPF
     /// </summary>
     public partial class MainWindow
     {
-        private readonly string _connectionString;
+        private readonly int _userId;
+        private readonly TagService _service;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            _connectionString = ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
+            _userId = 1;
+            _service = new TagService(_userId);
         }
 
         private void PagesListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -81,53 +82,16 @@ namespace CourseProjectWPF
             SearchExpander.HorizontalAlignment = HorizontalAlignment.Center;
         }
 
-        private bool FillFoundListBox(string[] tags)
+        private bool FillFoundListBox(IEnumerable<string> tags)
         {
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                var command = CreateSearchCommand(tags);
+            var foundItems = _service.GetItemsByTags(tags).ToList();
 
-                connection.Open();
+            if (foundItems.Count == 0)
+                return false;
 
-                using (var cmd = new SQLiteCommand(command, connection))
-                {
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        if (!reader.HasRows)
-                            return false;
-
-                        var toDoItemsCollection = new ObservableCollection<ToDoItem>();
-
-                        DatabaseOperations.FillCollection(reader, toDoItemsCollection);
-
-                        FoundToDoItems.ItemsSource = toDoItemsCollection;
-                    }
-                }
-            }
+            FoundToDoItems.ItemsSource = foundItems;
 
             return true;
-        }
-
-        private static string CreateSearchCommand(string[] tags)
-        {
-            var command =
-                "SELECT a.ID, a.Header, a.Notes, a.Date, a.Deadline FROM ItemsTags it1 INNER JOIN ToDoItems a ON a.ID=it1.ItemID";
-
-            for (var i = 0; i < tags.Length; i++)
-            {
-                command += $" INNER JOIN ItemsTags it{i + 2} ON it1.ItemID=it{i + 2}.ItemID";
-            }
-
-            command += $" WHERE it1.TagID=(SELECT ID FROM Tags WHERE Text='{tags[0]}')";
-
-            for (var i = 1; i < tags.Length; i++)
-            {
-                command += $" AND it{i + 1}.TagID=(SELECT ID FROM Tags WHERE Text='{tags[i]}')";
-            }
-
-            command += " GROUP BY a.ID";
-
-            return command;
         }
 
         private void FoundToDoItems_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -136,16 +100,18 @@ namespace CourseProjectWPF
 
             if (index == -1) return;
 
-            var selectedToDoItem = (ToDoItem) FoundToDoItems.Items[index];
+            var selectedToDoItem = (ToDoItemModel) FoundToDoItems.Items[index];
 
-            if (selectedToDoItem.Date == DateTime.MinValue)
+            if (selectedToDoItem.Date == DateTime.MinValue.AddYears(1753))
                 PagesListView.SelectedIndex = 0;
 
             else if (selectedToDoItem.Date == DateTime.Today)
                 PagesListView.SelectedIndex = 1;
 
-            else
+            else if (selectedToDoItem.CompleteDay == DateTime.MinValue.AddYears(1753))
                 PagesListView.SelectedIndex = 2;
+            else
+                PagesListView.SelectedIndex = 3;
         }
     }
 }

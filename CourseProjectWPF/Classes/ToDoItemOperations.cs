@@ -3,19 +3,49 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using ClassLibrary.Classes;
+using BUS.Models;
+using BUS.Services;
 
 namespace CourseProjectWPF.Classes
 {
     internal abstract class ToDoItemOperations
     {
-        private readonly ListView                       _toDoItemsListView;
-        private readonly ObservableCollection<ToDoItem> _toDoItemsCollection;
+        private readonly ListView                            _toDoItemsListView;
+        private readonly ObservableCollection<ToDoItemModel> _toDoItemsCollection;
+        private readonly ToDoItemService                     _itemService;
+        private readonly TagService                          _tagService;
+        private readonly int                                 _userId;
 
-        internal ToDoItemOperations(ListView toDoItemsListView, ObservableCollection<ToDoItem> toDoItemsCollection)
+        internal ToDoItemOperations(ListView toDoItemsListView, ObservableCollection<ToDoItemModel> toDoItemsCollection,
+            int userId)
         {
+            _userId = userId;
+
             _toDoItemsListView   = toDoItemsListView;
             _toDoItemsCollection = toDoItemsCollection;
+            _itemService         = new ToDoItemService(userId);
+            _tagService          = new TagService(userId);
+        }
+
+        public void Add()
+        {
+            var itemWindow = new ToDoItemWindow(_userId);
+
+            if (this is TodayToDoItemOperations)
+                itemWindow.ShowDialog(DateTime.Today);
+            else
+                itemWindow.ShowDialog();
+
+            if (itemWindow.DialogResult == false) return;
+
+            _itemService.Add(itemWindow.Item);
+
+            if (itemWindow.Item.Id != -1 && IsCorrect(itemWindow.Item))
+                _toDoItemsCollection.Add(itemWindow.Item);
+            else if (itemWindow.Item.Id == -1)
+                return;
+
+            _tagService.ReplaceItemsTags(itemWindow.Item.Id, itemWindow.SelectedTagsId);
         }
 
         public void Selected()
@@ -24,7 +54,8 @@ namespace CourseProjectWPF.Classes
 
             if (index == -1) return;
 
-            var itemWindow = new ToDoItemWindow(_toDoItemsCollection[index]);
+            var item       = _toDoItemsCollection[index];
+            var itemWindow = new ToDoItemWindow(item, _userId);
 
             _toDoItemsListView.SelectedItem = null;
 
@@ -32,8 +63,8 @@ namespace CourseProjectWPF.Classes
 
             if (itemWindow.ToDelete)
             {
-                DatabaseOperations.RemoveToDoItem(_toDoItemsCollection[index]);
-                _toDoItemsCollection.RemoveAt(index);
+                if (_itemService.Remove(item))
+                    _toDoItemsCollection.Remove(item);
 
                 return;
             }
@@ -41,29 +72,30 @@ namespace CourseProjectWPF.Classes
             // User closed a window.
             if (itemWindow.DialogResult == false) return;
 
-            DatabaseOperations.ReplaceToDoItem(itemWindow.Item);
-            DatabaseOperations.ReplaceToDoItemTags(itemWindow.Item.Id, itemWindow.SelectedTags);
+            _itemService.Update(itemWindow.Item);
 
             if (IsCorrect(itemWindow.Item))
                 _toDoItemsCollection[index] = itemWindow.Item;
             else
-                _toDoItemsCollection.RemoveAt(index);
+                _toDoItemsCollection.Remove(item);
+
+            _tagService.ReplaceItemsTags(item.Id, itemWindow.SelectedTagsId);
         }
 
         private void Timer_OnTick(object sender, EventArgs e)
         {
-            var timer = (DispatcherTimer) sender;
-            var toDoItem = (ToDoItem) timer.Tag;
+            var timer    = (DispatcherTimer) sender;
+            var toDoItem = (ToDoItemModel) timer.Tag;
 
-            DatabaseOperations.RemoveTagsFromToDoItem(toDoItem.Id);
-            DatabaseOperations.RemoveToDoItem(toDoItem);
-            DatabaseOperations.AddToDoItemToLogbook(toDoItem);
-            
+            toDoItem.CompleteDay = DateTime.Today;
+
+            _itemService.Update(toDoItem);
+
             _toDoItemsCollection.Remove(toDoItem);
-            
+
             toDoItem.Timer.Stop();
         }
-        
+
         public void Checked(object sender)
         {
             var item     = ((FrameworkElement) sender).DataContext;
@@ -72,12 +104,12 @@ namespace CourseProjectWPF.Classes
             {
                 Interval = new TimeSpan(0, 0, 2)
             };
-            
+
             timer.Tick += Timer_OnTick;
-            timer.Tag = toDoItem;
+            timer.Tag  =  toDoItem;
 
             toDoItem.Timer = timer;
-            
+
             timer.Start();
         }
 
@@ -85,55 +117,39 @@ namespace CourseProjectWPF.Classes
         {
             var item     = ((FrameworkElement) sender).DataContext;
             var toDoItem = _toDoItemsCollection[_toDoItemsListView.Items.IndexOf(item)];
-            
+
             toDoItem.Timer.Stop();
         }
-        
-        public void Add()
-        {
-            var itemWindow = new ToDoItemWindow();
 
-            // Set today's initial date if user on "Today" page.
-            if (this is TodayToDoItemOperations)
-                itemWindow.ShowDialog(DateTime.Now);
-            else
-                itemWindow.ShowDialog();
-
-            if (itemWindow.DialogResult == false) return;
-
-            itemWindow.Item.Id = DatabaseOperations.AddToDoItem(itemWindow.Item);
-
-            if (IsCorrect(itemWindow.Item))
-                _toDoItemsCollection.Add(itemWindow.Item);
-
-            DatabaseOperations.AddTagsToItem(itemWindow.Item.Id, itemWindow.SelectedTags);
-        }
-
-        protected abstract bool IsCorrect(ToDoItem item);
+        protected abstract bool IsCorrect(ToDoItemModel item);
     }
 
     internal sealed class InboxToDoItemOperations : ToDoItemOperations
     {
-        public InboxToDoItemOperations(ListView toDoItemsListView, ObservableCollection<ToDoItem> toDoItemsCollection) :
-            base(toDoItemsListView, toDoItemsCollection)
+        public InboxToDoItemOperations(ListView toDoItemsListView,
+            ObservableCollection<ToDoItemModel> toDoItemsCollection,
+            int userId) :
+            base(toDoItemsListView, toDoItemsCollection, userId)
         {
         }
 
-        protected override bool IsCorrect(ToDoItem item)
+        protected override bool IsCorrect(ToDoItemModel item)
         {
             // User didn't choose a date for task.
-            return item.Date == DateTime.MinValue;
+            return item.Date == DateTime.MinValue.AddYears(1753);
         }
     }
 
     internal sealed class TodayToDoItemOperations : ToDoItemOperations
     {
-        public TodayToDoItemOperations(ListView toDoItemsListView, ObservableCollection<ToDoItem> toDoItemsCollection) :
-            base(toDoItemsListView, toDoItemsCollection)
+        public TodayToDoItemOperations(ListView toDoItemsListView,
+            ObservableCollection<ToDoItemModel> toDoItemsCollection,
+            int userId) :
+            base(toDoItemsListView, toDoItemsCollection, userId)
         {
         }
 
-        protected override bool IsCorrect(ToDoItem item)
+        protected override bool IsCorrect(ToDoItemModel item)
         {
             // User chose today's date for task.
             return item.Date.ToShortDateString() == DateTime.Now.ToShortDateString();

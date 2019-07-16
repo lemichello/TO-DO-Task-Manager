@@ -1,36 +1,33 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Configuration;
-using System.Data.SQLite;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using ClassLibrary.Classes;
-using CourseProjectWPF.Classes;
+using BUS.Models;
+using BUS.Services;
 
 namespace CourseProjectWPF
 {
     public partial class ToDoItemWindow : Window
     {
-        private readonly ObservableCollection<Tag> _tagsList;
-        private readonly string                    _connectionString;
-        
-        public ToDoItem Item { get; }
-        public bool ToDelete { get; private set; }
-        public List<Tag> SelectedTags { get; private set; }
+        private readonly ObservableCollection<TagModel> _tagsList;
+        private readonly TagService                     _tagService;
+        public IEnumerable<int> SelectedTagsId { get; set; }
 
-        public ToDoItemWindow()
+        public ToDoItemModel Item { get; }
+        public bool ToDelete { get; private set; }
+
+        public ToDoItemWindow(int userId)
         {
             InitializeComponent();
 
             PickedDate.DisplayDateStart     = DateTime.Now;
             PickedDeadline.DisplayDateStart = DateTime.Now;
-            Item                            = new ToDoItem();
+            Item                            = new ToDoItemModel();
             ToDelete                        = false;
 
-            _connectionString = ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
-            _tagsList         = new ObservableCollection<Tag>();
+            _tagService       = new TagService(userId);
+            _tagsList         = new ObservableCollection<TagModel>();
 
             FillTagsCollection();
 
@@ -44,17 +41,17 @@ namespace CourseProjectWPF
             ShowDialog();
         }
 
-        public ToDoItemWindow(ToDoItem item) : this()
+        public ToDoItemWindow(ToDoItemModel item, int userId) : this(userId)
         {
-            Item = new ToDoItem {Id = item.Id};
+            Item = new ToDoItemModel {Id = item.Id};
 
             HeaderText.Text = item.Header;
             NotesText.Text  = item.Notes;
 
-            if (item.Date != DateTime.MinValue)
+            if (item.Date != DateTime.MinValue.AddYears(1753))
                 PickedDate.SelectedDate = item.Date;
 
-            if (item.Deadline != DateTime.MinValue)
+            if (item.Deadline != DateTime.MinValue.AddYears(1753))
                 PickedDeadline.SelectedDate = item.Deadline;
 
             PickedDate.DisplayDateStart     = DateTime.Now;
@@ -76,90 +73,53 @@ namespace CourseProjectWPF
 
             if (PickedDate.SelectedDate != null)
                 Item.Date = (DateTime) PickedDate.SelectedDate;
+            else
+                Item.Date = DateTime.MinValue.AddYears(1753);
 
             if (PickedDeadline.SelectedDate != null)
                 Item.Deadline = (DateTime) PickedDeadline.SelectedDate;
+            else
+                Item.Deadline = DateTime.MinValue.AddYears(1753);
 
-            if (TagsListBox.SelectedItems.Count != 0)
-                FillSelectedList();
+            Item.CompleteDay = DateTime.MinValue.AddYears(1753);
+
+            SelectedTagsId = GetTagsId();
 
             DialogResult = true;
             Close();
         }
 
+        private IEnumerable<int> GetTagsId()
+        {
+            return from TagModel i in TagsListBox.SelectedItems select i.Id;
+        }
+
+        // Delete TO-DO item.
         private void Delete_OnClick(object sender, RoutedEventArgs e)
         {
             ToDelete = true;
-            DatabaseOperations.RemoveTagsFromToDoItem(Item.Id);
 
             Close();
         }
 
         private void FillTagsCollection()
         {
-            using (var connection = new SQLiteConnection(_connectionString))
+            // Getting all tags.
+            var collection = _tagService.Get(i => true).ToList();
+
+            foreach (var i in collection)
             {
-                const string command = "SELECT * FROM Tags";
-
-                connection.Open();
-
-                using (var cmd = new SQLiteCommand(command, connection))
-                {
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            _tagsList.Add(new Tag
-                            {
-                                Id   = long.Parse(reader["ID"].ToString()),
-                                Text = reader["Text"].ToString()
-                            });
-                        }
-                    }
-                }
-            }
-        }
-
-        private void FillSelectedList()
-        {
-            SelectedTags = new List<Tag>();
-
-            foreach (Tag i in TagsListBox.SelectedItems)
-            {
-                SelectedTags.Add(i);
+                _tagsList.Add(i);
             }
         }
 
         private void SelectTags()
         {
-            using (var connection = new SQLiteConnection(_connectionString))
+            var collection = _tagService.GetSelected(Item.Id).ToList();
+
+            foreach (var i in collection)
             {
-                // Selecting all tags, which has TO-DO item.
-                const string command =
-                    "SELECT a.ID, a.Text FROM Tags AS a, ItemsTags AS b WHERE @id=b.ItemID AND a.ID=b.TagID";
-
-                connection.Open();
-
-                using (var cmd = new SQLiteCommand(command, connection))
-                {
-                    cmd.Prepare();
-
-                    cmd.Parameters.AddWithValue("@id", Item.Id);
-
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            var tag = new Tag
-                            {
-                                Id   = long.Parse(reader["ID"].ToString()),
-                                Text = reader["Text"].ToString()
-                            };
-
-                            TagsListBox.SelectedItems.Add(tag);
-                        }
-                    }
-                }
+                TagsListBox.SelectedItems.Add(i);
             }
         }
 
@@ -169,8 +129,12 @@ namespace CourseProjectWPF
 
             if (window.ShowDialog() == false) return;
 
-            var tag = new Tag {Text = window.NewText, Id = AddTag(window.NewText)};
+            var tag = new TagModel
+            {
+                Text = window.NewText,
+            };
 
+            _tagService.Add(tag);
             _tagsList.Add(tag);
         }
 
@@ -179,83 +143,24 @@ namespace CourseProjectWPF
             if (TagsListBox.SelectedItems.Count == 0) return;
 
             var window = new TagWindow();
+            var tag    = _tagsList[TagsListBox.SelectedIndex];
 
             if (window.ShowDialog() == false) return;
 
-            _tagsList[TagsListBox.SelectedIndex].Text = window.NewText;
-            ReplaceTag(_tagsList[TagsListBox.SelectedIndex]);
+            tag.Text = window.NewText;
+            
+            _tagsList[TagsListBox.SelectedIndex].Text = tag.Text;
+            _tagService.Update(tag);
         }
 
         private void DeleteButton_OnClick(object sender, RoutedEventArgs e)
         {
             if (TagsListBox.SelectedItems.Count == 0) return;
 
-            var id = _tagsList[TagsListBox.SelectedIndex].Id;
+            var tag = _tagsList[TagsListBox.SelectedIndex];
 
-            _tagsList.RemoveAt(TagsListBox.SelectedIndex);
-            RemoveTagFromDatabase(id);
-        }
-
-        private long AddTag(string text)
-        {
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                const string command = "INSERT INTO Tags(Text) VALUES (@text)";
-
-                connection.Open();
-
-                using (var cmd = new SQLiteCommand(command, connection))
-                {
-                    cmd.Prepare();
-
-                    cmd.Parameters.AddWithValue("@text", text);
-
-                    cmd.ExecuteNonQuery();
-                }
-
-                return DatabaseOperations.GetLastWrittenId(connection);
-            }
-        }
-
-        private void ReplaceTag(Tag tag)
-        {
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                const string command = "REPLACE INTO Tags(ID, Text) VALUES (@id, @text)";
-
-                connection.Open();
-
-                using (var cmd = new SQLiteCommand(command, connection))
-                {
-                    cmd.Prepare();
-
-                    cmd.Parameters.AddWithValue("@id", tag.Id);
-                    cmd.Parameters.AddWithValue("@text", tag.Text);
-
-                    cmd.ExecuteNonQuery();
-                }
-            }
-        }
-
-        private void RemoveTagFromDatabase(long id)
-        {
-            DatabaseOperations.RemoveTagConnections(id);
-
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                const string command = "DELETE FROM Tags WHERE ID=@id";
-
-                connection.Open();
-
-                using (var cmd = new SQLiteCommand(command, connection))
-                {
-                    cmd.Prepare();
-
-                    cmd.Parameters.AddWithValue("@id", id);
-
-                    cmd.ExecuteNonQuery();
-                }
-            }
+            if (_tagService.Remove(tag))
+                _tagsList.Remove(tag);
         }
     }
 }

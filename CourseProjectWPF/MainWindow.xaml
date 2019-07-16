@@ -30,12 +30,12 @@
                     <ColumnDefinition Width="250" />
                     <ColumnDefinition Width="90" />
                 </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="5 0 0 0">
+                <Canvas Grid.Column="0" HorizontalAlignment="Left" Margin="5 0 0 0">
                     <TextBox Name="SearchTextBox" Width="150"
                              materialDesign:HintAssist.Hint="Tags"
-                             Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
-                    <Button Content="Search" Width="75" Height="25" Margin="10 15 0 0" Click="Search_OnClick" />
-                </StackPanel>
+                             Style="{StaticResource MaterialDesignTextBoxBase}" Margin="0" />
+                    <Button Content="Search" Width="75" Height="25" Margin="160 5 0 0" Click="Search_OnClick" />
+                </Canvas>
                 <Expander Grid.Column="1" Name="SearchExpander"
                           Style="{StaticResource MaterialDesignExpander}" Margin="5 0 0 0">
                     <ListBox Name="FoundToDoItems"

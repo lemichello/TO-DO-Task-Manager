@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:CourseProjectWPF"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="" Height="140" Width="200" WindowStartupLocation="CenterScreen">
+        Title="" Height="140" Width="200" WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow"
+        ShowInTaskbar="False">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

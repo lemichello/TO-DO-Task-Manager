@@ -1,26 +1,28 @@
-using ClassLibrary.Classes;
 using System;
 using System.Collections.ObjectModel;
-using System.Configuration;
-using System.Data.SQLite;
 using System.Windows;
 using System.Windows.Controls;
-using CourseProjectWPF.Classes;
+using BUS.Models;
+using BUS.Services;
 
 namespace CourseProjectWPF
 {
     public partial class LogbookPage
     {
-        private readonly ObservableCollection<ToDoItem> _toDoItemsCollection;
-        private readonly string                         _connectionString;
-        private readonly MainWindow                     _parent;
+        private readonly ObservableCollection<LogbookToDoItem> _toDoItemsCollection;
+        private readonly ToDoItemService                     _itemService;
+        private readonly TagService                          _tagService;
+        private readonly MainWindow                          _parent;
+        private readonly int                                 _userId;
 
         public LogbookPage(MainWindow window)
         {
             InitializeComponent();
 
-            _toDoItemsCollection = new ObservableCollection<ToDoItem>();
-            _connectionString    = ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
+            _userId              = 1;
+            _toDoItemsCollection = new ObservableCollection<LogbookToDoItem>();
+            _itemService         = new ToDoItemService(_userId);
+            _tagService          = new TagService(_userId);
             _parent              = window;
 
             FillCollection();
@@ -28,13 +30,19 @@ namespace CourseProjectWPF
             ToDoItemsListView.ItemsSource = _toDoItemsCollection;
         }
 
+        public class LogbookToDoItem : ToDoItemModel
+        {
+            public string CompleteDateStr { get; set; }
+        }
+        
         private void ToDoItemsListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var index = ToDoItemsListView.SelectedIndex;
 
             if (index == -1) return;
 
-            var itemWindow = new ToDoItemWindow(_toDoItemsCollection[index]);
+            var item       = _toDoItemsCollection[index];
+            var itemWindow = new ToDoItemWindow(_toDoItemsCollection[index], _userId);
 
             ToDoItemsListView.SelectedItem = null;
 
@@ -42,8 +50,8 @@ namespace CourseProjectWPF
 
             if (itemWindow.ToDelete)
             {
-                DeleteToDoItem(_toDoItemsCollection[index]);
-                _toDoItemsCollection.RemoveAt(index);
+                _itemService.Remove(item);
+                _parent.UpdateUpcomingPage();
 
                 return;
             }
@@ -51,54 +59,28 @@ namespace CourseProjectWPF
             // User closed a window.
             if (itemWindow.DialogResult == false) return;
 
-            itemWindow.Item.CompleteDay = _toDoItemsCollection[index].CompleteDay;
-
-            ReplaceToDoItem(itemWindow.Item);
+            _itemService.Update(itemWindow.Item);
+            _tagService.ReplaceItemsTags(itemWindow.Item.Id, itemWindow.SelectedTagsId);
             _parent.UpdateLogbookPage();
         }
 
         private void FillCollection()
         {
-            using (var connection = new SQLiteConnection(_connectionString))
+            var items = _itemService.Get(i => i.CompleteDay != DateTime.MinValue.AddYears(1753));
+
+            foreach (var i in items)
             {
-                const string command = "SELECT * FROM LogbookItems";
-
-                connection.Open();
-
-                using (var cmd = new SQLiteCommand(command, connection))
+                _toDoItemsCollection.Add(new LogbookToDoItem
                 {
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            var item = CreateToDoItem(reader);
-
-                            _toDoItemsCollection.Add(item);
-                        }
-                    }
-                }
+                    Id = i.Id,
+                    Header = i.Header,
+                    Notes = i.Notes,
+                    Date = i.Date,
+                    Deadline = i.Deadline,
+                    CompleteDay = i.CompleteDay,
+                    CompleteDateStr = i.CompleteDay.ToShortDateString()
+                });
             }
-        }
-
-        private static ToDoItem CreateToDoItem(SQLiteDataReader reader)
-        {
-            var item = new ToDoItem
-            {
-                Id     = int.Parse(reader["ID"].ToString()),
-                Header = reader["Header"].ToString(),
-                Notes  = reader["Notes"].ToString()
-            };
-
-            if (reader["Date"].ToString() != "")
-                item.Date = DateTime.MinValue.AddMilliseconds(long.Parse(reader["Date"].ToString()));
-
-            if (reader["Deadline"].ToString() != "")
-                item.Deadline =
-                    DateTime.MinValue.AddMilliseconds(long.Parse(reader["Deadline"].ToString()));
-
-            item.CompleteDay = reader["CompleteDay"].ToString();
-
-            return item;
         }
 
         // Recover ToDoItem from Logbook page.
@@ -118,66 +100,10 @@ namespace CourseProjectWPF
             var index        = ToDoItemsListView.Items.IndexOf(selectedItem);
             var toDoItem     = _toDoItemsCollection[index];
 
-            DeleteToDoItem(toDoItem);
+            toDoItem.CompleteDay = DateTime.MinValue.AddYears(1753);
 
-            DatabaseOperations.AddToDoItem(toDoItem);
+            _itemService.Update(toDoItem);
             _toDoItemsCollection.RemoveAt(index);
-        }
-
-        private void DeleteToDoItem(ToDoItem item)
-        {
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                connection.Open();
-
-                const string command = "DELETE FROM LogbookItems WHERE ID=@id";
-
-                using (var cmd = new SQLiteCommand(command, connection))
-                {
-                    cmd.Prepare();
-
-                    cmd.Parameters.AddWithValue("@id", item.Id);
-
-                    cmd.ExecuteNonQuery();
-                }
-            }
-        }
-
-        private void ReplaceToDoItem(ToDoItem item)
-        {
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                const string command =
-                    "REPLACE INTO LogbookItems(ID, Header, Notes, Date, Deadline, CompleteDay) VALUES (@id, @header, @notes, @date, @deadline, @completeDay)";
-
-                connection.Open();
-
-                using (var cmd = new SQLiteCommand(command, connection))
-                {
-                    cmd.Prepare();
-
-                    FillCommandParameters(item, cmd);
-
-                    cmd.ExecuteNonQuery();
-                }
-            }
-        }
-
-        private static void FillCommandParameters(ToDoItem item, SQLiteCommand cmd)
-        {
-            cmd.Parameters.AddWithValue("@id", item.Id);
-            cmd.Parameters.AddWithValue("@header", item.Header);
-            cmd.Parameters.AddWithValue("@notes", item.Notes);
-
-            cmd.Parameters.AddWithValue("@date",
-                item.Date != DateTime.MinValue
-                    ? ((long) (item.Date - DateTime.MinValue).TotalMilliseconds).ToString()
-                    : "");
-
-            cmd.Parameters.AddWithValue("@deadline",
-                item.Deadline != DateTime.MinValue ? item.Deadline.ToShortDateString() : "");
-
-            cmd.Parameters.AddWithValue("@completeDay", item.CompleteDay);
         }
     }
 }

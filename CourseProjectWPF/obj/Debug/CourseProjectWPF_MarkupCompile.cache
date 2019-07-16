@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\Maksym\C#\CourseProjectWPF\CourseProjectWPF\obj\Debug\
+D:\Maksym\C#\CourseProjectWPF\CourseProjectWPF\obj\Debug\
 CourseProjectWPF
 none
 false
 DEBUG;TRACE
-C:\Maksym\C#\CourseProjectWPF\CourseProjectWPF\App.xaml
+D:\Maksym\C#\CourseProjectWPF\CourseProjectWPF\App.xaml
 71217460897
 1451208240
 13-961116004
-19815849075
+20218336318
 InboxPage.xaml;LogbookPage.xaml;MainWindow.xaml;TagWindow.xaml;TodayPage.xaml;ToDoItemWindow.xaml;UpcomingPage.xaml;
 
 False

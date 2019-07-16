@@ -1,13 +1,10 @@
-﻿using ClassLibrary.Classes;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Configuration;
-using System.Data.SQLite;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Animation;
 using System.Windows.Threading;
+using BUS.Models;
+using BUS.Services;
 using CourseProjectWPF.Classes;
 
 namespace CourseProjectWPF
@@ -17,16 +14,20 @@ namespace CourseProjectWPF
     /// </summary>
     public partial class UpcomingPage : Page
     {
-        private readonly string                  _connectionString;
         private readonly List<UpcomingToDoItems> _upcomingItemsCollection;
+        private readonly ToDoItemService         _itemService;
+        private readonly TagService              _tagService;
         private readonly MainWindow              _parent;
+        private readonly int                     _userId;
 
         public UpcomingPage(MainWindow window)
         {
             InitializeComponent();
 
+            _userId                  = 1;
             _upcomingItemsCollection = new List<UpcomingToDoItems>();
-            _connectionString        = ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
+            _itemService             = new ToDoItemService(_userId);
+            _tagService              = new TagService(_userId);
             _parent                  = window;
 
             FillCollection();
@@ -36,15 +37,18 @@ namespace CourseProjectWPF
 
         private void AddButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var itemWindow = new ToDoItemWindow();
+            var itemWindow = new ToDoItemWindow(_userId);
 
             itemWindow.ShowDialog();
 
             if (itemWindow.DialogResult == false) return;
 
-            itemWindow.Item.Id = DatabaseOperations.AddToDoItem(itemWindow.Item);
+            _itemService.Add(itemWindow.Item);
 
-            DatabaseOperations.AddTagsToItem(itemWindow.Item.Id, itemWindow.SelectedTags);
+            if (itemWindow.Item.Id == -1)
+                return;
+
+            _tagService.ReplaceItemsTags(itemWindow.Item.Id, itemWindow.SelectedTagsId);
 
             _parent.UpdateUpcomingPage();
         }
@@ -55,91 +59,79 @@ namespace CourseProjectWPF
 
             if (listView.SelectedIndex == -1) return;
 
-            var item       = listView.SelectedItem as ToDoItem;
-            var itemWindow = new ToDoItemWindow(item);
+            var item = listView.SelectedItem as ToDoItemModel;
+            var itemWindow = new ToDoItemWindow(item, _userId);
 
-            listView.SelectedIndex = -1;
+            listView.SelectedItem = null;
+
             itemWindow.ShowDialog();
 
             if (itemWindow.ToDelete)
             {
-                DatabaseOperations.RemoveToDoItem(item);
+                _itemService.Remove(item);
                 _parent.UpdateUpcomingPage();
-
+                
                 return;
             }
 
+            // User closed a window.
             if (itemWindow.DialogResult == false) return;
 
-            DatabaseOperations.ReplaceToDoItem(itemWindow.Item);
-            DatabaseOperations.ReplaceToDoItemTags(itemWindow.Item.Id, itemWindow.SelectedTags);
-
+            _itemService.Update(itemWindow.Item);
+            _tagService.ReplaceItemsTags(itemWindow.Item.Id, itemWindow.SelectedTagsId);
             _parent.UpdateUpcomingPage();
         }
 
         private void ToDoItem_OnChecked(object sender, RoutedEventArgs e)
         {
-            /*var item = ((FrameworkElement) sender).DataContext;
-
-            DatabaseOperations.RemoveTagsFromToDoItem(((ToDoItem) item).Id);
-            DatabaseOperations.RemoveToDoItem(item as ToDoItem);
-            DatabaseOperations.AddToDoItemToLogbook(item as ToDoItem);
-
-            _parent.UpdateUpcomingPage();*/
-            
             var item     = ((FrameworkElement) sender).DataContext;
-            var toDoItem = (ToDoItem) item;
+            var toDoItem = (ToDoItemModel) item;
             var timer = new DispatcherTimer
             {
                 Interval = new TimeSpan(0, 0, 2)
             };
-            
+
             timer.Tick += Timer_OnTick;
             timer.Tag  =  toDoItem;
 
             toDoItem.Timer = timer;
-            
+
             timer.Start();
         }
-        
+
         private void ToDoItem_OnUnchecked(object sender, RoutedEventArgs e)
         {
             var item     = ((FrameworkElement) sender).DataContext;
-            var toDoItem = (ToDoItem) item;
-            
+            var toDoItem = (ToDoItemModel) item;
+
             toDoItem.Timer.Stop();
         }
 
         private void Timer_OnTick(object sender, EventArgs e)
         {
             var timer    = (DispatcherTimer) sender;
-            var toDoItem = (ToDoItem) timer.Tag;
-            
-            DatabaseOperations.RemoveTagsFromToDoItem(toDoItem.Id);
-            DatabaseOperations.RemoveToDoItem(toDoItem);
-            DatabaseOperations.AddToDoItemToLogbook(toDoItem);
+            var toDoItem = (ToDoItemModel) timer.Tag;
 
-            _parent.UpdateUpcomingPage();
+            toDoItem.CompleteDay = DateTime.Today;
+
+            _itemService.Update(toDoItem);
             
             toDoItem.Timer.Stop();
+
+            _parent.UpdateUpcomingPage();
         }
 
         private void FillCollection()
         {
-            using (var connection = new SQLiteConnection(_connectionString))
+            // Fill next 7 days by TO-DO items.
+            for (var i = 1; i <= 7; i++)
             {
-                connection.Open();
+                _upcomingItemsCollection.Add(new UpcomingToDoItems(ref i, _itemService, true));
+            }
 
-                // Fill next 7 days by TO-DO items.
-                for (var i = 1; i <= 7; i++)
-                {
-                    _upcomingItemsCollection.Add(new UpcomingToDoItems(ref i, connection, true));
-                }
-
-                for (var i = 0; i < 5; i++)
-                {
-                    _upcomingItemsCollection.Add(new UpcomingToDoItems(ref i, connection, false));
-                }
+            for (var i = 0; i < 5; i++)
+            {
+                _upcomingItemsCollection.Add(new UpcomingToDoItems(ref i, _itemService, false));
             }
         }
     }
