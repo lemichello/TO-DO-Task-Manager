@@ -1,4 +1,5 @@
 using System;
+using System.Windows.Threading;
 
 namespace BUS.Models
 {
@@ -9,5 +10,7 @@ namespace BUS.Models
         public string Notes { get; set; }
         public DateTime Date { get; set; }
         public DateTime Deadline { get; set; }
+        public DateTime CompleteDay { get; set; }
+        public DispatcherTimer Timer { get; set; }
     }
 }
