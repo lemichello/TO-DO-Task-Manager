@@ -52,6 +52,7 @@
     <Compile Include="Models\TagModel.cs" />
     <Compile Include="Models\ToDoItemModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\TagService.cs" />
     <Compile Include="Services\ToDoItemService.cs" />
   </ItemGroup>
   <ItemGroup>
