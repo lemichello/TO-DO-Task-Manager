@@ -13,15 +13,19 @@ namespace CourseProjectWPF
     /// </summary>
     public partial class MainWindow
     {
-        private readonly int _userId;
-        private readonly TagService _service;
+        private readonly LoginWindow _parent;
+        private readonly int         _userId;
+        private readonly TagService  _service;
+        private          bool        _isLogOut;
 
-        public MainWindow()
+        public MainWindow(LoginWindow parent, int userId)
         {
             InitializeComponent();
 
-            _userId = 1;
-            _service = new TagService(_userId);
+            _isLogOut = false;
+            _parent   = parent;
+            _userId   = userId;
+            _service  = new TagService(_userId);
         }
 
         private void PagesListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -35,19 +39,19 @@ namespace CourseProjectWPF
             switch (PagesListView.SelectedIndex)
             {
                 case 0:
-                    PagesFrame.Content = new InboxPage();
+                    PagesFrame.Content = new InboxPage(_userId);
                     break;
 
                 case 1:
-                    PagesFrame.Content = new TodayPage();
+                    PagesFrame.Content = new TodayPage(_userId);
                     break;
 
                 case 2:
-                    PagesFrame.Content = new UpcomingPage(this);
+                    PagesFrame.Content = new UpcomingPage(this, _userId);
                     break;
 
                 case 3:
-                    PagesFrame.Content = new LogbookPage(this);
+                    PagesFrame.Content = new LogbookPage(this, _userId);
                     break;
 
                 default:
@@ -57,12 +61,12 @@ namespace CourseProjectWPF
 
         public void UpdateUpcomingPage()
         {
-            PagesFrame.Content = new UpcomingPage(this);
+            PagesFrame.Content = new UpcomingPage(this, _userId);
         }
 
         public void UpdateLogbookPage()
         {
-            PagesFrame.Content = new LogbookPage(this);
+            PagesFrame.Content = new LogbookPage(this, _userId);
         }
 
         private void Search_OnClick(object sender, RoutedEventArgs e)
@@ -112,6 +116,19 @@ namespace CourseProjectWPF
                 PagesListView.SelectedIndex = 2;
             else
                 PagesListView.SelectedIndex = 3;
+        }
+
+        private void MainWindow_OnClosed(object sender, EventArgs e)
+        {
+            if (!_isLogOut)
+                _parent.Close();
+        }
+
+        private void LogOutButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            _isLogOut = true;
+            Close();
+            _parent.Show();
         }
     }
 }

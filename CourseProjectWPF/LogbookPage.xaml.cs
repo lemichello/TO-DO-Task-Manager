@@ -15,11 +15,11 @@ namespace CourseProjectWPF
         private readonly MainWindow                          _parent;
         private readonly int                                 _userId;
 
-        public LogbookPage(MainWindow window)
+        public LogbookPage(MainWindow window, int userId)
         {
             InitializeComponent();
 
-            _userId              = 1;
+            _userId              = userId;
             _toDoItemsCollection = new ObservableCollection<LogbookToDoItem>();
             _itemService         = new ToDoItemService(_userId);
             _tagService          = new TagService(_userId);

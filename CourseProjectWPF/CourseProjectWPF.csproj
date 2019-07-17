@@ -74,6 +74,12 @@
     <Compile Include="LogbookPage.xaml.cs">
       <DependentUpon>LogbookPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LoginWindow.xaml.cs">
+      <DependentUpon>LoginWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RegistrationWindow.xaml.cs">
+      <DependentUpon>RegistrationWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TagWindow.xaml.cs">
       <DependentUpon>TagWindow.xaml</DependentUpon>
     </Compile>
@@ -91,6 +97,7 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="LogbookPage.xaml" />
+    <Page Include="LoginWindow.xaml" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -106,6 +113,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="RegistrationWindow.xaml" />
     <Page Include="TagWindow.xaml" />
     <Page Include="TodayPage.xaml">
       <SubType>Designer</SubType>
@@ -145,10 +153,6 @@
     <ProjectReference Include="..\BUS\BUS.csproj">
       <Project>{274f4796-bd44-42ca-a499-12065c72de38}</Project>
       <Name>BUS</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ClassLibrary\ClassLibrary.csproj">
-      <Project>{d550504f-dd85-467f-bd05-dd3b82404bd0}</Project>
-      <Name>ClassLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

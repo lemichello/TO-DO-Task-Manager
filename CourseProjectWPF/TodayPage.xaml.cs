@@ -19,11 +19,11 @@ namespace CourseProjectWPF
         private readonly ToDoItemService                     _service;
         private readonly int _userId;
 
-        public TodayPage()
+        public TodayPage(int userId)
         {
             InitializeComponent();
 
-            _userId = 1;
+            _userId = userId;
             _toDoItemsCollection = new ObservableCollection<ToDoItemModel>();
             _service = new ToDoItemService(_userId);
 
@@ -36,7 +36,7 @@ namespace CourseProjectWPF
 
         private void FillCollection()
         {
-            var collection = _service.Get(item => item.Date == DateTime.Today &&
+            var collection = _service.Get(item => item.Date <= DateTime.Today &&
                                                   item.CompleteDay == DateTime.MinValue.AddYears(1753)).ToList();
 
             foreach (var i in collection)

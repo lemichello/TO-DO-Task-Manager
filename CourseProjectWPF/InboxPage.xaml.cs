@@ -19,11 +19,11 @@ namespace CourseProjectWPF
         private readonly ToDoItemOperations                  _operations;
         private readonly int                                 _userId;
 
-        public InboxPage()
+        public InboxPage(int userId)
         {
             InitializeComponent();
 
-            _userId              = 1;
+            _userId              = userId;
             _toDoItemsCollection = new ObservableCollection<ToDoItemModel>();
             _service             = new ToDoItemService(_userId);
             _operations          = new InboxToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, _userId);

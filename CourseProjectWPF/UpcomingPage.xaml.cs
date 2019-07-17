@@ -20,11 +20,11 @@ namespace CourseProjectWPF
         private readonly MainWindow              _parent;
         private readonly int                     _userId;
 
-        public UpcomingPage(MainWindow window)
+        public UpcomingPage(MainWindow window, int userId)
         {
             InitializeComponent();
 
-            _userId                  = 1;
+            _userId                  = userId;
             _upcomingItemsCollection = new List<UpcomingToDoItems>();
             _itemService             = new ToDoItemService(_userId);
             _tagService              = new TagService(_userId);
