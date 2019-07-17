@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -126,6 +127,13 @@ namespace CourseProjectWPF
 
         private void LogOutButton_OnClick(object sender, RoutedEventArgs e)
         {
+            var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None); 
+            
+            config.AppSettings.Settings["UserId"].Value = "-1";
+            
+            config.Save(ConfigurationSaveMode.Modified);
+            ConfigurationManager.RefreshSection("appSettings");
+            
             _isLogOut = true;
             Close();
             _parent.Show();
