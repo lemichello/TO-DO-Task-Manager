@@ -14,7 +14,7 @@ namespace CourseProjectWPF
             Hide();
 
             _service = new UserService();
-            
+
             IsUserLoggedIn();
         }
 
@@ -27,12 +27,12 @@ namespace CourseProjectWPF
                 Show();
                 return;
             }
-            
+
             var window = new MainWindow(this, int.Parse(loginStatus));
-            
+
             window.Show();
         }
-        
+
         private void EnterButton_OnClick(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(LoginTextBox.Text) ||
@@ -55,22 +55,27 @@ namespace CourseProjectWPF
             window.Show();
             Hide();
 
-            LoginTextBox.Text = string.Empty;
+            LoginTextBox.Text    = string.Empty;
             PasswordBox.Password = string.Empty;
-            
+
+            // User chose to not remember his password. 
+            if (RememberPasswordCheckBox?.IsChecked != null &&
+                !(bool) RememberPasswordCheckBox.IsChecked)
+                return;
+
             SetLoginInfo(id);
         }
 
         private static void SetLoginInfo(int id)
         {
-            var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None); 
-            
+            var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
             config.AppSettings.Settings["UserId"].Value = id.ToString();
-            
+
             config.Save(ConfigurationSaveMode.Modified);
             ConfigurationManager.RefreshSection("appSettings");
         }
-        
+
         private void RegisterButton_OnClick(object sender, RoutedEventArgs e)
         {
             var window = new RegistrationWindow(_service);
