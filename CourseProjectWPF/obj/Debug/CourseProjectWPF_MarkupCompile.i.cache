@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-E:\Maksym\C#\CourseProjectWPF\CourseProjectWPF\obj\Debug\
+C:\Users\user.itstep\Source\Repos\TO-DO-Task-Manager\CourseProjectWPF\obj\Debug\
 CourseProjectWPF
 none
 false
 DEBUG;TRACE
-E:\Maksym\C#\CourseProjectWPF\CourseProjectWPF\App.xaml
-71217460897
+C:\Users\user.itstep\Source\Repos\TO-DO-Task-Manager\CourseProjectWPF\App.xaml
+9-490527132
 
-16378679449
-162033600835
-InboxPage.xaml;LogbookPage.xaml;MainWindow.xaml;TagWindow.xaml;TodayPage.xaml;ToDoItemWindow.xaml;UpcomingPage.xaml;
+18-992992025
+17635927250
+InboxPage.xaml;LogbookPage.xaml;LoginWindow.xaml;MainWindow.xaml;RegistrationWindow.xaml;TagWindow.xaml;TodayPage.xaml;ToDoItemWindow.xaml;UpcomingPage.xaml;
 
-False
+True
 
