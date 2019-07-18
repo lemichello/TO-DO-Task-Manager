@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using BUS.Models;
@@ -51,7 +52,7 @@ namespace CourseProjectWPF
             if (itemWindow.ToDelete)
             {
                 _itemService.Remove(item);
-                _parent.UpdateUpcomingPage();
+                _parent.UpdateLogbookPage();
 
                 return;
             }
@@ -68,7 +69,9 @@ namespace CourseProjectWPF
 
         private void FillCollection()
         {
-            var items = _itemService.Get(i => i.CompleteDay != DateTime.MinValue.AddYears(1753));
+            var items = _itemService.Get(i => i.CompleteDay != DateTime.MinValue.AddYears(1753)).ToList();
+            
+            items.Sort((a, b) => -a.CompleteDay.CompareTo(b.CompleteDay));
 
             foreach (var i in items)
             {

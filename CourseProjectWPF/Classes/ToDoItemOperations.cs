@@ -87,7 +87,7 @@ namespace CourseProjectWPF.Classes
             var timer    = (DispatcherTimer) sender;
             var toDoItem = (ToDoItemModel) timer.Tag;
 
-            toDoItem.CompleteDay = DateTime.Today;
+            toDoItem.CompleteDay = DateTime.Now;
 
             _itemService.Update(toDoItem);
 
