@@ -59,6 +59,8 @@ namespace CourseProjectWPF
             // User closed a window.
             if (itemWindow.DialogResult == false) return;
 
+            itemWindow.Item.CompleteDay = item.CompleteDay;
+
             _itemService.Update(itemWindow.Item);
             _tagService.ReplaceItemsTags(itemWindow.Item.Id, itemWindow.SelectedTagsId);
             _parent.UpdateLogbookPage();
