@@ -37,7 +37,8 @@ namespace CourseProjectWPF
         private void FillCollection()
         {
             var collection = _service.Get(item => item.Date <= DateTime.Today &&
-                                                  item.CompleteDay == DateTime.MinValue.AddYears(1753)).ToList();
+                                                  item.CompleteDay == DateTime.MinValue.AddYears(1753) &&
+                                                  item.Date != DateTime.MinValue.AddYears(1753)).ToList();
 
             foreach (var i in collection)
             {

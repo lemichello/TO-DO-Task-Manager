@@ -8,7 +8,7 @@ namespace DAO.Entities
     {
         [Key] public int Id { get; set; }
         [Required] public string Header { get; set; }
-        [Required] public string Notes { get; set; }
+        public string Notes { get; set; }
         public DateTime Date { get; set; }
         public DateTime Deadline { get; set; }
         public DateTime CompleteDate { get; set; }
