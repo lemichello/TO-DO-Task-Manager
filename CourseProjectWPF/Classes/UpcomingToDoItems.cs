@@ -15,9 +15,9 @@ namespace CourseProjectWPF.Classes
 
         private readonly List<ToDoItemModel> _allItems;
 
-        public UpcomingToDoItems(ref int increaser, ToDoItemService service, bool addToDays)
+        public UpcomingToDoItems(ref int increaser, List<ToDoItemModel> items, bool addToDays)
         {
-            _allItems = service.Get(i => i.CompleteDay == DateTime.MinValue.AddYears(1753)).ToList();
+            _allItems = items;
             Date     = DateTime.Today.AddDays(increaser).Day.ToString();
 
             if (increaser == 0 && !addToDays)

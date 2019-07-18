@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -123,15 +124,17 @@ namespace CourseProjectWPF
 
         private void FillCollection()
         {
+            var allItems = _itemService.Get(i => i.CompleteDay == DateTime.MinValue.AddYears(1753)).ToList();
+
             // Fill next 7 days by TO-DO items.
             for (var i = 1; i <= 7; i++)
             {
-                _upcomingItemsCollection.Add(new UpcomingToDoItems(ref i, _itemService, true));
+                _upcomingItemsCollection.Add(new UpcomingToDoItems(ref i, allItems, true));
             }
 
             for (var i = 0; i < 5; i++)
             {
-                _upcomingItemsCollection.Add(new UpcomingToDoItems(ref i, _itemService, false));
+                _upcomingItemsCollection.Add(new UpcomingToDoItems(ref i, allItems, false));
             }
         }
     }
