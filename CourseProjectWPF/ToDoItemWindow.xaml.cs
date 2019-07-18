@@ -81,6 +81,12 @@ namespace CourseProjectWPF
             else
                 Item.Deadline = DateTime.MinValue.AddYears(1753);
 
+            if (PickedDate.SelectedDate < DateTime.Today)
+            {
+                MessageBox.Show("You can\'t pick date, that is lower than today");
+                return;
+            }
+
             Item.CompleteDay = DateTime.MinValue.AddYears(1753);
 
             SelectedTagsId = GetTagsId();
