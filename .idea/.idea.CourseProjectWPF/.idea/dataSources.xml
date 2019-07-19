@@ -10,11 +10,11 @@
         <property name="enable_load_extension" value="true" />
       </driver-properties>
     </data-source>
-    <data-source source="LOCAL" name="tododatabase@den1.mssql8.gear.host" uuid="4fc1e8fc-5389-46c1-abac-7099a934f80f">
+    <data-source source="LOCAL" name="todotaskdb@den1.mssql8.gear.host" uuid="b5ce85b7-34b2-44ea-97f6-efbbdd923963">
       <driver-ref>sqlserver.ms</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbc-driver>
-      <jdbc-url>jdbc:sqlserver://den1.mssql8.gear.host;database=tododatabase</jdbc-url>
+      <jdbc-url>jdbc:sqlserver://den1.mssql8.gear.host;database=todotaskdb</jdbc-url>
       <driver-properties>
         <property name="applicationName" value="DataGrip" />
       </driver-properties>
