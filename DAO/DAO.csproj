@@ -56,21 +56,9 @@
     <Compile Include="Entities\ToDoItem.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="ErrorHandler.cs" />
-    <Compile Include="Migrations\201907141810328_InitialCreate.cs" />
-    <Compile Include="Migrations\201907141810328_InitialCreate.Designer.cs">
-      <DependentUpon>201907141810328_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201907151452283_ChangeDateAndDeadlineType.cs" />
-    <Compile Include="Migrations\201907151452283_ChangeDateAndDeadlineType.Designer.cs">
-      <DependentUpon>201907151452283_ChangeDateAndDeadlineType.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201907151549573_AddCompleteDayColumn.cs" />
-    <Compile Include="Migrations\201907151549573_AddCompleteDayColumn.Designer.cs">
-      <DependentUpon>201907151549573_AddCompleteDayColumn.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201907181028560_RemoveRequiredAttributeFromNotes.cs" />
-    <Compile Include="Migrations\201907181028560_RemoveRequiredAttributeFromNotes.Designer.cs">
-      <DependentUpon>201907181028560_RemoveRequiredAttributeFromNotes.cs</DependentUpon>
+    <Compile Include="Migrations\201907190919271_InitialCreate.cs" />
+    <Compile Include="Migrations\201907190919271_InitialCreate.Designer.cs">
+      <DependentUpon>201907190919271_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -85,17 +73,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201907141810328_InitialCreate.resx">
-      <DependentUpon>201907141810328_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201907151452283_ChangeDateAndDeadlineType.resx">
-      <DependentUpon>201907151452283_ChangeDateAndDeadlineType.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201907151549573_AddCompleteDayColumn.resx">
-      <DependentUpon>201907151549573_AddCompleteDayColumn.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201907181028560_RemoveRequiredAttributeFromNotes.resx">
-      <DependentUpon>201907181028560_RemoveRequiredAttributeFromNotes.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201907190919271_InitialCreate.resx">
+      <DependentUpon>201907190919271_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

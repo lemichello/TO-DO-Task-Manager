@@ -1,4 +1,4 @@
-﻿namespace DAO.Migrations
+namespace DAO.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
@@ -26,9 +26,10 @@
                     {
                         Id = c.Int(nullable: false, identity: true),
                         Header = c.String(nullable: false),
-                        Notes = c.String(nullable: false),
-                        Date = c.String(),
-                        Deadline = c.String(),
+                        Notes = c.String(),
+                        Date = c.DateTime(nullable: false),
+                        Deadline = c.DateTime(nullable: false),
+                        CompleteDate = c.DateTime(nullable: false),
                         UserId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
