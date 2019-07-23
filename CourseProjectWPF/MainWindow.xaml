@@ -81,10 +81,12 @@
         <DockPanel Grid.Column="1" Background="{DynamicResource MaterialDesignPaper}">
             <Grid DockPanel.Dock="Top">
                 <Button Content="Log out" HorizontalAlignment="Right" Margin="5"
-                Style="{StaticResource MaterialDesignRaisedButton}" Click="LogOutButton_OnClick"/>
+                        Style="{StaticResource MaterialDesignRaisedButton}" Click="LogOutButton_OnClick" />
+                <Button Content="Refresh" HorizontalAlignment="Left" Margin="5"
+                        Style="{StaticResource MaterialDesignRaisedButton}" Click="RefreshButton_OnClick" />
             </Grid>
             <Frame Name="PagesFrame" NavigationUIVisibility="Hidden"
-               Background="{DynamicResource MaterialDesignPaper}" />
+                   Background="{DynamicResource MaterialDesignPaper}" />
         </DockPanel>
     </Grid>
 </Window>

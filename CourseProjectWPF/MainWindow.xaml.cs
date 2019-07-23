@@ -16,7 +16,7 @@ namespace CourseProjectWPF
     {
         private readonly LoginWindow _parent;
         private readonly int         _userId;
-        private readonly TagService  _service;
+        private readonly TagService  _tagService;
         private          bool        _isLogOut;
 
         public MainWindow(LoginWindow parent, int userId)
@@ -26,7 +26,7 @@ namespace CourseProjectWPF
             _isLogOut = false;
             _parent   = parent;
             _userId   = userId;
-            _service  = new TagService(_userId);
+            _tagService  = new TagService(_userId);
         }
 
         private void PagesListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -89,7 +89,7 @@ namespace CourseProjectWPF
 
         private bool FillFoundListBox(IEnumerable<string> tags)
         {
-            var foundItems = _service.GetItemsByTags(tags).ToList();
+            var foundItems = _tagService.GetItemsByTags(tags).ToList();
 
             if (foundItems.Count == 0)
                 return false;
@@ -137,6 +137,13 @@ namespace CourseProjectWPF
             _isLogOut = true;
             Close();
             _parent.Show();
+        }
+
+        private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            _tagService.Refresh();
+            
+            PagesListView_OnSelectionChanged(null, null);
         }
     }
 }
