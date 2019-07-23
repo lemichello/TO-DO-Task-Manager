@@ -227,3 +227,4 @@ C:\Users\user.itstep\Source\Repos\TO-DO-Task-Manager\CourseProjectWPF\obj\Debug\
 C:\Users\user.itstep\Source\Repos\TO-DO-Task-Manager\CourseProjectWPF\obj\Debug\CourseProjectWPF.csproj.CopyComplete
 C:\Users\user.itstep\Source\Repos\TO-DO-Task-Manager\CourseProjectWPF\obj\Debug\CourseProjectWPF.exe
 C:\Users\user.itstep\Source\Repos\TO-DO-Task-Manager\CourseProjectWPF\obj\Debug\CourseProjectWPF.pdb
+D:\Maksym\C#\CourseProjectWPF\CourseProjectWPF\obj\Debug\CourseProjectWPF_Content.g.cs
