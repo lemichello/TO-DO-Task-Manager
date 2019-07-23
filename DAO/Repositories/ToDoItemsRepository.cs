@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using DAO.Entities;
 
@@ -8,7 +9,7 @@ namespace DAO.Repositories
 {
     public class ToDoItemsRepository : IRepository<ToDoItem>
     {
-        private readonly EfContext _context;
+        private EfContext _context;
 
         public ToDoItemsRepository()
         {
@@ -57,6 +58,11 @@ namespace DAO.Repositories
         public void SaveChanges()
         {
             _context.SaveChanges();
+        }
+
+        public void Refresh()
+        {
+            _context = ContextSingleton.GetInstance();
         }
     }
 }

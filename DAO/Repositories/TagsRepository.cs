@@ -7,7 +7,7 @@ namespace DAO.Repositories
 {
     public class TagsRepository : IRepository<Tag>
     {
-        private readonly EfContext _context;
+        private EfContext _context;
 
         public TagsRepository()
         {
@@ -56,6 +56,11 @@ namespace DAO.Repositories
         public void SaveChanges()
         {
             _context.SaveChanges();
+        }
+
+        public void Refresh()
+        {
+            _context = ContextSingleton.GetInstance();
         }
     }
 }

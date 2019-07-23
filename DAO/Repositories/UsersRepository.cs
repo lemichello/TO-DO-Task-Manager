@@ -7,7 +7,7 @@ namespace DAO.Repositories
 {
     public class UsersRepository : IRepository<User>
     {
-        private readonly EfContext _context;
+        private EfContext _context;
 
         public UsersRepository()
         {
@@ -56,6 +56,11 @@ namespace DAO.Repositories
         public void SaveChanges()
         {
             _context.SaveChanges();
+        }
+
+        public void Refresh()
+        {
+            _context = ContextSingleton.GetInstance();
         }
     }
 }
