@@ -24,6 +24,14 @@ namespace CourseProjectWPF
                 return;
             }
 
+            if (LoginTextBox.Text.Contains(" ") ||
+                PasswordBox.Password.Contains(" "))
+            {
+                MessageBox.Show("Spaces are not allowed in login and password. " +
+                                "Instead use \'_\' symbol");
+                return;
+            }
+            
             if (PasswordBox.Password != RepeatPasswordBox.Password)
             {
                 MessageBox.Show("Passwords don\'t match");
