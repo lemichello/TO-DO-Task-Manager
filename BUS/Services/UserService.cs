@@ -6,7 +6,7 @@ using DAO.Repositories;
 
 namespace BUS.Services
 {
-    public class UserService
+    public class UserService : Service
     {
         private readonly IRepository<User> _repository;
 

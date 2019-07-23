@@ -7,7 +7,7 @@ using DAO.Repositories;
 
 namespace BUS.Services
 {
-    public class TagService
+    public class TagService : Service
     {
         private readonly IRepository<Tag>     _tagRepository;
         private readonly IRepository<ItemTag> _itemTagRepository;
