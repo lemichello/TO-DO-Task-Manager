@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 using BUS.Models;
 using BUS.Services;
 
@@ -23,10 +25,12 @@ namespace CourseProjectWPF
         {
             InitializeComponent();
 
-            _isLogOut = false;
-            _parent   = parent;
-            _userId   = userId;
-            _tagService  = new TagService(_userId);
+            RefreshButtonImage.Source = new BitmapImage(new Uri(Path.GetFullPath("../../Resources/refresh.png")));
+
+            _isLogOut   = false;
+            _parent     = parent;
+            _userId     = userId;
+            _tagService = new TagService(_userId);
         }
 
         private void PagesListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -127,13 +131,13 @@ namespace CourseProjectWPF
 
         private void LogOutButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None); 
-            
+            var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
             config.AppSettings.Settings["UserId"].Value = "-1";
-            
+
             config.Save(ConfigurationSaveMode.Modified);
             ConfigurationManager.RefreshSection("appSettings");
-            
+
             _isLogOut = true;
             Close();
             _parent.Show();
@@ -142,7 +146,7 @@ namespace CourseProjectWPF
         private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
         {
             _tagService.Refresh();
-            
+
             PagesListView_OnSelectionChanged(null, null);
         }
     }

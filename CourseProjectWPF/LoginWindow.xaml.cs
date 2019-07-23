@@ -64,6 +64,9 @@ namespace CourseProjectWPF
                 return;
 
             SetLoginInfo(id);
+
+            if (RememberPasswordCheckBox != null) 
+                RememberPasswordCheckBox.IsChecked = false;
         }
 
         private static void SetLoginInfo(int id)

@@ -80,10 +80,14 @@
         </StackPanel>
         <DockPanel Grid.Column="1" Background="{DynamicResource MaterialDesignPaper}">
             <Grid DockPanel.Dock="Top">
-                <Button Content="Log out" HorizontalAlignment="Right" Margin="5"
+                <Button Content="Log out" HorizontalAlignment="Right" Margin="5 10 5 5"
                         Style="{StaticResource MaterialDesignRaisedButton}" Click="LogOutButton_OnClick" />
-                <Button Content="Refresh" HorizontalAlignment="Left" Margin="5"
-                        Style="{StaticResource MaterialDesignRaisedButton}" Click="RefreshButton_OnClick" />
+                <Button HorizontalAlignment="Left" Margin="10 20 5 5"
+                        Style="{StaticResource MaterialDesignFloatingActionMiniButton}" Click="RefreshButton_OnClick">
+                    <Grid>
+                        <Image Name="RefreshButtonImage" Width="30" Height="30" />
+                    </Grid>
+                </Button>
             </Grid>
             <Frame Name="PagesFrame" NavigationUIVisibility="Hidden"
                    Background="{DynamicResource MaterialDesignPaper}" />
