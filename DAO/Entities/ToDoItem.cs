@@ -12,8 +12,10 @@ namespace DAO.Entities
         public DateTime Date { get; set; }
         public DateTime Deadline { get; set; }
         public DateTime CompleteDate { get; set; }
+        [ForeignKey("ProjectOf")]public int? ProjectId { get; set; }
         [ForeignKey("UserOf")] public int UserId { get; set; }
 
         public virtual User UserOf { get; set; }
+        public virtual Project ProjectOf { get; set; }
     }
 }

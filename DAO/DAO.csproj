@@ -71,6 +71,14 @@
     <Compile Include="Migrations\201907250711234_AddIsAcceptedColumn.Designer.cs">
       <DependentUpon>201907250711234_AddIsAcceptedColumn.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201907251547403_AddProjectIdForToDoItemTable.cs" />
+    <Compile Include="Migrations\201907251547403_AddProjectIdForToDoItemTable.Designer.cs">
+      <DependentUpon>201907251547403_AddProjectIdForToDoItemTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907251552493_ReplaceProjectIdWithForeignKey.cs" />
+    <Compile Include="Migrations\201907251552493_ReplaceProjectIdWithForeignKey.Designer.cs">
+      <DependentUpon>201907251552493_ReplaceProjectIdWithForeignKey.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IRepository.cs" />
@@ -94,6 +102,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201907250711234_AddIsAcceptedColumn.resx">
       <DependentUpon>201907250711234_AddIsAcceptedColumn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907251547403_AddProjectIdForToDoItemTable.resx">
+      <DependentUpon>201907251547403_AddProjectIdForToDoItemTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907251552493_ReplaceProjectIdWithForeignKey.resx">
+      <DependentUpon>201907251552493_ReplaceProjectIdWithForeignKey.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
