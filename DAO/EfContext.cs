@@ -13,5 +13,7 @@ namespace DAO
         public DbSet<Tag> Tags { get; set; }
         public DbSet<ItemTag> ItemsTags { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<ProjectsUsers> ProjectsUsers { get; set; }
     }
 }

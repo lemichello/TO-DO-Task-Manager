@@ -53,6 +53,8 @@
     <Compile Include="ContextSingleton.cs" />
     <Compile Include="EfContext.cs" />
     <Compile Include="Entities\ItemTag.cs" />
+    <Compile Include="Entities\Project.cs" />
+    <Compile Include="Entities\ProjectsUsers.cs" />
     <Compile Include="Entities\Tag.cs" />
     <Compile Include="Entities\ToDoItem.cs" />
     <Compile Include="Entities\User.cs" />
@@ -61,10 +63,20 @@
     <Compile Include="Migrations\201907191603051_InitialCreate.Designer.cs">
       <DependentUpon>201907191603051_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201907250632459_AddSharedProjects.cs" />
+    <Compile Include="Migrations\201907250632459_AddSharedProjects.Designer.cs">
+      <DependentUpon>201907250632459_AddSharedProjects.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907250711234_AddIsAcceptedColumn.cs" />
+    <Compile Include="Migrations\201907250711234_AddIsAcceptedColumn.Designer.cs">
+      <DependentUpon>201907250711234_AddIsAcceptedColumn.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\ItemsTagsRepository.cs" />
+    <Compile Include="Repositories\ProjectsRepository.cs" />
+    <Compile Include="Repositories\ProjectsUsersRepository.cs" />
     <Compile Include="Repositories\TagsRepository.cs" />
     <Compile Include="Repositories\ToDoItemsRepository.cs" />
     <Compile Include="Repositories\UsersRepository.cs" />
@@ -76,6 +88,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201907191603051_InitialCreate.resx">
       <DependentUpon>201907191603051_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907250632459_AddSharedProjects.resx">
+      <DependentUpon>201907250632459_AddSharedProjects.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907250711234_AddIsAcceptedColumn.resx">
+      <DependentUpon>201907250711234_AddIsAcceptedColumn.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
