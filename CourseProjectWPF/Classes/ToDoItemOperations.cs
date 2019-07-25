@@ -15,11 +15,13 @@ namespace CourseProjectWPF.Classes
         private readonly ToDoItemService                     _itemService;
         private readonly TagService                          _tagService;
         private readonly int                                 _userId;
+        private readonly int?                                _projectId;
 
         internal ToDoItemOperations(ListView toDoItemsListView, ObservableCollection<ToDoItemModel> toDoItemsCollection,
-            int userId)
+            int userId, int? projectId)
         {
             _userId = userId;
+            _projectId = projectId;
 
             _toDoItemsListView   = toDoItemsListView;
             _toDoItemsCollection = toDoItemsCollection;
@@ -38,7 +40,7 @@ namespace CourseProjectWPF.Classes
 
             if (itemWindow.DialogResult == false) return;
 
-            _itemService.Add(itemWindow.Item);
+            _itemService.Add(itemWindow.Item, _projectId);
 
             if (itemWindow.Item.Id != -1 && IsCorrect(itemWindow.Item))
                 _toDoItemsCollection.Add(itemWindow.Item);
@@ -72,6 +74,8 @@ namespace CourseProjectWPF.Classes
             // User closed a window.
             if (itemWindow.DialogResult == false) return;
 
+            itemWindow.Item.ProjectName = item.ProjectName;
+            
             _itemService.Update(itemWindow.Item);
 
             if (IsCorrect(itemWindow.Item))
@@ -128,8 +132,8 @@ namespace CourseProjectWPF.Classes
     {
         public InboxToDoItemOperations(ListView toDoItemsListView,
             ObservableCollection<ToDoItemModel> toDoItemsCollection,
-            int userId) :
-            base(toDoItemsListView, toDoItemsCollection, userId)
+            int userId, int? projectId) :
+            base(toDoItemsListView, toDoItemsCollection, userId, projectId)
         {
         }
 
@@ -144,8 +148,8 @@ namespace CourseProjectWPF.Classes
     {
         public TodayToDoItemOperations(ListView toDoItemsListView,
             ObservableCollection<ToDoItemModel> toDoItemsCollection,
-            int userId) :
-            base(toDoItemsListView, toDoItemsCollection, userId)
+            int userId, int? projectId) :
+            base(toDoItemsListView, toDoItemsCollection, userId, projectId)
         {
         }
 
@@ -153,6 +157,20 @@ namespace CourseProjectWPF.Classes
         {
             // User chose today's date for task.
             return item.Date.ToShortDateString() == DateTime.Now.ToShortDateString();
+        }
+    }
+
+    internal sealed class SharedToDoItemOperations : ToDoItemOperations
+    {
+        public SharedToDoItemOperations(ListView toDoItemsListView,
+            ObservableCollection<ToDoItemModel> toDoItemsCollection, int userId, int? projectId) : base(toDoItemsListView,
+            toDoItemsCollection, userId, projectId)
+        {
+        }
+
+        protected override bool IsCorrect(ToDoItemModel item)
+        {
+            return true;
         }
     }
 }

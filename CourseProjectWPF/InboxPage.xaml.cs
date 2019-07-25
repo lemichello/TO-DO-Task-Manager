@@ -26,7 +26,7 @@ namespace CourseProjectWPF
             _userId              = userId;
             _toDoItemsCollection = new ObservableCollection<ToDoItemModel>();
             _service             = new ToDoItemService(_userId);
-            _operations          = new InboxToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, _userId);
+            _operations          = new InboxToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, _userId, null);
 
             FillCollection();
 
@@ -55,8 +55,10 @@ namespace CourseProjectWPF
 
         private void FillCollection()
         {
-            var collection = _service.Get(item => item.Date == DateTime.MinValue.AddYears(1753) &&
-                                                  item.CompleteDay == DateTime.MinValue.AddYears(1753)).ToList();
+            var collection = _service.Get(item =>
+                item.Date == DateTime.MinValue.AddYears(1753) &&
+                item.CompleteDay == DateTime.MinValue.AddYears(1753) &&
+                item.ProjectName == "").ToList();
 
             foreach (var i in collection)
             {

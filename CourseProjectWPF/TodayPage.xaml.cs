@@ -31,7 +31,7 @@ namespace CourseProjectWPF
 
             ToDoItemsListView.ItemsSource = _toDoItemsCollection;
             _toDoItemOperations =
-                new TodayToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, _userId);
+                new TodayToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, _userId, null);
         }
 
         private void FillCollection()

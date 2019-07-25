@@ -10,6 +10,7 @@ namespace CourseProjectWPF
 {
     public partial class ToDoItemWindow : Window
     {
+        private readonly DateTime _minDate = DateTime.MinValue.AddYears(1753);
         private readonly ObservableCollection<TagModel> _tagsList;
         private readonly TagService                     _tagService;
         public IEnumerable<int> SelectedTagsId { get; set; }
@@ -48,10 +49,10 @@ namespace CourseProjectWPF
             HeaderText.Text = item.Header;
             NotesText.Text  = item.Notes;
 
-            if (item.Date != DateTime.MinValue.AddYears(1753))
+            if (item.Date != _minDate)
                 PickedDate.SelectedDate = item.Date;
 
-            if (item.Deadline != DateTime.MinValue.AddYears(1753))
+            if (item.Deadline != _minDate)
                 PickedDeadline.SelectedDate = item.Deadline;
 
             PickedDate.DisplayDateStart     = DateTime.Now;
@@ -74,20 +75,14 @@ namespace CourseProjectWPF
             if (PickedDate.SelectedDate != null)
                 Item.Date = (DateTime) PickedDate.SelectedDate;
             else
-                Item.Date = DateTime.MinValue.AddYears(1753);
+                Item.Date = _minDate;
 
             if (PickedDeadline.SelectedDate != null)
                 Item.Deadline = (DateTime) PickedDeadline.SelectedDate;
             else
-                Item.Deadline = DateTime.MinValue.AddYears(1753);
+                Item.Deadline = _minDate;
 
-            if (PickedDate.SelectedDate < DateTime.Today)
-            {
-                MessageBox.Show("You can\'t pick date, that is lower than today");
-                return;
-            }
-
-            Item.CompleteDay = DateTime.MinValue.AddYears(1753);
+            Item.CompleteDay = _minDate;
 
             SelectedTagsId = GetTagsId();
 

@@ -18,7 +18,7 @@ namespace CourseProjectWPF.Classes
         public UpcomingToDoItems(ref int increaser, List<ToDoItemModel> items, bool addToDays)
         {
             _allItems = items;
-            Date     = DateTime.Today.AddDays(increaser).Day.ToString();
+            Date      = DateTime.Today.AddDays(increaser).Day.ToString();
 
             if (increaser == 0 && !addToDays)
             {

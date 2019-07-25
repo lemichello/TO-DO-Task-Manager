@@ -85,6 +85,9 @@
     <Compile Include="RegistrationWindow.xaml.cs">
       <DependentUpon>RegistrationWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SharedProjectPage.xaml.cs">
+      <DependentUpon>SharedProjectPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TagWindow.xaml.cs">
       <DependentUpon>TagWindow.xaml</DependentUpon>
     </Compile>
@@ -119,6 +122,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="RegistrationWindow.xaml" />
+    <Page Include="SharedProjectPage.xaml" />
     <Page Include="TagWindow.xaml" />
     <Page Include="TodayPage.xaml">
       <SubType>Designer</SubType>

@@ -44,7 +44,7 @@ namespace CourseProjectWPF
 
             if (itemWindow.DialogResult == false) return;
 
-            _itemService.Add(itemWindow.Item);
+            _itemService.Add(itemWindow.Item, null);
 
             if (itemWindow.Item.Id == -1)
                 return;

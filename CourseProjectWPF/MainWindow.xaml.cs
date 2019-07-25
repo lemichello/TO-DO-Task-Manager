@@ -50,25 +50,25 @@ namespace CourseProjectWPF
             _projects.Add(new ProjectView
             {
                 ImageSource = "Resources/inbox.png",
-                ProjectName = "Inbox"
+                Name = "Inbox"
             });
 
             _projects.Add(new ProjectView
             {
                 ImageSource = "Resources/today.png",
-                ProjectName = "Today"
+                Name = "Today"
             });
 
             _projects.Add(new ProjectView
             {
                 ImageSource = "Resources/upcoming.png",
-                ProjectName = "Upcoming"
+                Name = "Upcoming"
             });
 
             _projects.Add(new ProjectView
             {
                 ImageSource = "Resources/logbook.png",
-                ProjectName = "Logbook"
+                Name = "Logbook"
             });
         }
 
@@ -80,21 +80,24 @@ namespace CourseProjectWPF
             {
                 _projects.Add(new ProjectView
                 {
+                    Id          = project.Id,
                     ImageSource = Path.GetFullPath("../../Resources/shared.png"),
-                    ProjectName = project.Name
+                    Name = project.Name
                 });
             }
         }
 
         private void PagesListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (ProjectsListView.SelectedIndex == -1)
+            var selectedIndex = ProjectsListView.SelectedIndex;
+
+            if (selectedIndex == -1)
             {
                 PagesFrame.Content = null;
                 return;
             }
 
-            switch (ProjectsListView.SelectedIndex)
+            switch (selectedIndex)
             {
                 case 0:
                     PagesFrame.Content = new InboxPage(_userId);
@@ -113,7 +116,10 @@ namespace CourseProjectWPF
                     break;
 
                 default:
-                    throw new NotImplementedException();
+                    var project = ((ProjectView) ProjectsListView.Items[selectedIndex]);
+
+                    PagesFrame.Content = new SharedProjectPage(project.Id,project.Name, _userId);
+                    break;
             }
         }
 
@@ -163,17 +169,29 @@ namespace CourseProjectWPF
             if (index == -1) return;
 
             var selectedToDoItem = (ToDoItemModel) FoundToDoItems.Items[index];
+            var minDate          = DateTime.MinValue.AddYears(1753);
 
-            if (selectedToDoItem.Date == DateTime.MinValue.AddYears(1753))
+            // Inbox page.
+            if (selectedToDoItem.Date == minDate)
                 ProjectsListView.SelectedIndex = 0;
-
+            // Today page.
             else if (selectedToDoItem.Date == DateTime.Today)
                 ProjectsListView.SelectedIndex = 1;
-
-            else if (selectedToDoItem.CompleteDay == DateTime.MinValue.AddYears(1753))
+            // Upcoming page.
+            else if (selectedToDoItem.CompleteDay == minDate)
                 ProjectsListView.SelectedIndex = 2;
-            else
+            // Logbook page.
+            else if (selectedToDoItem.ProjectName == "")
                 ProjectsListView.SelectedIndex = 3;
+            // Project page.
+            else
+            {
+                var foundProjects = _projectService.GetProjects().ToList();
+                var projectIndex = foundProjects
+                    .IndexOf(foundProjects.First(i => i.Name == selectedToDoItem.ProjectName));
+
+                ProjectsListView.SelectedIndex = projectIndex;
+            }
         }
 
         private void MainWindow_OnClosed(object sender, EventArgs e)
@@ -217,17 +235,19 @@ namespace CourseProjectWPF
                 return;
             }
 
-            if (!_projectService.AddProject(new ProjectModel
-            {
-                Name = ProjectNameTextBox.Text
-            }, InvitedUsersTextBox.Text.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries)))
+            var userLogins = InvitedUsersTextBox.Text.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+            var projectId  = _projectService.AddProject(new ProjectModel {Name = ProjectNameTextBox.Text}, userLogins);
+
+            if (projectId == -1)
                 return;
-            
+
             _projects.Add(new ProjectView
             {
+                Id          = projectId,
                 ImageSource = Path.GetFullPath("../../Resources/shared.png"),
-                ProjectName = ProjectNameTextBox.Text
+                Name = ProjectNameTextBox.Text
             });
+
             CancelButton_OnClick(null, null);
         }
 

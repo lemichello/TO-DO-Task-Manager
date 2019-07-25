@@ -29,7 +29,7 @@
             <TextBlock Text="Tags" FontSize="20" HorizontalAlignment="Center" />
             <ListBox Name="TagsListBox" BorderThickness="0" Height="297" SelectionMode="Multiple" FontSize="20"
                      Margin="0 17 0 0" Style="{StaticResource MaterialDesignListBox}">
-            <ListBox.ItemTemplate>
+                <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Text}" />
                     </DataTemplate>
@@ -50,9 +50,11 @@
                      Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                      materialDesign:HintAssist.Hint="Notes" />
             <Label Content="Date" FontSize="17" Margin="5" Height="30" Style="{StaticResource MaterialDesignLabel}" />
-            <DatePicker Name="PickedDate" Margin="5" Height="30" Style="{StaticResource MaterialDesignDatePicker}" />
+            <DatePicker Name="PickedDate" Margin="5" Height="30" Style="{StaticResource MaterialDesignDatePicker}"
+                        Focusable="False" />
             <Label Content="Deadline" FontSize="17" Margin="5" Height="30" Style="{StaticResource MaterialDesignLabel}" />
-            <DatePicker Name="PickedDeadline" Margin="5" Height="30" Style="{StaticResource MaterialDesignDatePicker}" />
+            <DatePicker Name="PickedDeadline" Margin="5" Height="30" Style="{StaticResource MaterialDesignDatePicker}"
+                        Focusable="False" />
             <Button Content="Save" FontSize="16" Height="30" Click="Save_OnClick"
                     Margin="5 20 5 0" Style="{StaticResource MaterialDesignRaisedButton}" />
             <Button Content="Delete" FontSize="16" Height="30" Click="Delete_OnClick"
