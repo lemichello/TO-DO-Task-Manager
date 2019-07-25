@@ -22,7 +22,7 @@ namespace BUS.Services
             _userId                = userId;
         }
 
-        public bool AddProject(ProjectModel project, IEnumerable<string> userLogins)
+        public int AddProject(ProjectModel project, IEnumerable<string> userLogins)
         {
             var users  = _userRepository.Get().ToList();
             var logins = userLogins.ToList();
@@ -30,20 +30,20 @@ namespace BUS.Services
             if (!logins.All(i => users.Any(user => user.Login == i)))
             {
                 MessageBox.Show("One of user logins doesn't exist");
-                return false;
+                return -1;
             }
 
             if (logins.Contains(users.First(user => user.Id == _userId).Login))
             {
                 MessageBox.Show("You can't invite yourself. This will be done automatically");
-                return false;
+                return -1;
             }
 
             var newProject = new Project {Name = project.Name};
 
             if (!_projectRepository.Add(newProject))
             {
-                return false;
+                return -1;
             }
 
             // Adding user, which created project.
@@ -53,9 +53,8 @@ namespace BUS.Services
                 UserId     = _userId,
                 IsAccepted = true
             });
-
-            // Adding invited users.
-            return AddInvitedUsers(logins, newProject, users);
+            
+            return AddInvitedUsers(logins, newProject, users) ? newProject.Id : -1;
         }
 
         private bool AddInvitedUsers(IEnumerable<string> logins, Project newProject, List<User> users)
@@ -78,11 +77,12 @@ namespace BUS.Services
 
         public IEnumerable<ProjectModel> GetProjects()
         {
-            return _projectUserRepository.Get().ToList().Where(i => i.UserId == _userId).Select(i => new ProjectModel
-            {
-                Id   = i.ProjectId,
-                Name = i.ProjectOf.Name
-            });
+            return _projectUserRepository.Get().ToList().Where(i => i.UserId == _userId && i.IsAccepted).Select(
+                i => new ProjectModel
+                {
+                    Id   = i.ProjectId,
+                    Name = i.ProjectOf.Name
+                });
         }
     }
 }
