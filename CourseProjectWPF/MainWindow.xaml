@@ -24,20 +24,21 @@
             <ColumnDefinition Width="350" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0" Background="#F4F6F8">
-            <Grid Margin="5 20 0 0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="250" />
-                    <ColumnDefinition Width="90" />
-                </Grid.ColumnDefinitions>
-                <Canvas Grid.Column="0" HorizontalAlignment="Left" Margin="5 0 0 0">
+        <Grid Grid.Column="0" Background="#F4F6F8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <StackPanel Margin="5 20 0 0" Grid.Row="0" Orientation="Horizontal">
+                <Canvas HorizontalAlignment="Left" Margin="5 0 0 0">
                     <TextBox Name="SearchTextBox" Width="150"
                              materialDesign:HintAssist.Hint="Tags"
                              Style="{StaticResource MaterialDesignTextBoxBase}" Margin="0" />
                     <Button Content="Search" Width="75" Height="25" Margin="160 5 0 0" Click="Search_OnClick" />
                 </Canvas>
-                <Expander Grid.Column="1" Name="SearchExpander"
-                          Style="{StaticResource MaterialDesignExpander}" Margin="5 0 0 0">
+                <Expander Name="SearchExpander"
+                          Style="{StaticResource MaterialDesignExpander}" Margin="245 0 0 15">
                     <ListBox Name="FoundToDoItems"
                              SelectionChanged="FoundToDoItems_OnSelectionChanged"
                              Style="{StaticResource MaterialDesignListBox}">
@@ -48,36 +49,36 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
                 </Expander>
-            </Grid>
-            <ListView Name="PagesListView" Background="#F4F6F8" BorderThickness="0" Margin="20 30 0 0"
+            </StackPanel>
+            <ListView Grid.Row="1" Name="ProjectsListView" Background="#F4F6F8" BorderThickness="0" Margin="20 30 0 0"
                       SelectionChanged="PagesListView_OnSelectionChanged"
                       Style="{StaticResource MaterialDesignListView}">
-                <ListViewItem>
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="Resources/inbox.png" Style="{StaticResource ImageStyle}" />
-                        <TextBlock Text="Inbox" Style="{StaticResource TextBlockStyle}" />
-                    </StackPanel>
-                </ListViewItem>
-                <ListViewItem Margin="0 5 0 0">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="Resources/today.png" Style="{StaticResource ImageStyle}" />
-                        <TextBlock Text="Today" Style="{StaticResource TextBlockStyle}" />
-                    </StackPanel>
-                </ListViewItem>
-                <ListViewItem Margin="0 5 0 0">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="Resources/upcoming.png" Style="{StaticResource ImageStyle}" />
-                        <TextBlock Text="Upcoming" Style="{StaticResource TextBlockStyle}" />
-                    </StackPanel>
-                </ListViewItem>
-                <ListViewItem Margin="0 5 0 0">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="Resources/logbook.png" Style="{StaticResource ImageStyle}" />
-                        <TextBlock Text="Logbook" Style="{StaticResource TextBlockStyle}" />
-                    </StackPanel>
-                </ListViewItem>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
+                            <Image Source="{Binding ImageSource}" Style="{StaticResource ImageStyle}" />
+                            <TextBlock Text="{Binding ProjectName}" Style="{StaticResource TextBlockStyle}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
             </ListView>
-        </StackPanel>
+            <StackPanel Grid.Row="2" Margin="0 20 0 20">
+                <StackPanel Name="NewProjectStackPanel" HorizontalAlignment="Center" Visibility="Collapsed">
+                    <TextBox Name="ProjectNameTextBox" Style="{StaticResource MaterialDesignTextBox}"
+                             materialDesign:HintAssist.Hint="Project name" FontSize="15" />
+                    <TextBox Name="InvitedUsersTextBox" Style="{StaticResource MaterialDesignTextBox}" Margin="0 10"
+                             materialDesign:HintAssist.Hint="Invited user logins (separate by space)" FontSize="15" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Confirm" Click="ConfirmButton_OnClick"
+                                Style="{StaticResource MaterialDesignRaisedButton}" Width="120" />
+                        <Button Content="Cancel" Style="{StaticResource MaterialDesignRaisedButton}"
+                                Click="CancelButton_OnClick" Margin="10 0 0 0" Width="120" />
+                    </StackPanel>
+                </StackPanel>
+                <Button Name="AddProjectButton" Content="Add shared project" HorizontalAlignment="Center"
+                        Style="{StaticResource MaterialDesignRaisedButton}" Click="AddSharedProjectButton_OnClick" />
+            </StackPanel>
+        </Grid>
         <DockPanel Grid.Column="1" Background="{DynamicResource MaterialDesignPaper}">
             <Grid DockPanel.Dock="Top">
                 <Button Content="Log out" HorizontalAlignment="Right" Margin="5 10 5 5"

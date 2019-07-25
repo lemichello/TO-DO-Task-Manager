@@ -73,6 +73,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Classes\ProjectView.cs" />
     <Compile Include="Classes\ToDoItemOperations.cs" />
     <Compile Include="Classes\UpcomingToDoItems.cs" />
     <Compile Include="LogbookPage.xaml.cs">
@@ -161,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\refresh.png" />
+    <Content Include="Resources\shared.png" />
     <Content Include="Resources\todoIcon.ico" />
     <Resource Include="todoIcon.ico" />
   </ItemGroup>

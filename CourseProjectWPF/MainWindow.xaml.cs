@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Configuration;
 using System.IO;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using BUS.Models;
 using BUS.Services;
+using CourseProjectWPF.Classes;
 
 namespace CourseProjectWPF
 {
@@ -16,14 +18,24 @@ namespace CourseProjectWPF
     /// </summary>
     public partial class MainWindow
     {
-        private readonly LoginWindow _parent;
-        private readonly int         _userId;
-        private readonly TagService  _tagService;
-        private          bool        _isLogOut;
+        private readonly LoginWindow                       _parent;
+        private readonly int                               _userId;
+        private readonly TagService                        _tagService;
+        private readonly ProjectService                    _projectService;
+        private readonly ObservableCollection<ProjectView> _projects;
+        private          bool                              _isLogOut;
 
         public MainWindow(LoginWindow parent, int userId)
         {
             InitializeComponent();
+
+            _projectService = new ProjectService(userId);
+            _projects       = new ObservableCollection<ProjectView>();
+
+            ShowDefaultProjects();
+            ShowSharedProjects();
+
+            ProjectsListView.ItemsSource = _projects;
 
             RefreshButtonImage.Source = new BitmapImage(new Uri(Path.GetFullPath("../../Resources/refresh.png")));
 
@@ -33,15 +45,56 @@ namespace CourseProjectWPF
             _tagService = new TagService(_userId);
         }
 
+        private void ShowDefaultProjects()
+        {
+            _projects.Add(new ProjectView
+            {
+                ImageSource = "Resources/inbox.png",
+                ProjectName = "Inbox"
+            });
+
+            _projects.Add(new ProjectView
+            {
+                ImageSource = "Resources/today.png",
+                ProjectName = "Today"
+            });
+
+            _projects.Add(new ProjectView
+            {
+                ImageSource = "Resources/upcoming.png",
+                ProjectName = "Upcoming"
+            });
+
+            _projects.Add(new ProjectView
+            {
+                ImageSource = "Resources/logbook.png",
+                ProjectName = "Logbook"
+            });
+        }
+
+        private void ShowSharedProjects()
+        {
+            var foundProjects = _projectService.GetProjects().ToList();
+
+            foreach (var project in foundProjects)
+            {
+                _projects.Add(new ProjectView
+                {
+                    ImageSource = Path.GetFullPath("../../Resources/shared.png"),
+                    ProjectName = project.Name
+                });
+            }
+        }
+
         private void PagesListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (PagesListView.SelectedIndex == -1)
+            if (ProjectsListView.SelectedIndex == -1)
             {
                 PagesFrame.Content = null;
                 return;
             }
 
-            switch (PagesListView.SelectedIndex)
+            switch (ProjectsListView.SelectedIndex)
             {
                 case 0:
                     PagesFrame.Content = new InboxPage(_userId);
@@ -112,15 +165,15 @@ namespace CourseProjectWPF
             var selectedToDoItem = (ToDoItemModel) FoundToDoItems.Items[index];
 
             if (selectedToDoItem.Date == DateTime.MinValue.AddYears(1753))
-                PagesListView.SelectedIndex = 0;
+                ProjectsListView.SelectedIndex = 0;
 
             else if (selectedToDoItem.Date == DateTime.Today)
-                PagesListView.SelectedIndex = 1;
+                ProjectsListView.SelectedIndex = 1;
 
             else if (selectedToDoItem.CompleteDay == DateTime.MinValue.AddYears(1753))
-                PagesListView.SelectedIndex = 2;
+                ProjectsListView.SelectedIndex = 2;
             else
-                PagesListView.SelectedIndex = 3;
+                ProjectsListView.SelectedIndex = 3;
         }
 
         private void MainWindow_OnClosed(object sender, EventArgs e)
@@ -148,6 +201,43 @@ namespace CourseProjectWPF
             _tagService.Refresh();
 
             PagesListView_OnSelectionChanged(null, null);
+        }
+
+        private void AddSharedProjectButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            NewProjectStackPanel.Visibility = Visibility.Visible;
+            AddProjectButton.Visibility     = Visibility.Collapsed;
+        }
+
+        private void ConfirmButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(ProjectNameTextBox.Text))
+            {
+                MessageBox.Show("You need to fill project name field");
+                return;
+            }
+
+            if (!_projectService.AddProject(new ProjectModel
+            {
+                Name = ProjectNameTextBox.Text
+            }, InvitedUsersTextBox.Text.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries)))
+                return;
+            
+            _projects.Add(new ProjectView
+            {
+                ImageSource = Path.GetFullPath("../../Resources/shared.png"),
+                ProjectName = ProjectNameTextBox.Text
+            });
+            CancelButton_OnClick(null, null);
+        }
+
+        private void CancelButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            NewProjectStackPanel.Visibility = Visibility.Collapsed;
+            AddProjectButton.Visibility     = Visibility.Visible;
+
+            ProjectNameTextBox.Text  = "";
+            InvitedUsersTextBox.Text = "";
         }
     }
 }
