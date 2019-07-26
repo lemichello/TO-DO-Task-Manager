@@ -24,6 +24,10 @@
             <Label Name="ProjectNameLabel" Margin="10 0 0 0" FontWeight="Bold" FontSize="30"
                    Style="{StaticResource MaterialDesignLabel}" />
         </StackPanel>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+            <Label Content="Members : " FontSize="20" Margin="0 7 0 0" Foreground="#2295F2"/>
+            <Expander Name="MembersExpander" Style="{StaticResource MaterialDesignExpander}" Foreground="#2295F2" />
+        </StackPanel>
         <Grid DockPanel.Dock="Bottom">
             <Button Height="60" Width="60" FontSize="19" Margin="0 0 50 20" Content="+"
                     Click="AddButton_OnClick" Style="{StaticResource MaterialDesignFloatingActionMiniButton}"

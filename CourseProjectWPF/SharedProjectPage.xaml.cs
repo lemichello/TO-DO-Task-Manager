@@ -40,6 +40,7 @@ namespace CourseProjectWPF
                 new SharedToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, userId, _projectId);
 
             FillCollection();
+            FillMembersExpander();
 
             ToDoItemsListView.ItemsSource = _toDoItemsCollection;
         }
@@ -54,6 +55,16 @@ namespace CourseProjectWPF
             }
         }
 
+        private void FillMembersExpander()
+        {
+            var members = _projectService.GetProjectMembers(_projectId).ToList();
+
+            foreach (var i in members)
+            {
+                MembersExpander.Content += i + "\n";
+            }
+        }
+        
         private void ToDoItemsListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _operations.Selected();
