@@ -162,5 +162,14 @@ namespace BUS.Services
                     ProjectName = i.ProjectOf.Name
                 }).ToList();
         }
+
+        public IEnumerable<string> GetProjectMembers(int projectId)
+        {
+            return _projectUserRepository
+                .Get()
+                .ToList()
+                .Where(i => i.ProjectId == projectId && i.IsAccepted)
+                .Select(i => i.UserOf.Login);
+        }
     }
 }
