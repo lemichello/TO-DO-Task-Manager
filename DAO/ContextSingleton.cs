@@ -21,6 +21,8 @@ namespace DAO
             _context.ToDoItems.Load();
             _context.Users.Load();
             _context.ItemsTags.Load();
+            _context.Projects.Load();
+            _context.ProjectsUsers.Load();
         }
         
         public static EfContext GetInstance()
