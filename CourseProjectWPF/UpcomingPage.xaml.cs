@@ -21,14 +21,14 @@ namespace CourseProjectWPF
         private readonly MainWindow              _parent;
         private readonly int                     _userId;
 
-        public UpcomingPage(MainWindow window, int userId)
+        public UpcomingPage(MainWindow window, int userId, ToDoItemService itemService, TagService tagService)
         {
             InitializeComponent();
 
             _userId                  = userId;
             _upcomingItemsCollection = new List<UpcomingToDoItems>();
-            _itemService             = new ToDoItemService(_userId);
-            _tagService              = new TagService(_userId);
+            _itemService             = itemService;
+            _tagService              = tagService;
             _parent                  = window;
 
             FillCollection();
@@ -62,7 +62,7 @@ namespace CourseProjectWPF
 
             if (listView.SelectedIndex == -1) return;
 
-            var item = listView.SelectedItem as ToDoItemModel;
+            var item       = listView.SelectedItem as ToDoItemModel;
             var itemWindow = new ToDoItemWindow(item, _userId);
 
             listView.SelectedItem = null;
@@ -73,7 +73,7 @@ namespace CourseProjectWPF
             {
                 _itemService.Remove(item);
                 _parent.UpdateUpcomingPage();
-                
+
                 return;
             }
 
@@ -118,7 +118,7 @@ namespace CourseProjectWPF
             toDoItem.CompleteDay = DateTime.Now;
 
             _itemService.Update(toDoItem);
-            
+
             toDoItem.Timer.Stop();
 
             _parent.UpdateUpcomingPage();

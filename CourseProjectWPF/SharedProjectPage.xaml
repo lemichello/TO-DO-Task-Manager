@@ -24,9 +24,13 @@
             <Label Name="ProjectNameLabel" Margin="10 0 0 0" FontWeight="Bold" FontSize="30"
                    Style="{StaticResource MaterialDesignLabel}" />
         </StackPanel>
-        <Button DockPanel.Dock="Bottom" Height="60" Width="60" FontSize="19" Margin="0 0 50 20" Content="+"
-                Click="AddButton_OnClick" Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-                HorizontalAlignment="Right"/>
+        <Grid DockPanel.Dock="Bottom">
+            <Button Height="60" Width="60" FontSize="19" Margin="0 0 50 20" Content="+"
+                    Click="AddButton_OnClick" Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                    HorizontalAlignment="Right" />
+            <Button Content="Leave project" Width="130" BorderBrush="Red" Background="Red"
+                    HorizontalAlignment="Left" Click="LeaveProjectButton_OnClick" />
+        </Grid>
         <ListView Name="ToDoItemsListView" Margin="0 20 0 0" BorderThickness="0"
                   SelectionChanged="ToDoItemsListView_OnSelectionChanged"
                   Style="{StaticResource MaterialDesignListView}">

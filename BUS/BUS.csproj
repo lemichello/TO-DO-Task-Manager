@@ -50,6 +50,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\InvitationRequestModel.cs" />
     <Compile Include="Models\ProjectModel.cs" />
     <Compile Include="Models\TagModel.cs" />
     <Compile Include="Models\ToDoItemModel.cs" />

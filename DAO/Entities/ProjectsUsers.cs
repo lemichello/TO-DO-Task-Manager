@@ -11,9 +11,12 @@ namespace DAO.Entities
         [Key, Column(Order = 2), ForeignKey("UserOf")]
         public int UserId { get; set; }
 
+        [ForeignKey("InviterOf")] public int InviterId { get; set; }
+
         public bool IsAccepted { get; set; }
 
         public virtual Project ProjectOf { get; set; }
         public virtual User UserOf { get; set; }
+        public virtual User InviterOf { get; set; }
     }
 }

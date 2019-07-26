@@ -17,21 +17,19 @@ namespace CourseProjectWPF
         private readonly ObservableCollection<ToDoItemModel> _toDoItemsCollection;
         private readonly TodayToDoItemOperations             _toDoItemOperations;
         private readonly ToDoItemService                     _service;
-        private readonly int _userId;
 
-        public TodayPage(int userId)
+        public TodayPage(int userId, ToDoItemService itemService)
         {
             InitializeComponent();
 
-            _userId = userId;
             _toDoItemsCollection = new ObservableCollection<ToDoItemModel>();
-            _service = new ToDoItemService(_userId);
+            _service = itemService;
 
             FillCollection();
 
             ToDoItemsListView.ItemsSource = _toDoItemsCollection;
             _toDoItemOperations =
-                new TodayToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, _userId, null);
+                new TodayToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, userId, null);
         }
 
         private void FillCollection()

@@ -8,5 +8,7 @@ namespace BUS.Services
         {
             ContextSingleton.RefreshContext();
         }
+
+        public abstract void RefreshRepositories();
     }
 }

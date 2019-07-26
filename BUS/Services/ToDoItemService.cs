@@ -9,13 +9,29 @@ namespace BUS.Services
 {
     public class ToDoItemService : Service
     {
-        private readonly IRepository<ToDoItem> _repository;
-        private readonly int                   _userId;
+        private readonly IRepository<ProjectsUsers> _projectUserRepository;
+        private readonly IRepository<ToDoItem>      _repository;
+        private          List<ProjectsUsers>        _projects;
+        private readonly int                        _userId;
 
         public ToDoItemService(int userId)
         {
-            _repository = new ToDoItemsRepository();
-            _userId     = userId;
+            _projectUserRepository = new ProjectsUsersRepository();
+            _repository            = new ToDoItemsRepository();
+            _userId = userId;
+            _projects = _projectUserRepository.Get()
+                .Where(i => i.UserId == _userId && i.IsAccepted)
+                .ToList();
+        }
+
+        public override void RefreshRepositories()
+        {
+            _repository.Refresh();
+            _projectUserRepository.Refresh();
+            
+            _projects = _projectUserRepository.Get()
+                .Where(i => i.UserId == _userId && i.IsAccepted)
+                .ToList();
         }
 
         public void Add(ToDoItemModel item)
@@ -57,7 +73,7 @@ namespace BUS.Services
         public IEnumerable<ToDoItemModel> Get(Func<ToDoItemModel, bool> predicate)
         {
             return _repository.Get()
-                .Where(i => i.UserId == _userId)
+                .Where(i => i.UserId == _userId || _projects.Any(p => i.ProjectId == p.ProjectId))
                 .Select(i => new ToDoItemModel
                 {
                     Id          = i.Id,

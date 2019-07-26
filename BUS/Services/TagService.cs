@@ -20,6 +20,12 @@ namespace BUS.Services
             _userId            = userId;
         }
 
+        public override void RefreshRepositories()
+        {
+            _tagRepository.Refresh();
+            _itemTagRepository.Refresh();
+        }
+
         public void Add(TagModel tag)
         {
             var addingTag = new Tag

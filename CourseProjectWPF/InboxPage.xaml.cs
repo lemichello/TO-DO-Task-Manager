@@ -17,16 +17,14 @@ namespace CourseProjectWPF
         private readonly ObservableCollection<ToDoItemModel> _toDoItemsCollection;
         private readonly ToDoItemService                     _service;
         private readonly ToDoItemOperations                  _operations;
-        private readonly int                                 _userId;
 
-        public InboxPage(int userId)
+        public InboxPage(int userId, ToDoItemService service)
         {
             InitializeComponent();
 
-            _userId              = userId;
             _toDoItemsCollection = new ObservableCollection<ToDoItemModel>();
-            _service             = new ToDoItemService(_userId);
-            _operations          = new InboxToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, _userId, null);
+            _service             = service;
+            _operations          = new InboxToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, userId, null);
 
             FillCollection();
 

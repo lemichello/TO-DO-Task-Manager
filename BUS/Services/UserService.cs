@@ -15,6 +15,11 @@ namespace BUS.Services
             _repository = new UsersRepository();
         }
 
+        public override void RefreshRepositories()
+        {
+            _repository.Refresh();
+        }
+
         public bool Add(string login, string password)
         {
             if (_repository.Get().Any(i => i.Login == login))

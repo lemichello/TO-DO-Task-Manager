@@ -18,24 +18,30 @@ namespace CourseProjectWPF
     /// </summary>
     public partial class MainWindow
     {
-        private readonly LoginWindow                       _parent;
-        private readonly int                               _userId;
-        private readonly TagService                        _tagService;
-        private readonly ProjectService                    _projectService;
-        private readonly ObservableCollection<ProjectView> _projects;
-        private          bool                              _isLogOut;
+        private readonly LoginWindow                                  _parent;
+        private readonly int                                          _userId;
+        private readonly TagService                                   _tagService;
+        private readonly ToDoItemService                              _itemService;
+        private readonly ProjectService                               _projectService;
+        private readonly ObservableCollection<ProjectView>            _projects;
+        private readonly ObservableCollection<InvitationRequestModel> _invitations;
+        private          bool                                         _isLogOut;
 
         public MainWindow(LoginWindow parent, int userId)
         {
             InitializeComponent();
 
             _projectService = new ProjectService(userId);
+            _itemService    = new ToDoItemService(userId);
+            _invitations    = new ObservableCollection<InvitationRequestModel>();
             _projects       = new ObservableCollection<ProjectView>();
 
             ShowDefaultProjects();
             ShowSharedProjects();
+            ShowInvitations();
 
-            ProjectsListView.ItemsSource = _projects;
+            ProjectsListView.ItemsSource    = _projects;
+            InvitationsListView.ItemsSource = _invitations;
 
             RefreshButtonImage.Source = new BitmapImage(new Uri(Path.GetFullPath("../../Resources/refresh.png")));
 
@@ -87,6 +93,18 @@ namespace CourseProjectWPF
             }
         }
 
+        private void ShowInvitations()
+        {
+            var invitations = _projectService.GetInvitations().ToList();
+
+            foreach (var i in invitations)
+            {
+                _invitations.Add(i);
+            }
+
+            InvitationsListView.Visibility = _invitations.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+        }
+
         private void PagesListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var selectedIndex = ProjectsListView.SelectedIndex;
@@ -97,40 +115,43 @@ namespace CourseProjectWPF
                 return;
             }
 
+            PagesFrame.NavigationService.RemoveBackEntry();
+
             switch (selectedIndex)
             {
                 case 0:
-                    PagesFrame.Content = new InboxPage(_userId);
+                    PagesFrame.Content = new InboxPage(_userId, _itemService);
                     break;
 
                 case 1:
-                    PagesFrame.Content = new TodayPage(_userId);
+                    PagesFrame.Content = new TodayPage(_userId, _itemService);
                     break;
 
                 case 2:
-                    PagesFrame.Content = new UpcomingPage(this, _userId);
+                    PagesFrame.Content = new UpcomingPage(this, _userId, _itemService, _tagService);
                     break;
 
                 case 3:
-                    PagesFrame.Content = new LogbookPage(this, _userId);
+                    PagesFrame.Content = new LogbookPage(this, _userId, _itemService, _tagService);
                     break;
 
                 default:
                     var project = (ProjectView) ProjectsListView.Items[selectedIndex];
 
-                    PagesFrame.Content = new SharedProjectPage(project.Id, project.Name, _userId);
+                    PagesFrame.Content = new SharedProjectPage(this, project.Id, project.Name, _userId,
+                        _itemService, _projectService);
                     break;
             }
         }
 
         public void UpdateUpcomingPage()
         {
-            PagesFrame.Content = new UpcomingPage(this, _userId);
+            PagesFrame.Content = new UpcomingPage(this, _userId, _itemService, _tagService);
         }
 
         public void UpdateLogbookPage()
         {
-            PagesFrame.Content = new LogbookPage(this, _userId);
+            PagesFrame.Content = new LogbookPage(this, _userId, _itemService, _tagService);
         }
 
         private void Search_OnClick(object sender, RoutedEventArgs e)
@@ -170,9 +191,9 @@ namespace CourseProjectWPF
 
             var selectedToDoItem = (ToDoItemModel) FoundToDoItems.Items[index];
             var minDate          = DateTime.MinValue.AddYears(1753);
-            
-            if (selectedToDoItem.Date == minDate && 
-                selectedToDoItem.ProjectName != "" && 
+
+            if (selectedToDoItem.Date == minDate &&
+                selectedToDoItem.ProjectName != "" &&
                 selectedToDoItem.CompleteDay == minDate)
             {
                 var projectView = _projects.First(i => i.Id == (selectedToDoItem.ProjectId ?? -1));
@@ -219,7 +240,13 @@ namespace CourseProjectWPF
         {
             _tagService.Refresh();
 
+            _tagService.RefreshRepositories();
+            _projectService.RefreshRepositories();
+            _itemService.RefreshRepositories();
+
             PagesListView_OnSelectionChanged(null, null);
+
+            ShowInvitations();
         }
 
         private void AddSharedProjectButton_OnClick(object sender, RoutedEventArgs e)
@@ -259,6 +286,50 @@ namespace CourseProjectWPF
 
             ProjectNameTextBox.Text  = "";
             InvitedUsersTextBox.Text = "";
+        }
+
+        private void AcceptButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var item       = ((FrameworkElement) sender).DataContext;
+            var invitation = _invitations[InvitationsListView.Items.IndexOf(item)];
+
+            if (_projectService.AcceptInvitation(invitation))
+            {
+                _invitations.Remove(invitation);
+
+                if (_invitations.Count == 0)
+                    InvitationsListView.Visibility = Visibility.Collapsed;
+
+                _projects.Add(new ProjectView
+                {
+                    Id          = invitation.ProjectId,
+                    Name        = invitation.ProjectName,
+                    ImageSource = Path.GetFullPath("../../Resources/shared.png")
+                });
+            }
+            else
+                MessageBox.Show("Can't accept invitation");
+        }
+
+        private void DeclineButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var item       = ((FrameworkElement) sender).DataContext;
+            var invitation = _invitations[InvitationsListView.Items.IndexOf(item)];
+
+            if (_projectService.DeclineInvitation(invitation))
+            {
+                _invitations.Remove(invitation);
+
+                if (_invitations.Count == 0)
+                    InvitationsListView.Visibility = Visibility.Collapsed;
+            }
+            else
+                MessageBox.Show("Can't decline invitation");
+        }
+
+        public void RemoveProject()
+        {
+            _projects.RemoveAt(ProjectsListView.SelectedIndex);
         }
     }
 }

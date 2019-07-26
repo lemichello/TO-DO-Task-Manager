@@ -11,19 +11,19 @@ namespace CourseProjectWPF
     public partial class LogbookPage
     {
         private readonly ObservableCollection<LogbookToDoItem> _toDoItemsCollection;
-        private readonly ToDoItemService                     _itemService;
-        private readonly TagService                          _tagService;
-        private readonly MainWindow                          _parent;
-        private readonly int                                 _userId;
+        private readonly ToDoItemService                       _itemService;
+        private readonly TagService                            _tagService;
+        private readonly MainWindow                            _parent;
+        private readonly int                                   _userId;
 
-        public LogbookPage(MainWindow window, int userId)
+        public LogbookPage(MainWindow window, int userId, ToDoItemService itemService, TagService tagService)
         {
             InitializeComponent();
 
             _userId              = userId;
             _toDoItemsCollection = new ObservableCollection<LogbookToDoItem>();
-            _itemService         = new ToDoItemService(_userId);
-            _tagService          = new TagService(_userId);
+            _itemService         = itemService;
+            _tagService          = tagService;
             _parent              = window;
 
             FillCollection();
@@ -35,7 +35,7 @@ namespace CourseProjectWPF
         {
             public string CompleteDateStr { get; set; }
         }
-        
+
         private void ToDoItemsListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var index = ToDoItemsListView.SelectedIndex;
@@ -70,20 +70,22 @@ namespace CourseProjectWPF
         private void FillCollection()
         {
             var items = _itemService.Get(i => i.CompleteDay != DateTime.MinValue.AddYears(1753)).ToList();
-            
+
             items.Sort((a, b) => -a.CompleteDay.CompareTo(b.CompleteDay));
 
             foreach (var i in items)
             {
                 _toDoItemsCollection.Add(new LogbookToDoItem
                 {
-                    Id = i.Id,
-                    Header = i.Header,
-                    Notes = i.Notes,
-                    Date = i.Date,
-                    Deadline = i.Deadline,
-                    CompleteDay = i.CompleteDay,
-                    CompleteDateStr = i.CompleteDay.ToShortDateString()
+                    Id              = i.Id,
+                    Header          = i.Header,
+                    Notes           = i.Notes,
+                    Date            = i.Date,
+                    Deadline        = i.Deadline,
+                    CompleteDay     = i.CompleteDay,
+                    CompleteDateStr = i.CompleteDay.ToShortDateString(),
+                    ProjectName     = i.ProjectName,
+                    ProjectId       = i.ProjectId
                 });
             }
         }
