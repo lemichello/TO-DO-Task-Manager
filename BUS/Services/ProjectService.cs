@@ -12,6 +12,7 @@ namespace BUS.Services
         private readonly IRepository<User>          _userRepository;
         private readonly IRepository<Project>       _projectRepository;
         private readonly IRepository<ProjectsUsers> _projectUserRepository;
+        private readonly IRepository<ToDoItem>      _itemRepository;
         private readonly int                        _userId;
 
         public ProjectService(int userId)
@@ -19,6 +20,7 @@ namespace BUS.Services
             _userRepository        = new UsersRepository();
             _projectRepository     = new ProjectsRepository();
             _projectUserRepository = new ProjectsUsersRepository();
+            _itemRepository        = new ToDoItemsRepository();
             _userId                = userId;
         }
 
@@ -53,7 +55,7 @@ namespace BUS.Services
                 UserId     = _userId,
                 IsAccepted = true
             });
-            
+
             return AddInvitedUsers(logins, newProject, users) ? newProject.Id : -1;
         }
 

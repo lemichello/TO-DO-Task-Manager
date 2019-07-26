@@ -18,7 +18,7 @@ namespace BUS.Services
             _userId     = userId;
         }
 
-        public void Add(ToDoItemModel item, int? projectId)
+        public void Add(ToDoItemModel item)
         {
             var addingItem = new ToDoItem
             {
@@ -28,7 +28,7 @@ namespace BUS.Services
                 Deadline     = item.Deadline,
                 CompleteDate = item.CompleteDay,
                 UserId       = _userId,
-                ProjectId    = projectId
+                ProjectId    = item.ProjectId
             };
 
             item.Id = _repository.Add(addingItem) ? addingItem.Id : -1;
@@ -66,7 +66,8 @@ namespace BUS.Services
                     Date        = i.Date,
                     Deadline    = i.Deadline,
                     CompleteDay = i.CompleteDate,
-                    ProjectName = i.ProjectId != null ? $"Project : {i.ProjectOf.Name}" : ""
+                    ProjectName = i.ProjectId != null ? $"Project : {i.ProjectOf.Name}" : "",
+                    ProjectId   = i.ProjectId
                 })
                 .Where(predicate);
         }
@@ -74,7 +75,7 @@ namespace BUS.Services
         public IEnumerable<ToDoItemModel> GetSharedProjectItems(int projectId)
         {
             return _repository.Get()
-                .Where(i => i.ProjectId == projectId)
+                .Where(i => i.ProjectId == projectId && i.CompleteDate == DateTime.MinValue.AddYears(1753))
                 .Select(i => new ToDoItemModel
                 {
                     Id          = i.Id,
@@ -83,6 +84,8 @@ namespace BUS.Services
                     Date        = i.Date,
                     Deadline    = i.Deadline,
                     CompleteDay = i.CompleteDate,
+                    ProjectId   = i.ProjectId,
+                    ProjectName = i.ProjectId != null ? $"Project : {i.ProjectOf.Name}" : ""
                 });
         }
     }

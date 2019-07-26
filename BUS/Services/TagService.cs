@@ -91,9 +91,9 @@ namespace BUS.Services
 
         public IEnumerable<ToDoItemModel> GetItemsByTags(IEnumerable<string> tags)
         {
-            var allItems = _itemTagRepository.Get().ToList().Where(i => i.TagOf.UserId == _userId).ToList();
+            var allItems   = _itemTagRepository.Get().ToList().Where(i => i.TagOf.UserId == _userId).ToList();
             var itemsCount = new Dictionary<ToDoItem, int>();
-            var tagTexts  = tags.ToList();
+            var tagTexts   = tags.ToList();
 
             foreach (var text in tagTexts)
             {
@@ -116,7 +116,9 @@ namespace BUS.Services
                 Notes       = i.Notes,
                 Date        = i.Date,
                 Deadline    = i.Deadline,
-                CompleteDay = i.CompleteDate
+                CompleteDay = i.CompleteDate,
+                ProjectName = i.ProjectOf?.Name ?? "",
+                ProjectId   = i.ProjectId
             });
         }
     }
