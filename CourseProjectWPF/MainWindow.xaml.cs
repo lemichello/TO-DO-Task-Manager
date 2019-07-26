@@ -50,25 +50,25 @@ namespace CourseProjectWPF
             _projects.Add(new ProjectView
             {
                 ImageSource = "Resources/inbox.png",
-                Name = "Inbox"
+                Name        = "Inbox"
             });
 
             _projects.Add(new ProjectView
             {
                 ImageSource = "Resources/today.png",
-                Name = "Today"
+                Name        = "Today"
             });
 
             _projects.Add(new ProjectView
             {
                 ImageSource = "Resources/upcoming.png",
-                Name = "Upcoming"
+                Name        = "Upcoming"
             });
 
             _projects.Add(new ProjectView
             {
                 ImageSource = "Resources/logbook.png",
-                Name = "Logbook"
+                Name        = "Logbook"
             });
         }
 
@@ -82,7 +82,7 @@ namespace CourseProjectWPF
                 {
                     Id          = project.Id,
                     ImageSource = Path.GetFullPath("../../Resources/shared.png"),
-                    Name = project.Name
+                    Name        = project.Name
                 });
             }
         }
@@ -116,9 +116,9 @@ namespace CourseProjectWPF
                     break;
 
                 default:
-                    var project = ((ProjectView) ProjectsListView.Items[selectedIndex]);
+                    var project = (ProjectView) ProjectsListView.Items[selectedIndex];
 
-                    PagesFrame.Content = new SharedProjectPage(project.Id,project.Name, _userId);
+                    PagesFrame.Content = new SharedProjectPage(project.Id, project.Name, _userId);
                     break;
             }
         }
@@ -170,9 +170,19 @@ namespace CourseProjectWPF
 
             var selectedToDoItem = (ToDoItemModel) FoundToDoItems.Items[index];
             var minDate          = DateTime.MinValue.AddYears(1753);
+            
+            if (selectedToDoItem.Date == minDate && 
+                selectedToDoItem.ProjectName != "" && 
+                selectedToDoItem.CompleteDay == minDate)
+            {
+                var projectView = _projects.First(i => i.Id == (selectedToDoItem.ProjectId ?? -1));
+
+                ProjectsListView.SelectedIndex = _projects.IndexOf(projectView);
+                return;
+            }
 
             // Inbox page.
-            if (selectedToDoItem.Date == minDate)
+            if (selectedToDoItem.Date == minDate && selectedToDoItem.ProjectName == "")
                 ProjectsListView.SelectedIndex = 0;
             // Today page.
             else if (selectedToDoItem.Date == DateTime.Today)
@@ -181,17 +191,8 @@ namespace CourseProjectWPF
             else if (selectedToDoItem.CompleteDay == minDate)
                 ProjectsListView.SelectedIndex = 2;
             // Logbook page.
-            else if (selectedToDoItem.ProjectName == "")
-                ProjectsListView.SelectedIndex = 3;
-            // Project page.
             else
-            {
-                var foundProjects = _projectService.GetProjects().ToList();
-                var projectIndex = foundProjects
-                    .IndexOf(foundProjects.First(i => i.Name == selectedToDoItem.ProjectName));
-
-                ProjectsListView.SelectedIndex = projectIndex;
-            }
+                ProjectsListView.SelectedIndex = 3;
         }
 
         private void MainWindow_OnClosed(object sender, EventArgs e)
@@ -245,7 +246,7 @@ namespace CourseProjectWPF
             {
                 Id          = projectId,
                 ImageSource = Path.GetFullPath("../../Resources/shared.png"),
-                Name = ProjectNameTextBox.Text
+                Name        = ProjectNameTextBox.Text
             });
 
             CancelButton_OnClick(null, null);

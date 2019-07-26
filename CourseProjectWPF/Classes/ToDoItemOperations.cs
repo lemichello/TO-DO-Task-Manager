@@ -40,7 +40,9 @@ namespace CourseProjectWPF.Classes
 
             if (itemWindow.DialogResult == false) return;
 
-            _itemService.Add(itemWindow.Item, _projectId);
+            itemWindow.Item.ProjectId = _projectId;
+
+            _itemService.Add(itemWindow.Item);
 
             if (itemWindow.Item.Id != -1 && IsCorrect(itemWindow.Item))
                 _toDoItemsCollection.Add(itemWindow.Item);
