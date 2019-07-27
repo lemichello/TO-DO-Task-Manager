@@ -22,7 +22,7 @@ namespace CourseProjectWPF.Classes
 
             if (increaser == 0 && !addToDays)
             {
-                // Show remaining days of current month, e.g. 17-31 October.
+                /*// Show remaining days of current month, e.g. 17-31 October.
                 if (DateTime.Now.AddDays(8).Month == DateTime.Now.Month)
                 {
                     Date = DateTime.Now.ToString("MMMM");
@@ -35,7 +35,12 @@ namespace CourseProjectWPF.Classes
                     // Getting next name of the next month and increasing counter.
                     Date = DateTime.Now.AddDays(8).ToString("MMMM");
                     increaser++;
-                }
+                }*/
+
+                Date = DateTime.Now.AddDays(8).ToString("MMMM");
+                WeekDay =
+                    $"{DateTime.Now.AddDays(8).Day}-{DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month)}";
+                increaser++;
             }
             else if (!addToDays)
                 Date = DateTime.Now.AddMonths(increaser).ToString("MMMM");
@@ -88,11 +93,12 @@ namespace CourseProjectWPF.Classes
 
         private static void FillByRemainingDays(out DateTime begin, out DateTime end)
         {
-            var lastMonthDay = new DateTime(DateTime.Now.Year, DateTime.Now.Month,
-                DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
-
             begin = DateTime.Today.AddDays(8);
-            end   = lastMonthDay;
+
+            var lastMonthDay = new DateTime(begin.Year, begin.Month,
+                DateTime.DaysInMonth(begin.Year, begin.Month));
+
+            end = lastMonthDay;
         }
     }
 }
