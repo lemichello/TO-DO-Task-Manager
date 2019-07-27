@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="AppDatabase.sqlite" uuid="8802c0b5-5ccc-4ccb-9532-287e158e1960">
-      <driver-ref>sqlite.xerial</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/CourseProjectWPF/AppDatabase.sqlite</jdbc-url>
-      <driver-properties>
-        <property name="enable_load_extension" value="true" />
-      </driver-properties>
-    </data-source>
     <data-source source="LOCAL" name="todotaskdb@den1.mssql8.gear.host" uuid="b5ce85b7-34b2-44ea-97f6-efbbdd923963">
       <driver-ref>sqlserver.ms</driver-ref>
       <synchronize>true</synchronize>

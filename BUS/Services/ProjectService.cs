@@ -32,7 +32,7 @@ namespace BUS.Services
             _projectUserRepository.Refresh();
         }
 
-        public int AddProject(ProjectModel project, IEnumerable<string> userLogins)
+        public int InviteUsers(ProjectModel project, IEnumerable<string> userLogins, bool isNewProject)
         {
             var users  = _userRepository.Get().ToList();
             var logins = userLogins.ToList();
@@ -41,6 +41,12 @@ namespace BUS.Services
             {
                 MessageBox.Show("One of user logins doesn't exist");
                 return -1;
+            }
+            
+            if (!isNewProject)
+            {
+                AddInvitedUsers(logins, users, project.Id);
+                return project.Id;
             }
 
             if (logins.Contains(users.First(user => user.Id == _userId).Login))
@@ -65,10 +71,10 @@ namespace BUS.Services
                 IsAccepted = true
             });
 
-            return AddInvitedUsers(logins, newProject, users, newProject.Id) ? newProject.Id : -1;
+            return AddInvitedUsers(logins, users, newProject.Id) ? newProject.Id : -1;
         }
 
-        private bool AddInvitedUsers(IEnumerable<string> logins, Project newProject, List<User> users, int projectId)
+        private bool AddInvitedUsers(IEnumerable<string> logins, List<User> users, int projectId)
         {
             var allProjects = _projectUserRepository.Get().ToList();
             
@@ -82,7 +88,7 @@ namespace BUS.Services
                 
                 if (!_projectUserRepository.Add(new ProjectsUsers
                 {
-                    ProjectId  = newProject.Id,
+                    ProjectId  = projectId,
                     InviterId  = _userId,
                     UserId     = users.Find(user => user.Login == login).Id,
                     IsAccepted = false

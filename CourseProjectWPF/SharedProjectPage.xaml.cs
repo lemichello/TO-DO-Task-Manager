@@ -27,7 +27,7 @@ namespace CourseProjectWPF
             ProjectService projectService)
         {
             InitializeComponent();
-            
+
             ProjectNameLabel.Content = projectName;
             SharedLogoImage.Source   = new BitmapImage(new Uri(Path.GetFullPath("../../Resources/shared.png")));
 
@@ -64,7 +64,7 @@ namespace CourseProjectWPF
                 MembersExpander.Content += i + "\n";
             }
         }
-        
+
         private void ToDoItemsListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _operations.Selected();
@@ -92,9 +92,52 @@ namespace CourseProjectWPF
 
             if (res == DialogResult.No)
                 return;
-            
+
             _projectService.LeaveProject(_projectId);
             _parent.RemoveProject();
+        }
+
+        private void InviteButton_OnCLick(object sender, RoutedEventArgs e)
+        {
+            InvitedUsersTextBox.Visibility = Visibility.Visible;
+            ConfirmButton.Visibility       = Visibility.Visible;
+            CancelButton.Visibility        = Visibility.Visible;
+
+            InviteButton.Visibility = Visibility.Collapsed;
+        }
+
+        private void CancelButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            InvitedUsersTextBox.Text       = "";
+            InvitedUsersTextBox.Visibility = Visibility.Collapsed;
+
+            ConfirmButton.Visibility = Visibility.Collapsed;
+            CancelButton.Visibility  = Visibility.Collapsed;
+
+            InviteButton.Visibility = Visibility.Visible;
+        }
+
+        private void ConfirmButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var userLogins = InvitedUsersTextBox.Text.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+
+            if (userLogins.Length == 0)
+            {
+                MessageBox.Show("You need to enter logins of user(s), which you want to invite");
+                return;
+            }
+
+            // An error occured.
+            if (_projectService.InviteUsers(new ProjectModel
+            {
+                Id   = _projectId,
+                Name = (string) ProjectNameLabel.Content
+            }, userLogins, false) == -1)
+                return;
+
+            MessageBox.Show("Invitation is successfully completed.");
+
+            CancelButton_OnClick(null, null);
         }
     }
 }

@@ -199,6 +199,8 @@ namespace CourseProjectWPF
                 var projectView = _projects.First(i => i.Id == (selectedToDoItem.ProjectId ?? -1));
 
                 ProjectsListView.SelectedIndex = _projects.IndexOf(projectView);
+
+                FoundToDoItems.SelectedIndex = -1;
                 return;
             }
 
@@ -214,6 +216,8 @@ namespace CourseProjectWPF
             // Logbook page.
             else
                 ProjectsListView.SelectedIndex = 3;
+
+            FoundToDoItems.SelectedIndex = -1;
         }
 
         private void MainWindow_OnClosed(object sender, EventArgs e)
@@ -264,7 +268,8 @@ namespace CourseProjectWPF
             }
 
             var userLogins = InvitedUsersTextBox.Text.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
-            var projectId  = _projectService.AddProject(new ProjectModel {Name = ProjectNameTextBox.Text}, userLogins);
+            var projectId = _projectService.InviteUsers(new ProjectModel {Name = ProjectNameTextBox.Text}, 
+                userLogins, true);
 
             if (projectId == -1)
                 return;
