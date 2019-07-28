@@ -23,8 +23,7 @@ namespace CourseProjectWPF
         private readonly MainWindow                          _parent;
 
         public SharedProjectPage(MainWindow parent, int projectId, string projectName, int userId,
-            ToDoItemService itemService,
-            ProjectService projectService)
+            ToDoItemService itemService, ProjectService projectService, TagService tagService)
         {
             InitializeComponent();
 
@@ -37,7 +36,8 @@ namespace CourseProjectWPF
             _itemService         = itemService;
             _projectService      = projectService;
             _operations =
-                new SharedToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, userId, _projectId);
+                new SharedToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, userId, _projectId,
+                    itemService, tagService);
 
             FillCollection();
             FillMembersExpander();

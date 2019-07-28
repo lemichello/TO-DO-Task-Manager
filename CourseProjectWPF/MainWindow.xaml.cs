@@ -120,11 +120,11 @@ namespace CourseProjectWPF
             switch (selectedIndex)
             {
                 case 0:
-                    PagesFrame.Content = new InboxPage(_userId, _itemService);
+                    PagesFrame.Content = new InboxPage(_userId, _itemService, _tagService);
                     break;
 
                 case 1:
-                    PagesFrame.Content = new TodayPage(_userId, _itemService);
+                    PagesFrame.Content = new TodayPage(_userId, _itemService, _tagService);
                     break;
 
                 case 2:
@@ -139,7 +139,7 @@ namespace CourseProjectWPF
                     var project = (ProjectView) ProjectsListView.Items[selectedIndex];
 
                     PagesFrame.Content = new SharedProjectPage(this, project.Id, project.Name, _userId,
-                        _itemService, _projectService);
+                        _itemService, _projectService, _tagService);
                     break;
             }
         }

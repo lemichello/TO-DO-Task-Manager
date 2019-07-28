@@ -18,7 +18,7 @@ namespace CourseProjectWPF
         private readonly TodayToDoItemOperations             _toDoItemOperations;
         private readonly ToDoItemService                     _service;
 
-        public TodayPage(int userId, ToDoItemService itemService)
+        public TodayPage(int userId, ToDoItemService itemService, TagService tagService)
         {
             InitializeComponent();
 
@@ -29,7 +29,8 @@ namespace CourseProjectWPF
 
             ToDoItemsListView.ItemsSource = _toDoItemsCollection;
             _toDoItemOperations =
-                new TodayToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, userId, null);
+                new TodayToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, userId, null,
+                    itemService, tagService);
         }
 
         private void FillCollection()

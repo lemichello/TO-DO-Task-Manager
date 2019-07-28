@@ -134,9 +134,18 @@ namespace CourseProjectWPF
                 _upcomingItemsCollection.Add(new UpcomingToDoItems(ref i, allItems, true));
             }
 
-            for (var i = 0; i < 5; i++)
+            for (var i = 0; i < 6; i++)
             {
                 _upcomingItemsCollection.Add(new UpcomingToDoItems(ref i, allItems, false));
+            }
+            
+            var yearsItems = allItems
+                .Where(i => i.Date > DateTime.Today.AddMonths(5))
+                .ToDictionary(item => item.Date.Year, item => allItems.Where(i => i.Date.Year == item.Date.Year));
+
+            foreach (var i in yearsItems)
+            {
+                _upcomingItemsCollection.Add(new UpcomingToDoItems(i.Key, i.Value.ToList()));
             }
         }
     }

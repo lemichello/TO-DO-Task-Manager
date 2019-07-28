@@ -18,15 +18,15 @@ namespace CourseProjectWPF.Classes
         private readonly int?                                _projectId;
 
         internal ToDoItemOperations(ListView toDoItemsListView, ObservableCollection<ToDoItemModel> toDoItemsCollection,
-            int userId, int? projectId)
+            int userId, int? projectId, ToDoItemService itemService, TagService tagService)
         {
             _userId = userId;
             _projectId = projectId;
 
             _toDoItemsListView   = toDoItemsListView;
             _toDoItemsCollection = toDoItemsCollection;
-            _itemService         = new ToDoItemService(userId);
-            _tagService          = new TagService(userId);
+            _itemService         = itemService;
+            _tagService          = tagService;
         }
 
         public void Add()
@@ -134,8 +134,8 @@ namespace CourseProjectWPF.Classes
     {
         public InboxToDoItemOperations(ListView toDoItemsListView,
             ObservableCollection<ToDoItemModel> toDoItemsCollection,
-            int userId, int? projectId) :
-            base(toDoItemsListView, toDoItemsCollection, userId, projectId)
+            int userId, int? projectId, ToDoItemService itemService, TagService tagService) :
+            base(toDoItemsListView, toDoItemsCollection, userId, projectId, itemService, tagService)
         {
         }
 
@@ -150,8 +150,8 @@ namespace CourseProjectWPF.Classes
     {
         public TodayToDoItemOperations(ListView toDoItemsListView,
             ObservableCollection<ToDoItemModel> toDoItemsCollection,
-            int userId, int? projectId) :
-            base(toDoItemsListView, toDoItemsCollection, userId, projectId)
+            int userId, int? projectId, ToDoItemService itemService, TagService tagService) :
+            base(toDoItemsListView, toDoItemsCollection, userId, projectId, itemService, tagService)
         {
         }
 
@@ -165,8 +165,9 @@ namespace CourseProjectWPF.Classes
     internal sealed class SharedToDoItemOperations : ToDoItemOperations
     {
         public SharedToDoItemOperations(ListView toDoItemsListView,
-            ObservableCollection<ToDoItemModel> toDoItemsCollection, int userId, int? projectId) : base(toDoItemsListView,
-            toDoItemsCollection, userId, projectId)
+            ObservableCollection<ToDoItemModel> toDoItemsCollection, int userId, int? projectId,
+            ToDoItemService itemService, TagService tagService) : base(toDoItemsListView,
+            toDoItemsCollection, userId, projectId, itemService, tagService)
         {
         }
 

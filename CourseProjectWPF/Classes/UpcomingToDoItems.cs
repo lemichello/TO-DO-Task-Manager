@@ -22,21 +22,6 @@ namespace CourseProjectWPF.Classes
 
             if (increaser == 0 && !addToDays)
             {
-                /*// Show remaining days of current month, e.g. 17-31 October.
-                if (DateTime.Now.AddDays(8).Month == DateTime.Now.Month)
-                {
-                    Date = DateTime.Now.ToString("MMMM");
-                    WeekDay =
-                        $"{DateTime.Now.AddDays(8).Day}-{DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month)}";
-                }
-                // There's no remaining days for current month.
-                else
-                {
-                    // Getting next name of the next month and increasing counter.
-                    Date = DateTime.Now.AddDays(8).ToString("MMMM");
-                    increaser++;
-                }*/
-
                 Date = DateTime.Now.AddDays(8).ToString("MMMM");
                 WeekDay =
                     $"{DateTime.Now.AddDays(8).Day}-{DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month)}";
@@ -55,6 +40,18 @@ namespace CourseProjectWPF.Classes
                 FillToDoItemsByMonths(increaser);
         }
 
+        // Fill remaining items.
+        public UpcomingToDoItems(int year, List<ToDoItemModel> items)
+        {
+            ToDoItems = new ObservableCollection<ToDoItemModel>();
+            Date = year.ToString();
+
+            foreach (var i in items)
+            {
+                ToDoItems.Add(i);
+            }
+        }
+        
         private void FillToDoItemsByDays(int dayIncreaser)
         {
             var items = _allItems.Where(i =>
