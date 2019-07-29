@@ -144,7 +144,7 @@ namespace CourseProjectWPF
             if (TagsListBox.SelectedItems.Count == 0) return;
 
             var window = new TagWindow();
-            var tag    = _tagsList[TagsListBox.SelectedIndex];
+            var tag = (TagModel)TagsListBox.SelectedItems[TagsListBox.SelectedItems.Count - 1];
 
             if (window.ShowDialog() == false) return;
 
