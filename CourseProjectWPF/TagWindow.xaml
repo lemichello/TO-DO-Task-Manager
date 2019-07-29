@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CourseProjectWPF"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="" Height="140" Width="200" WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow"
+        Title="" Height="150" Width="200" WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow"
         ShowInTaskbar="False">
     <Window.Resources>
         <ResourceDictionary>
@@ -20,10 +20,14 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    <StackPanel>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
         <TextBox Name="TagTextBox" Margin="10" Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                 materialDesign:HintAssist.Hint="Tag text" />
-        <Button Content="Confirm" Width="100" HorizontalAlignment="Center" Click="Confirm_OnClick"
-                Style="{StaticResource MaterialDesignRaisedButton}" />
-    </StackPanel>
+                 materialDesign:HintAssist.Hint="Tag name" FontSize="14" />
+        <Button Grid.Row="1" Content="Confirm" Width="100" HorizontalAlignment="Center" Click="Confirm_OnClick"
+                Style="{StaticResource MaterialDesignRaisedButton}" IsDefault="True" />
+    </Grid>
 </Window>

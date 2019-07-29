@@ -28,19 +28,22 @@
         <StackPanel Grid.Column="0" Background="#F4F6F8">
             <TextBlock Text="Tags" FontSize="20" HorizontalAlignment="Center" />
             <ListBox Name="TagsListBox" BorderThickness="0" Height="297" SelectionMode="Multiple" FontSize="20"
-                     Margin="0 17 0 0" Style="{StaticResource MaterialDesignListBox}">
+                     Margin="0 17 0 0" Style="{StaticResource MaterialDesignListBox}"
+                     SelectionChanged="TagsListBox_OnSelectionChanged">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Text}" />
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+            <Button Name="EditButton" Content="Edit tag" HorizontalAlignment="Center" Width="100" Margin="0 5"
+                    Visibility="Hidden"
+                    Click="EditButton_OnClick" Style="{StaticResource MaterialDesignRaisedButton}" />
+            <Button Name="DeleteButton" Content="Delete tag" HorizontalAlignment="Center" Width="100" Margin="0 5"
+                    Visibility="Hidden"
+                    Click="DeleteButton_OnClick" Style="{StaticResource MaterialDesignRaisedButton}" />
             <Button Content="Add tag" HorizontalAlignment="Center" Width="100" Margin="0 5"
                     Click="AddButton_OnCLick" Style="{StaticResource MaterialDesignRaisedButton}" />
-            <Button Content="Edit tag" HorizontalAlignment="Center" Width="100" Margin="0 5"
-                    Click="EditButton_OnClick" Style="{StaticResource MaterialDesignRaisedButton}" />
-            <Button Content="Delete tag" HorizontalAlignment="Center" Width="100" Margin="0 5"
-                    Click="DeleteButton_OnClick" Style="{StaticResource MaterialDesignRaisedButton}" />
         </StackPanel>
         <StackPanel Grid.Column="1" Background="{DynamicResource MaterialDesignPaper}">
             <TextBox Name="HeaderText" Margin="5" FontSize="14"

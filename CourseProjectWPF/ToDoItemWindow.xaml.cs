@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using BUS.Models;
 using BUS.Services;
 
@@ -10,7 +11,7 @@ namespace CourseProjectWPF
 {
     public partial class ToDoItemWindow : Window
     {
-        private readonly DateTime _minDate = DateTime.MinValue.AddYears(1753);
+        private readonly DateTime                       _minDate = DateTime.MinValue.AddYears(1753);
         private readonly ObservableCollection<TagModel> _tagsList;
         private readonly TagService                     _tagService;
         public IEnumerable<int> SelectedTagsId { get; set; }
@@ -27,8 +28,8 @@ namespace CourseProjectWPF
             Item                            = new ToDoItemModel();
             ToDelete                        = false;
 
-            _tagService       = new TagService(userId);
-            _tagsList         = new ObservableCollection<TagModel>();
+            _tagService = new TagService(userId);
+            _tagsList   = new ObservableCollection<TagModel>();
 
             FillTagsCollection();
 
@@ -124,6 +125,20 @@ namespace CourseProjectWPF
             }
         }
 
+        private void TagsListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (TagsListBox.SelectedIndex == -1)
+            {
+                EditButton.Visibility   = Visibility.Hidden;
+                DeleteButton.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                EditButton.Visibility   = Visibility.Visible;
+                DeleteButton.Visibility = Visibility.Visible;
+            }
+        }
+
         private void AddButton_OnCLick(object sender, RoutedEventArgs e)
         {
             var window = new TagWindow();
@@ -144,12 +159,12 @@ namespace CourseProjectWPF
             if (TagsListBox.SelectedItems.Count == 0) return;
 
             var window = new TagWindow();
-            var tag = (TagModel)TagsListBox.SelectedItems[TagsListBox.SelectedItems.Count - 1];
+            var tag    = (TagModel) TagsListBox.SelectedItems[TagsListBox.SelectedItems.Count - 1];
 
             if (window.ShowDialog() == false) return;
 
             tag.Text = window.NewText;
-            
+
             _tagsList[TagsListBox.SelectedIndex].Text = tag.Text;
             _tagService.Update(tag);
         }
