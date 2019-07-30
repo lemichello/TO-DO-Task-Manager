@@ -48,6 +48,15 @@ namespace CourseProjectWPF.Classes
             Date = year.ToString();
 
             AddItems(items);
+
+            foreach (var i in ToDoItems)
+            {
+                var day   = i.Date.Day > 9 ? i.Date.Day.ToString() : $"0{i.Date.Day}";
+                var month = i.Date.Month > 9 ? i.Date.Month.ToString() : $"0{i.Date.Month}";
+                
+                i.ShortDate = $"{day}.{month}";
+                i.DateVisibility = "Visible";
+            }
         }
 
         private void AddItems(List<ToDoItemModel> items)
@@ -97,6 +106,11 @@ namespace CourseProjectWPF.Classes
                 i.Date == DateTime.Today.AddDays(dayIncreaser)).ToList();
 
             AddItems(items);
+
+            foreach (var i in ToDoItems)
+            {
+                i.DateVisibility = "Collapsed";
+            }
         }
 
         private void FillToDoItemsByMonths(int monthIncreaser)
@@ -112,6 +126,15 @@ namespace CourseProjectWPF.Classes
             var items = _allItems.Where(i => i.Date >= begin && i.Date <= end).ToList();
 
             AddItems(items);
+
+            foreach (var i in ToDoItems)
+            {
+                var day = i.Date.Day > 9 ? i.Date.Day.ToString() : $"0{i.Date.Day}";
+                var month = i.Date.Month > 9 ? i.Date.Month.ToString() : $"0{i.Date.Month}";
+                
+                i.ShortDate = $"{day}.{month}";
+                i.DateVisibility = "Visible";
+            }
         }
 
         private static void FillByNextMonth(int monthIncreaser, out DateTime begin, out DateTime end)
