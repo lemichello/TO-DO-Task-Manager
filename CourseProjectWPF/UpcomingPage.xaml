@@ -53,6 +53,8 @@
                                         </StackPanel>
                                         <Label Content="{Binding ProjectName}" FontSize="17" Foreground="#2295F2"
                                                Margin="10 0 0 0" />
+                                        <TextBlock Text="{Binding DeadlineShort}" FontSize="17"
+                                                   Foreground="{Binding DeadlineColor}" Margin="8 0 0 0" />
                                     </StackPanel>
                                 </DataTemplate>
                             </ListView.ItemTemplate>

@@ -31,7 +31,7 @@ namespace CourseProjectWPF
             ToDoItemsListView.ItemsSource = _toDoItemsCollection;
         }
 
-        public class LogbookToDoItem : ToDoItemModel
+        private class LogbookToDoItem : ToDoItemModel
         {
             public string CompleteDateStr { get; set; }
         }

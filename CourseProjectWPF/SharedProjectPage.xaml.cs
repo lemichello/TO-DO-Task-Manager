@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using BUS.Models;
 using BUS.Services;
@@ -15,12 +16,13 @@ namespace CourseProjectWPF
 {
     public partial class SharedProjectPage : Page
     {
-        private readonly ObservableCollection<ToDoItemModel> _toDoItemsCollection;
-        private readonly ToDoItemService                     _itemService;
-        private readonly ProjectService                      _projectService;
-        private readonly ToDoItemOperations                  _operations;
-        private readonly int                                 _projectId;
-        private readonly MainWindow                          _parent;
+        private readonly ObservableCollection<ToDoItemView> _toDoItemsCollection;
+        private readonly ToDoItemService                    _itemService;
+        private readonly ProjectService                     _projectService;
+        private readonly ToDoItemOperations                 _operations;
+        private readonly int                                _projectId;
+        private readonly MainWindow                         _parent;
+        private          bool                               _membersLoaded;
 
         public SharedProjectPage(MainWindow parent, int projectId, string projectName, int userId,
             ToDoItemService itemService, ProjectService projectService, TagService tagService)
@@ -31,8 +33,9 @@ namespace CourseProjectWPF
             SharedLogoImage.Source   = new BitmapImage(new Uri(Path.GetFullPath("../../Resources/shared.png")));
 
             _parent              = parent;
+            _membersLoaded       = false;
             _projectId           = projectId;
-            _toDoItemsCollection = new ObservableCollection<ToDoItemModel>();
+            _toDoItemsCollection = new ObservableCollection<ToDoItemView>();
             _itemService         = itemService;
             _projectService      = projectService;
             _operations =
@@ -40,7 +43,6 @@ namespace CourseProjectWPF
                     itemService, tagService);
 
             FillCollection();
-            FillMembersExpander();
 
             ToDoItemsListView.ItemsSource = _toDoItemsCollection;
         }
@@ -51,7 +53,7 @@ namespace CourseProjectWPF
 
             foreach (var i in collection)
             {
-                _toDoItemsCollection.Add(i);
+                _toDoItemsCollection.Add(_operations.ConvertToItemView(i));
             }
         }
 
@@ -65,6 +67,15 @@ namespace CourseProjectWPF
             }
         }
 
+        private void MembersExpander_OnExpanded(object sender, RoutedEventArgs e)
+        {
+            if (!_membersLoaded)
+            {
+                FillMembersExpander();
+                _membersLoaded = true;
+            }
+        }
+        
         private void ToDoItemsListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _operations.Selected();

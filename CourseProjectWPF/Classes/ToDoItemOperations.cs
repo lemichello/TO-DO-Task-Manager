@@ -10,17 +10,17 @@ namespace CourseProjectWPF.Classes
 {
     internal abstract class ToDoItemOperations
     {
-        private readonly ListView                            _toDoItemsListView;
-        private readonly ObservableCollection<ToDoItemModel> _toDoItemsCollection;
-        private readonly ToDoItemService                     _itemService;
-        private readonly TagService                          _tagService;
-        private readonly int                                 _userId;
-        private readonly int?                                _projectId;
+        private readonly   ListView                           _toDoItemsListView;
+        private readonly   ObservableCollection<ToDoItemView> _toDoItemsCollection;
+        protected readonly ToDoItemService                    _itemService;
+        private readonly   TagService                         _tagService;
+        private readonly   int                                _userId;
+        private readonly   int?                               _projectId;
 
-        internal ToDoItemOperations(ListView toDoItemsListView, ObservableCollection<ToDoItemModel> toDoItemsCollection,
+        internal ToDoItemOperations(ListView toDoItemsListView, ObservableCollection<ToDoItemView> toDoItemsCollection,
             int userId, int? projectId, ToDoItemService itemService, TagService tagService)
         {
-            _userId = userId;
+            _userId    = userId;
             _projectId = projectId;
 
             _toDoItemsListView   = toDoItemsListView;
@@ -77,7 +77,7 @@ namespace CourseProjectWPF.Classes
             if (itemWindow.DialogResult == false) return;
 
             itemWindow.Item.ProjectName = item.ProjectName;
-            
+
             _itemService.Update(itemWindow.Item);
 
             if (IsCorrect(itemWindow.Item))
@@ -91,7 +91,7 @@ namespace CourseProjectWPF.Classes
         private void Timer_OnTick(object sender, EventArgs e)
         {
             var timer    = (DispatcherTimer) sender;
-            var toDoItem = (ToDoItemModel) timer.Tag;
+            var toDoItem = (ToDoItemView) timer.Tag;
 
             toDoItem.CompleteDay = DateTime.Now;
 
@@ -127,53 +127,159 @@ namespace CourseProjectWPF.Classes
             toDoItem.Timer.Stop();
         }
 
-        protected abstract bool IsCorrect(ToDoItemModel item);
+        public abstract ToDoItemView ConvertToItemView(ToDoItemModel item);
+
+        protected abstract bool IsCorrect(ToDoItemView item);
     }
 
     internal sealed class InboxToDoItemOperations : ToDoItemOperations
     {
         public InboxToDoItemOperations(ListView toDoItemsListView,
-            ObservableCollection<ToDoItemModel> toDoItemsCollection,
+            ObservableCollection<ToDoItemView> toDoItemsCollection,
             int userId, int? projectId, ToDoItemService itemService, TagService tagService) :
             base(toDoItemsListView, toDoItemsCollection, userId, projectId, itemService, tagService)
         {
         }
 
-        protected override bool IsCorrect(ToDoItemModel item)
+        protected override bool IsCorrect(ToDoItemView item)
         {
             // User didn't choose a date for task.
             return item.Date == DateTime.MinValue.AddYears(1753);
+        }
+
+        public override ToDoItemView ConvertToItemView(ToDoItemModel item)
+        {
+            var itemView = new ToDoItemView
+            {
+                Id          = item.Id,
+                Header      = item.Header,
+                Notes       = item.Notes,
+                Date        = item.Date,
+                Deadline    = item.Deadline,
+                CompleteDay = item.CompleteDay,
+                ProjectId   = item.ProjectId,
+                ProjectName = item.ProjectName,
+                Timer       = item.Timer
+            };
+
+            if (itemView.Deadline == DateTime.MinValue.AddYears(1753))
+                return itemView;
+
+            // Moving task, which deadline is today, to TodayPage.
+            if (itemView.Deadline == DateTime.Today)
+            {
+                itemView.Date = DateTime.Today;
+                _itemService.Update(itemView);
+
+                return null;
+            }
+
+            var remainingDays = (itemView.Deadline - DateTime.Today).TotalDays;
+
+            itemView.DeadlineColor = "Gray";
+            itemView.DeadlineShort = $"{remainingDays}d left";
+
+            return itemView;
         }
     }
 
     internal sealed class TodayToDoItemOperations : ToDoItemOperations
     {
         public TodayToDoItemOperations(ListView toDoItemsListView,
-            ObservableCollection<ToDoItemModel> toDoItemsCollection,
+            ObservableCollection<ToDoItemView> toDoItemsCollection,
             int userId, int? projectId, ToDoItemService itemService, TagService tagService) :
             base(toDoItemsListView, toDoItemsCollection, userId, projectId, itemService, tagService)
         {
         }
 
-        protected override bool IsCorrect(ToDoItemModel item)
+        protected override bool IsCorrect(ToDoItemView item)
         {
             // User chose today's date for task.
-            return item.Date.ToShortDateString() == DateTime.Now.ToShortDateString();
+            return item.Date.ToShortDateString() == DateTime.Now.ToShortDateString() ||
+                   item.Deadline == DateTime.Today;
+        }
+
+        public override ToDoItemView ConvertToItemView(ToDoItemModel item)
+        {
+            var itemView = new ToDoItemView
+            {
+                Id          = item.Id,
+                Header      = item.Header,
+                Notes       = item.Notes,
+                Date        = item.Date,
+                Deadline    = item.Deadline,
+                CompleteDay = item.CompleteDay,
+                ProjectId   = item.ProjectId,
+                ProjectName = item.ProjectName,
+                Timer       = item.Timer
+            };
+
+            if (itemView.Deadline == DateTime.MinValue.AddYears(1753))
+                return itemView;
+
+            if (itemView.Deadline == DateTime.Today)
+            {
+                itemView.DeadlineColor = "Red";
+                itemView.DeadlineShort = "today";
+            }
+            else
+            {
+                var remainingDays = (itemView.Deadline - DateTime.Today).TotalDays;
+
+                itemView.DeadlineColor = "Gray";
+                itemView.DeadlineShort = $"{remainingDays}d left";
+            }
+
+            return itemView;
         }
     }
 
     internal sealed class SharedToDoItemOperations : ToDoItemOperations
     {
         public SharedToDoItemOperations(ListView toDoItemsListView,
-            ObservableCollection<ToDoItemModel> toDoItemsCollection, int userId, int? projectId,
+            ObservableCollection<ToDoItemView> toDoItemsCollection, int userId, int? projectId,
             ToDoItemService itemService, TagService tagService) : base(toDoItemsListView,
             toDoItemsCollection, userId, projectId, itemService, tagService)
         {
         }
 
-        protected override bool IsCorrect(ToDoItemModel item)
+        protected override bool IsCorrect(ToDoItemView item)
         {
             return true;
+        }
+
+        public override ToDoItemView ConvertToItemView(ToDoItemModel item)
+        {
+            var itemView = new ToDoItemView
+            {
+                Id          = item.Id,
+                Header      = item.Header,
+                Notes       = item.Notes,
+                Date        = item.Date,
+                Deadline    = item.Deadline,
+                CompleteDay = item.CompleteDay,
+                ProjectId   = item.ProjectId,
+                ProjectName = item.ProjectName,
+                Timer       = item.Timer
+            };
+
+            if (itemView.Deadline == DateTime.MinValue.AddYears(1753))
+                return itemView;
+
+            if (itemView.Deadline == DateTime.Today)
+            {
+                itemView.DeadlineColor = "Red";
+                itemView.DeadlineShort = "today";
+            }
+            else
+            {
+                var remainingDays = (itemView.Deadline - DateTime.Today).TotalDays;
+
+                itemView.DeadlineColor = "Gray";
+                itemView.DeadlineShort = $"{remainingDays}d left";
+            }
+
+            return itemView;
         }
     }
 }

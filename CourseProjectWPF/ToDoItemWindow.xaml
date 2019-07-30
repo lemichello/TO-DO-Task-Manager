@@ -54,10 +54,10 @@
                      materialDesign:HintAssist.Hint="Notes" />
             <Label Content="Date" FontSize="17" Margin="5" Height="30" Style="{StaticResource MaterialDesignLabel}" />
             <DatePicker Name="PickedDate" Margin="5" Height="30" Style="{StaticResource MaterialDesignDatePicker}"
-                        Focusable="False" />
+                        Focusable="False" ToolTip="To unselect date hold Ctrl and click on date" />
             <Label Content="Deadline" FontSize="17" Margin="5" Height="30" Style="{StaticResource MaterialDesignLabel}" />
             <DatePicker Name="PickedDeadline" Margin="5" Height="30" Style="{StaticResource MaterialDesignDatePicker}"
-                        Focusable="False" />
+                        Focusable="False" ToolTip="To unselect deadline date hold Ctrl and click on date" />
             <Button Content="Save" FontSize="16" Height="30" Click="Save_OnClick"
                     Margin="5 20 5 0" Style="{StaticResource MaterialDesignRaisedButton}" />
             <Button Content="Delete" FontSize="16" Height="30" Click="Delete_OnClick"

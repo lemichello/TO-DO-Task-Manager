@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using BUS.Models;
 using BUS.Services;
+using CourseProjectWPF.Classes;
 
 namespace CourseProjectWPF
 {
@@ -16,7 +17,7 @@ namespace CourseProjectWPF
         private readonly TagService                     _tagService;
         public IEnumerable<int> SelectedTagsId { get; set; }
 
-        public ToDoItemModel Item { get; }
+        public ToDoItemView Item { get; }
         public bool ToDelete { get; private set; }
 
         public ToDoItemWindow(int userId)
@@ -25,7 +26,7 @@ namespace CourseProjectWPF
 
             PickedDate.DisplayDateStart     = DateTime.Now;
             PickedDeadline.DisplayDateStart = DateTime.Now;
-            Item                            = new ToDoItemModel();
+            Item                            = new ToDoItemView();
             ToDelete                        = false;
 
             _tagService = new TagService(userId);
@@ -45,7 +46,7 @@ namespace CourseProjectWPF
 
         public ToDoItemWindow(ToDoItemModel item, int userId) : this(userId)
         {
-            Item = new ToDoItemModel {Id = item.Id};
+            Item = new ToDoItemView {Id = item.Id};
 
             HeaderText.Text = item.Header;
             NotesText.Text  = item.Notes;
@@ -84,6 +85,19 @@ namespace CourseProjectWPF
                 Item.Deadline = _minDate;
 
             Item.CompleteDay = _minDate;
+
+            if (Item.Deadline == DateTime.Today)
+            {
+                Item.DeadlineColor = "Red";
+                Item.DeadlineShort = "today";
+            }
+            else
+            {
+                var remainingDays = (Item.Deadline - DateTime.Today).TotalDays;
+
+                Item.DeadlineColor = "Gray";
+                Item.DeadlineShort = $"{remainingDays}d left";
+            }
 
             SelectedTagsId = GetTagsId();
 

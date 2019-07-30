@@ -14,34 +14,36 @@ namespace CourseProjectWPF
     /// </summary>
     public partial class TodayPage : Page
     {
-        private readonly ObservableCollection<ToDoItemModel> _toDoItemsCollection;
-        private readonly TodayToDoItemOperations             _toDoItemOperations;
-        private readonly ToDoItemService                     _service;
+        private readonly ObservableCollection<ToDoItemView> _toDoItemsCollection;
+        private readonly TodayToDoItemOperations            _toDoItemOperations;
+        private readonly ToDoItemService                    _service;
 
         public TodayPage(int userId, ToDoItemService itemService, TagService tagService)
         {
             InitializeComponent();
 
-            _toDoItemsCollection = new ObservableCollection<ToDoItemModel>();
-            _service = itemService;
+            _toDoItemsCollection = new ObservableCollection<ToDoItemView>();
+            _service             = itemService;
+
+            _toDoItemOperations = new TodayToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, userId, null,
+                itemService, tagService);
 
             FillCollection();
 
             ToDoItemsListView.ItemsSource = _toDoItemsCollection;
-            _toDoItemOperations =
-                new TodayToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, userId, null,
-                    itemService, tagService);
         }
 
         private void FillCollection()
         {
-            var collection = _service.Get(item => item.Date <= DateTime.Today &&
+            var collection = _service.Get(item => (item.Date <= DateTime.Today ||
+                                                   item.Deadline == DateTime.Today) &&
                                                   item.CompleteDay == DateTime.MinValue.AddYears(1753) &&
-                                                  item.Date != DateTime.MinValue.AddYears(1753)).ToList();
+                                                  (item.Date != DateTime.MinValue.AddYears(1753) ||
+                                                   item.Deadline == DateTime.Today)).ToList();
 
             foreach (var i in collection)
             {
-                _toDoItemsCollection.Add(i);
+                _toDoItemsCollection.Add(_toDoItemOperations.ConvertToItemView(i));
             }
         }
 

@@ -14,17 +14,17 @@ namespace CourseProjectWPF
     /// </summary>
     public partial class InboxPage : Page
     {
-        private readonly ObservableCollection<ToDoItemModel> _toDoItemsCollection;
-        private readonly ToDoItemService                     _service;
-        private readonly ToDoItemOperations                  _operations;
+        private readonly ObservableCollection<ToDoItemView> _toDoItemsCollection;
+        private readonly ToDoItemService                    _service;
+        private readonly ToDoItemOperations                 _operations;
 
         public InboxPage(int userId, ToDoItemService service, TagService tagService)
         {
             InitializeComponent();
 
-            _toDoItemsCollection = new ObservableCollection<ToDoItemModel>();
+            _toDoItemsCollection = new ObservableCollection<ToDoItemView>();
             _service             = service;
-            _operations          = new InboxToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, userId, null,
+            _operations = new InboxToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, userId, null,
                 service, tagService);
 
             FillCollection();
@@ -61,7 +61,11 @@ namespace CourseProjectWPF
 
             foreach (var i in collection)
             {
-                _toDoItemsCollection.Add(i);
+                var item = _operations.ConvertToItemView(i);
+
+                if (item == null) continue;
+
+                _toDoItemsCollection.Add(item);
             }
         }
     }

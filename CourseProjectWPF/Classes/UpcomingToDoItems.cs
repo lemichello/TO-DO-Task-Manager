@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using BUS.Models;
 using BUS.Services;
@@ -11,7 +12,7 @@ namespace CourseProjectWPF.Classes
     {
         public string Date { get; set; }
         public string WeekDay { get; set; }
-        public ObservableCollection<ToDoItemModel> ToDoItems { get; set; }
+        public ObservableCollection<ToDoItemView> ToDoItems { get; set; }
 
         private readonly List<ToDoItemModel> _allItems;
 
@@ -32,35 +33,70 @@ namespace CourseProjectWPF.Classes
             else
                 WeekDay = DateTime.Today.AddDays(increaser).DayOfWeek.ToString();
 
-            ToDoItems = new ObservableCollection<ToDoItemModel>();
+            ToDoItems = new ObservableCollection<ToDoItemView>();
 
             if (addToDays)
                 FillToDoItemsByDays(increaser);
             else
                 FillToDoItemsByMonths(increaser);
         }
-
+        
         // Fill remaining items.
         public UpcomingToDoItems(int year, List<ToDoItemModel> items)
         {
-            ToDoItems = new ObservableCollection<ToDoItemModel>();
+            ToDoItems = new ObservableCollection<ToDoItemView>();
             Date = year.ToString();
 
+            AddItems(items);
+        }
+
+        private void AddItems(List<ToDoItemModel> items)
+        {
             foreach (var i in items)
             {
-                ToDoItems.Add(i);
+                var itemView = new ToDoItemView
+                {
+                    Id          = i.Id,
+                    Header      = i.Header,
+                    Notes       = i.Notes,
+                    Date        = i.Date,
+                    Deadline    = i.Deadline,
+                    CompleteDay = i.CompleteDay,
+                    ProjectId   = i.ProjectId,
+                    ProjectName = i.ProjectName,
+                    Timer       = i.Timer
+                };
+
+                if (i.Deadline == DateTime.MinValue.AddYears(1753))
+                {
+                    ToDoItems.Add(itemView);
+                    continue;
+                }
+                
+                if (i.Deadline == DateTime.Today)
+                {
+                    itemView.DeadlineColor = "Red";
+                    itemView.DeadlineShort = "today";
+                }
+                else
+                {
+                    var remainingDays = (i.Deadline - DateTime.Today).TotalDays;
+                    
+                    itemView.DeadlineColor = "Gray";
+                    itemView.DeadlineShort = $"{remainingDays}d left";
+                }
+                
+                ToDoItems.Add(itemView);
             }
         }
+
         
         private void FillToDoItemsByDays(int dayIncreaser)
         {
             var items = _allItems.Where(i =>
                 i.Date == DateTime.Today.AddDays(dayIncreaser)).ToList();
 
-            foreach (var i in items)
-            {
-                ToDoItems.Add(i);
-            }
+            AddItems(items);
         }
 
         private void FillToDoItemsByMonths(int monthIncreaser)
@@ -75,10 +111,7 @@ namespace CourseProjectWPF.Classes
 
             var items = _allItems.Where(i => i.Date >= begin && i.Date <= end).ToList();
 
-            foreach (var i in items)
-            {
-                ToDoItems.Add(i);
-            }
+            AddItems(items);
         }
 
         private static void FillByNextMonth(int monthIncreaser, out DateTime begin, out DateTime end)

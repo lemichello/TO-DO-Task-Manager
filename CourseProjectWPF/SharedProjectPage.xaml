@@ -27,7 +27,8 @@
         </StackPanel>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
             <Label Content="Members : " FontSize="20" Margin="0 5 0 0" Foreground="#2295F2" />
-            <Expander Name="MembersExpander" Style="{StaticResource MaterialDesignExpander}" Foreground="#2295F2" />
+            <Expander Name="MembersExpander" Style="{StaticResource MaterialDesignExpander}" Foreground="#2295F2" 
+                      Expanded="MembersExpander_OnExpanded"/>
             <Canvas Margin="0 6 0 0">
                 <StackPanel Orientation="Horizontal">
                     <Button Name="InviteButton" Content="Invite" Click="InviteButton_OnCLick" />
@@ -60,6 +61,8 @@
                             <TextBlock Text="{Binding Header}" FontSize="17" />
                             <TextBlock Text="{Binding Notes}" FontSize="13" Foreground="Silver" />
                         </StackPanel>
+                        <TextBlock Text="{Binding DeadlineShort}" FontSize="17" Foreground="{Binding DeadlineColor}"
+                                   Margin="8 0 0 0" />
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>

@@ -75,6 +75,7 @@
     </ApplicationDefinition>
     <Compile Include="Classes\ProjectView.cs" />
     <Compile Include="Classes\ToDoItemOperations.cs" />
+    <Compile Include="Classes\ToDoItemView.cs" />
     <Compile Include="Classes\UpcomingToDoItems.cs" />
     <Compile Include="LogbookPage.xaml.cs">
       <DependentUpon>LogbookPage.xaml</DependentUpon>
