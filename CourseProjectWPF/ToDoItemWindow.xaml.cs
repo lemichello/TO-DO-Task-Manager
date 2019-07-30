@@ -91,7 +91,7 @@ namespace CourseProjectWPF
                 Item.DeadlineColor = "Red";
                 Item.DeadlineShort = "today";
             }
-            else
+            else if (Item.Deadline != _minDate)
             {
                 var remainingDays = (Item.Deadline - DateTime.Today).TotalDays;
 
