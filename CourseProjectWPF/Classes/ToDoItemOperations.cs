@@ -127,6 +127,22 @@ namespace CourseProjectWPF.Classes
             toDoItem.Timer.Stop();
         }
 
+        protected ToDoItemView GetItemView(ToDoItemModel item)
+        {
+            return new ToDoItemView
+            {
+                Id          = item.Id,
+                Header      = item.Header,
+                Notes       = item.Notes,
+                Date        = item.Date,
+                Deadline    = item.Deadline,
+                CompleteDay = item.CompleteDay,
+                ProjectId   = item.ProjectId,
+                ProjectName = item.ProjectName,
+                Timer       = item.Timer
+            };
+        }
+        
         public abstract ToDoItemView ConvertToItemView(ToDoItemModel item);
 
         protected abstract bool IsCorrect(ToDoItemView item);
@@ -149,24 +165,13 @@ namespace CourseProjectWPF.Classes
 
         public override ToDoItemView ConvertToItemView(ToDoItemModel item)
         {
-            var itemView = new ToDoItemView
-            {
-                Id          = item.Id,
-                Header      = item.Header,
-                Notes       = item.Notes,
-                Date        = item.Date,
-                Deadline    = item.Deadline,
-                CompleteDay = item.CompleteDay,
-                ProjectId   = item.ProjectId,
-                ProjectName = item.ProjectName,
-                Timer       = item.Timer
-            };
+            var itemView = GetItemView(item);
 
             if (itemView.Deadline == DateTime.MinValue.AddYears(1753))
                 return itemView;
 
             // Moving task, which deadline is today, to TodayPage.
-            if (itemView.Deadline == DateTime.Today)
+            if (itemView.Deadline <= DateTime.Today)
             {
                 itemView.Date = DateTime.Today;
                 _itemService.Update(itemView);
@@ -201,23 +206,12 @@ namespace CourseProjectWPF.Classes
 
         public override ToDoItemView ConvertToItemView(ToDoItemModel item)
         {
-            var itemView = new ToDoItemView
-            {
-                Id          = item.Id,
-                Header      = item.Header,
-                Notes       = item.Notes,
-                Date        = item.Date,
-                Deadline    = item.Deadline,
-                CompleteDay = item.CompleteDay,
-                ProjectId   = item.ProjectId,
-                ProjectName = item.ProjectName,
-                Timer       = item.Timer
-            };
+            var itemView = GetItemView(item);
 
             if (itemView.Deadline == DateTime.MinValue.AddYears(1753))
                 return itemView;
 
-            if (itemView.Deadline == DateTime.Today)
+            if (itemView.Deadline <= DateTime.Today)
             {
                 itemView.DeadlineColor = "Red";
                 itemView.DeadlineShort = "today";
@@ -250,23 +244,12 @@ namespace CourseProjectWPF.Classes
 
         public override ToDoItemView ConvertToItemView(ToDoItemModel item)
         {
-            var itemView = new ToDoItemView
-            {
-                Id          = item.Id,
-                Header      = item.Header,
-                Notes       = item.Notes,
-                Date        = item.Date,
-                Deadline    = item.Deadline,
-                CompleteDay = item.CompleteDay,
-                ProjectId   = item.ProjectId,
-                ProjectName = item.ProjectName,
-                Timer       = item.Timer
-            };
+            var itemView = GetItemView(item);
 
             if (itemView.Deadline == DateTime.MinValue.AddYears(1753))
                 return itemView;
 
-            if (itemView.Deadline == DateTime.Today)
+            if (itemView.Deadline <= DateTime.Today)
             {
                 itemView.DeadlineColor = "Red";
                 itemView.DeadlineShort = "today";

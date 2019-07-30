@@ -35,11 +35,13 @@ namespace CourseProjectWPF
 
         private void FillCollection()
         {
+            var minDate = DateTime.MinValue.AddYears(1753);
+
             var collection = _service.Get(item => (item.Date <= DateTime.Today ||
                                                    item.Deadline == DateTime.Today) &&
-                                                  item.CompleteDay == DateTime.MinValue.AddYears(1753) &&
-                                                  (item.Date != DateTime.MinValue.AddYears(1753) ||
-                                                   item.Deadline == DateTime.Today)).ToList();
+                                                  item.CompleteDay == minDate &&
+                                                  (item.Date != minDate || (item.Deadline <= DateTime.Today &&
+                                                                            item.Deadline != minDate))).ToList();
 
             foreach (var i in collection)
             {
