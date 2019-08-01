@@ -7,18 +7,6 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d"
       Title="SharedProjectPage" d:DesignHeight="450" d:DesignWidth="800">
-    <Page.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary
-                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
-                <ResourceDictionary
-                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
-                <ResourceDictionary
-                    Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Blue.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Page.Resources>
     <DockPanel Margin="50 60 0 0">
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
             <Image Name="SharedLogoImage" Width="40" Height="40" />
@@ -27,8 +15,8 @@
         </StackPanel>
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
             <Label Content="Members : " FontSize="20" Margin="0 5 0 0" Foreground="#2295F2" />
-            <Expander Name="MembersExpander" Style="{StaticResource MaterialDesignExpander}" Foreground="#2295F2" 
-                      Expanded="MembersExpander_OnExpanded"/>
+            <Expander Name="MembersExpander" Style="{StaticResource MaterialDesignExpander}" Foreground="#2295F2"
+                      Expanded="MembersExpander_OnExpanded" />
             <Canvas Margin="0 6 0 0">
                 <StackPanel Orientation="Horizontal">
                     <Button Name="InviteButton" Content="Invite" Click="InviteButton_OnCLick" />

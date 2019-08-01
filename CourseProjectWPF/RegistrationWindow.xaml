@@ -7,26 +7,14 @@
         xmlns:local="clr-namespace:CourseProjectWPF"
         mc:Ignorable="d"
         Title="RegistrationWindow" Height="450" Width="800" WindowState="Maximized">
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary
-                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
-                <ResourceDictionary
-                    Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
-                <ResourceDictionary
-                    Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.Blue.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="350">
         <TextBox Name="LoginTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                 materialDesign:HintAssist.Hint="Login" FontSize="17"/>
+                 materialDesign:HintAssist.Hint="Login" FontSize="17" />
         <PasswordBox Name="PasswordBox" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
                      materialDesign:HintAssist.Hint="Password" FontSize="17" />
         <PasswordBox Name="RepeatPasswordBox" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
                      materialDesign:HintAssist.Hint="Repeat password" FontSize="17" />
-        <Button Content="Register" Style="{StaticResource MaterialDesignRaisedButton}" Margin="0 20 0 10" 
-                IsDefault="True" Click="RegisterButton_OnClick"/>
+        <Button Content="Register" Style="{StaticResource MaterialDesignRaisedButton}" Margin="0 20 0 10"
+                IsDefault="True" Click="RegisterButton_OnClick" />
     </StackPanel>
 </Window>
