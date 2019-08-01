@@ -1,6 +1,4 @@
-﻿using System.Windows;
-
-namespace CourseProjectWPF
+﻿namespace ToDoTaskManager
 {
     /// <summary>
     /// Interaction logic for App.xaml

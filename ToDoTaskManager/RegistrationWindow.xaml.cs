@@ -1,7 +1,7 @@
 using System.Windows;
 using BUS.Services;
 
-namespace CourseProjectWPF
+namespace ToDoTaskManager
 {
     public partial class RegistrationWindow : Window
     {

@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using BUS.Models;
-using BUS.Services;
 
-namespace CourseProjectWPF.Classes
+namespace ToDoTaskManager.Classes
 {
     public sealed class UpcomingToDoItems
     {

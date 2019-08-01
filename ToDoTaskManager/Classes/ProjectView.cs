@@ -1,4 +1,4 @@
-namespace CourseProjectWPF.Classes
+namespace ToDoTaskManager.Classes
 {
     public class ProjectView
     {

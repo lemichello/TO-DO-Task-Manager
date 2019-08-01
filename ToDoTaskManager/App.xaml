@@ -1,7 +1,7 @@
-﻿<Application x:Class="CourseProjectWPF.App"
+﻿<Application x:Class="ToDoTaskManager.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:CourseProjectWPF"
+             xmlns:local="clr-namespace:ToDoTaskManager"
              StartupUri="LoginWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>

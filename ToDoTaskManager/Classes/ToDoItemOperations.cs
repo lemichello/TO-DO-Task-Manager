@@ -6,7 +6,7 @@ using System.Windows.Threading;
 using BUS.Models;
 using BUS.Services;
 
-namespace CourseProjectWPF.Classes
+namespace ToDoTaskManager.Classes
 {
     internal abstract class ToDoItemOperations
     {

@@ -1,18 +1,15 @@
 using System;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using BUS.Models;
 using BUS.Services;
-using CourseProjectWPF.Classes;
+using ToDoTaskManager.Classes;
 using MessageBox = System.Windows.Forms.MessageBox;
 
-namespace CourseProjectWPF
+namespace ToDoTaskManager
 {
     public partial class SharedProjectPage : Page
     {

@@ -6,9 +6,9 @@ using System.Windows.Controls;
 using System.Windows.Threading;
 using BUS.Models;
 using BUS.Services;
-using CourseProjectWPF.Classes;
+using ToDoTaskManager.Classes;
 
-namespace CourseProjectWPF
+namespace ToDoTaskManager
 {
     /// <summary>
     /// Interaction logic for UpcomingPage.xaml

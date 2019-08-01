@@ -1,6 +1,6 @@
 using System.Windows;
 
-namespace CourseProjectWPF
+namespace ToDoTaskManager
 {
     public partial class TagWindow : Window
     {

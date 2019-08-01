@@ -1,9 +1,8 @@
-using System;
 using System.Configuration;
 using System.Windows;
 using BUS.Services;
 
-namespace CourseProjectWPF
+namespace ToDoTaskManager
 {
     public partial class LoginWindow : Window
     {
@@ -21,7 +20,6 @@ namespace CourseProjectWPF
 
         private void IsUserLoggedIn()
         {
-
             var loginStatus = ConfigurationManager.AppSettings["UserId"];
 
             if (loginStatus == null || loginStatus == "-1")
@@ -57,19 +55,18 @@ namespace CourseProjectWPF
             window.Show();
             Hide();
 
-            LoginTextBox.Text = string.Empty;
+            LoginTextBox.Text    = string.Empty;
             PasswordBox.Password = string.Empty;
 
             // User chose to not remember his password. 
             if (RememberPasswordCheckBox?.IsChecked != null &&
-                !(bool)RememberPasswordCheckBox.IsChecked)
+                !(bool) RememberPasswordCheckBox.IsChecked)
                 return;
 
             SetLoginInfo(id);
 
             if (RememberPasswordCheckBox != null)
                 RememberPasswordCheckBox.IsChecked = false;
-
         }
 
         private static void SetLoginInfo(int id)

@@ -2,16 +2,14 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
-using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
 using BUS.Models;
 using BUS.Services;
-using CourseProjectWPF.Classes;
+using ToDoTaskManager.Classes;
 
-namespace CourseProjectWPF
+namespace ToDoTaskManager
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

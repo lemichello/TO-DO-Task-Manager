@@ -6,9 +6,9 @@ using System.Windows;
 using System.Windows.Controls;
 using BUS.Models;
 using BUS.Services;
-using CourseProjectWPF.Classes;
+using ToDoTaskManager.Classes;
 
-namespace CourseProjectWPF
+namespace ToDoTaskManager
 {
     public partial class ToDoItemWindow : Window
     {

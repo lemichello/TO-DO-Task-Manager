@@ -3,11 +3,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using BUS.Models;
 using BUS.Services;
-using CourseProjectWPF.Classes;
+using ToDoTaskManager.Classes;
 
-namespace CourseProjectWPF
+namespace ToDoTaskManager
 {
     /// <summary>
     /// Interaction logic for InboxPage.xaml

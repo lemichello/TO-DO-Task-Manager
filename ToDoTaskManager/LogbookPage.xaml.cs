@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using BUS.Models;
 using BUS.Services;
 
-namespace CourseProjectWPF
+namespace ToDoTaskManager
 {
     public partial class LogbookPage
     {

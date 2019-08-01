@@ -1,6 +1,6 @@
 using BUS.Models;
 
-namespace CourseProjectWPF.Classes
+namespace ToDoTaskManager.Classes
 {
     public class ToDoItemView : ToDoItemModel
     {
