@@ -118,7 +118,7 @@
                 <Button HorizontalAlignment="Left" Margin="10 20 5 5" ToolTip="Refresh"
                         Style="{StaticResource MaterialDesignFloatingActionMiniButton}" Click="RefreshButton_OnClick">
                     <Grid>
-                        <Image Name="RefreshButtonImage" Width="22" Height="22" />
+                        <Image Name="RefreshButtonImage" Width="22" Height="22" Source="Resources/refresh.png" />
                     </Grid>
                 </Button>
             </Grid>

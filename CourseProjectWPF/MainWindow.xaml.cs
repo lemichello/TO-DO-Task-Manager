@@ -43,8 +43,6 @@ namespace CourseProjectWPF
             ProjectsListView.ItemsSource    = _projects;
             InvitationsListView.ItemsSource = _invitations;
 
-            RefreshButtonImage.Source = new BitmapImage(new Uri(Path.GetFullPath("../../Resources/refresh.png")));
-
             _isLogOut   = false;
             _parent     = parent;
             _userId     = userId;
@@ -87,7 +85,7 @@ namespace CourseProjectWPF
                 _projects.Add(new ProjectView
                 {
                     Id          = project.Id,
-                    ImageSource = Path.GetFullPath("../../Resources/shared.png"),
+                    ImageSource = "Resources/shared.png",
                     Name        = project.Name
                 });
             }
@@ -282,7 +280,7 @@ namespace CourseProjectWPF
             _projects.Add(new ProjectView
             {
                 Id          = projectId,
-                ImageSource = Path.GetFullPath("../../Resources/shared.png"),
+                ImageSource = "Resources/shared.png",
                 Name        = ProjectNameTextBox.Text
             });
 
@@ -314,7 +312,7 @@ namespace CourseProjectWPF
                 {
                     Id          = invitation.ProjectId,
                     Name        = invitation.ProjectName,
-                    ImageSource = Path.GetFullPath("../../Resources/shared.png")
+                    ImageSource = "Resources/shared.png"
                 });
             }
             else

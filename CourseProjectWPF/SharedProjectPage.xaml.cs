@@ -30,7 +30,6 @@ namespace CourseProjectWPF
             InitializeComponent();
 
             ProjectNameLabel.Content = projectName;
-            SharedLogoImage.Source   = new BitmapImage(new Uri(Path.GetFullPath("../../Resources/shared.png")));
 
             _parent              = parent;
             _membersLoaded       = false;

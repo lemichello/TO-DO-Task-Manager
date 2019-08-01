@@ -9,7 +9,7 @@
       Title="SharedProjectPage" d:DesignHeight="450" d:DesignWidth="800">
     <DockPanel Margin="50 60 0 0">
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-            <Image Name="SharedLogoImage" Width="40" Height="40" />
+            <Image Name="SharedLogoImage" Width="40" Height="40" Source="Resources/shared.png" />
             <Label Name="ProjectNameLabel" Margin="10 0 0 0" FontWeight="Bold" FontSize="30"
                    Style="{StaticResource MaterialDesignLabel}" />
         </StackPanel>
