@@ -226,6 +226,11 @@ namespace CourseProjectWPF
                 _parent.Close();
         }
 
+        private void SupportButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://send.monobank.com.ua/nzpHJn4A");
+        }
+        
         private void LogOutButton_OnClick(object sender, RoutedEventArgs e)
         {
             var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);

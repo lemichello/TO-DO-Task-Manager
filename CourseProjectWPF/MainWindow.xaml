@@ -111,6 +111,8 @@
         <GridSplitter Grid.Column="0" Width="3" Background="#F4F6F8" />
         <DockPanel Grid.Column="1" Background="{DynamicResource MaterialDesignPaper}">
             <Grid DockPanel.Dock="Top">
+                <Button Content="Support project" HorizontalAlignment="Center" Click="SupportButton_OnClick" 
+                        Margin="0 10 0 0"/>
                 <Button Content="Log out" HorizontalAlignment="Right" Margin="5 10 5 5"
                         Style="{StaticResource MaterialDesignRaisedButton}" Click="LogOutButton_OnClick" />
                 <Button HorizontalAlignment="Left" Margin="10 20 5 5" ToolTip="Refresh"
