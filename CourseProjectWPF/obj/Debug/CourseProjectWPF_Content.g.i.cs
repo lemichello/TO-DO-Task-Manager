@@ -9,6 +9,7 @@
 //------------------------------------------------------------------------------
 
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/refresh.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/shared.png")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/todoicon.ico")]
 
 
