@@ -3,6 +3,9 @@
 
 Hi, this is a TO-DO Task Manager, which will help you to manage your tasks.
 
+## Telegram Bot:
+There's also a Telegram Bot - @todotaskmanagerbot, which is written on Go. It can do everything, that you can do on desktop version (except registration).
+
 ## Characteristics of Inbox page:
 Tasks will appear in the Inbox page when they haven't their date (their date is not specified). When you'll specify a date of a task in the Inbox page, it will be removed from the Inbox page and added to the Today page or Upcoming page. The inbox page is useful for tasks, dates of which you didn't come up with.
 
@@ -20,6 +23,6 @@ You can create shared projects. In shared projects you and your team can add and
 know their logins and after accepting the invitation they will join to your project. Also, you can create project, but not invite any users to it.
 
 ### Another:
-There's also a possibility to add tags to tasks. You can search your tasks by tags, separating them by spaces.
+You can add tags to tasks. By tags you can search your tasks in search bar.
 
 That's all. Thanks for reading.
