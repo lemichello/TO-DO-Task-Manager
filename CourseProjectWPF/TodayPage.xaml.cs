@@ -37,8 +37,8 @@ namespace CourseProjectWPF
         {
             var minDate = DateTime.MinValue.AddYears(1753);
 
-            var collection = _service.Get(item => item.Date <= DateTime.Today && item.Date != minDate ||
-                                                  item.Deadline <= DateTime.Today && item.Deadline != minDate &&
+            var collection = _service.Get(item => (item.Date <= DateTime.Today && item.Date != minDate ||
+                                                   item.Deadline <= DateTime.Today && item.Deadline != minDate) &&
                                                   item.CompleteDay == minDate).ToList();
 
             foreach (var i in collection)
