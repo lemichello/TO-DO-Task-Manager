@@ -82,7 +82,7 @@ namespace CourseProjectWPF.Classes
                     continue;
                 }
                 
-                if (i.Deadline == DateTime.Today)
+                if (i.Deadline <= DateTime.Today)
                 {
                     itemView.DeadlineColor = "Red";
                     itemView.DeadlineShort = "today";
