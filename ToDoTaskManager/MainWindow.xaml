@@ -28,29 +28,46 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <StackPanel Margin="5 20 0 0" Grid.Row="0" Orientation="Horizontal">
-                <Canvas HorizontalAlignment="Left" Margin="5 8 0 0">
-                    <TextBox Name="SearchTextBox" Width="150"
-                             materialDesign:HintAssist.Hint="Tags (separate by space)"
-                             Style="{StaticResource MaterialDesignTextBoxBase}" Margin="0" />
-                    <Button Content="Search" Width="75" Height="25" Margin="160 5 0 0" Click="Search_OnClick"
-                            ToolTip="Find tasks by their tags" />
-                </Canvas>
-                <Expander Name="SearchExpander" MaxWidth="88"
-                          Style="{StaticResource MaterialDesignExpander}" Margin="245 0 0 0" Background="#F4F6F8">
-                    <ListBox Name="FoundToDoItems" MaxWidth="88"
-                             SelectionChanged="FoundToDoItems_OnSelectionChanged"
-                             Style="{StaticResource MaterialDesignListBox}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid ToolTip="{Binding Header}">
-                                    <TextBlock Text="{Binding Header}" />
-                                </Grid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </Expander>
-            </StackPanel>
+            <Grid Grid.Row="0" Margin="5 20 0 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <ComboBox Name="SearchConditionsComboBox" Width="150" HorizontalAlignment="Left" Margin="5 0 0 0"
+                          materialDesign:HintAssist.Hint="Search in..."
+                          SelectionChanged="SearchConditionsComboBox_OnSelectionChanged">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox  Content="{Binding Name}" IsChecked="{Binding IsSelected}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                    <Canvas HorizontalAlignment="Left" Margin="5 8 0 0">
+                        <TextBox Name="SearchTextBox" Width="150"
+                                 materialDesign:HintAssist.Hint="Tags (separate by space)"
+                                 Style="{StaticResource MaterialDesignTextBoxBase}" Margin="0" />
+                        <Button Content="Search" Width="75" Height="25" Margin="160 5 0 0" Click="Search_OnClick"
+                                ToolTip="Find tasks by their tags" />
+                    </Canvas>
+                    <Expander Name="SearchExpander" MaxWidth="88"
+                              Style="{StaticResource MaterialDesignExpander}" Margin="245 0 0 0" Background="#F4F6F8">
+                        <ListBox Name="FoundToDoItems" MaxWidth="88"
+                                 SelectionChanged="FoundToDoItems_OnSelectionChanged"
+                                 Style="{StaticResource MaterialDesignListBox}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid ToolTip="{Binding Header}">
+                                        <TextBlock Text="{Binding Header}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Expander>
+                </StackPanel>
+            </Grid>
             <ListView Grid.Row="1" Name="ProjectsListView" Background="#F4F6F8" BorderThickness="0" Margin="20 30 0 0"
                       SelectionChanged="PagesListView_OnSelectionChanged"
                       Style="{StaticResource MaterialDesignListView}">
@@ -111,8 +128,8 @@
         <GridSplitter Grid.Column="0" Width="3" Background="#F4F6F8" />
         <DockPanel Grid.Column="1" Background="{DynamicResource MaterialDesignPaper}">
             <Grid DockPanel.Dock="Top">
-                <Button Content="Support project" HorizontalAlignment="Center" Click="SupportButton_OnClick" 
-                        Margin="0 10 0 0"/>
+                <Button Content="Support project" HorizontalAlignment="Center" Click="SupportButton_OnClick"
+                        Margin="0 10 0 0" />
                 <Button Content="Log out" HorizontalAlignment="Right" Margin="5 10 5 5"
                         Style="{StaticResource MaterialDesignRaisedButton}" Click="LogOutButton_OnClick" />
                 <Button HorizontalAlignment="Left" Margin="10 20 5 5" ToolTip="Refresh"

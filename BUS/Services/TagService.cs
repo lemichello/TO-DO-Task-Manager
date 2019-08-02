@@ -95,9 +95,51 @@ namespace BUS.Services
                 });
         }
 
-        public IEnumerable<ToDoItemModel> GetItemsByTags(IEnumerable<string> tags)
+        private List<Predicate<ItemTag>> GetPredicates(IEnumerable<string> projectNames)
         {
-            var allItems   = _itemTagRepository.Get().ToList().Where(i => i.TagOf.UserId == _userId).ToList();
+            var minDate    = DateTime.MinValue.AddYears(1753);
+            var predicates = new List<Predicate<ItemTag>>();
+
+            foreach (var name in projectNames)
+            {
+                switch (name)
+                {
+                    case "Inbox":
+                        predicates.Add(i => i.ItemOf.Date == minDate &&
+                                            i.ItemOf.CompleteDate == minDate &&
+                                            i.ItemOf.ProjectOf == null);
+                        break;
+
+                    case "Today":
+                        predicates.Add(i => (i.ItemOf.Date <= DateTime.Today && i.ItemOf.Date != minDate ||
+                                             i.ItemOf.Deadline <= DateTime.Today && i.ItemOf.Deadline != minDate) &&
+                                            i.ItemOf.CompleteDate == minDate);
+                        break;
+
+                    case "Upcoming":
+                        predicates.Add(i => i.ItemOf.Date > DateTime.Today && i.ItemOf.CompleteDate == minDate);
+                        break;
+
+                    case "Logbook":
+                        predicates.Add(i => i.ItemOf.CompleteDate != minDate);
+                        break;
+
+                    default:
+                        predicates.Add(i => i.ItemOf.ProjectOf != null && i.ItemOf.ProjectOf.Name == name);
+                        break;
+                }
+            }
+
+            return predicates;
+        }
+
+        public IEnumerable<ToDoItemModel> GetItemsByTags(IEnumerable<string> tags, List<string> projectNames)
+        {
+            var predicates = GetPredicates(projectNames);
+            var allItems = _itemTagRepository
+                .Get()
+                .ToList()
+                .Where(i => i.TagOf.UserId == _userId && predicates.Any(p => p.Invoke(i))).ToList();
             var itemsCount = new Dictionary<ToDoItem, int>();
             var tagTexts   = tags.ToList();
 
@@ -112,7 +154,8 @@ namespace BUS.Services
                 }
             }
 
-            // Selecting ToDoItems, which has all searching-tags (their are equal to searching-tags length).
+            // Selecting ToDoItems, which have all searching-tags (their occurrences count are equal to
+            // searching-tags length).
             var foundItems = itemsCount.Where(i => i.Value == tagTexts.Count).Select(i => i.Key).ToList();
 
             return foundItems.Select(i => new ToDoItemModel

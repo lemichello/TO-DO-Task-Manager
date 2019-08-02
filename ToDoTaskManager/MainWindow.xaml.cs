@@ -38,8 +38,9 @@ namespace ToDoTaskManager
             ShowSharedProjects();
             ShowInvitations();
 
-            ProjectsListView.ItemsSource    = _projects;
-            InvitationsListView.ItemsSource = _invitations;
+            SearchConditionsComboBox.ItemsSource = _projects;
+            ProjectsListView.ItemsSource         = _projects;
+            InvitationsListView.ItemsSource      = _invitations;
 
             _isLogOut   = false;
             _parent     = parent;
@@ -150,8 +151,19 @@ namespace ToDoTaskManager
             PagesFrame.Content = new LogbookPage(this, _userId, _itemService, _tagService);
         }
 
+        private void SearchConditionsComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SearchConditionsComboBox.SelectedIndex = -1;
+        }
+
         private void Search_OnClick(object sender, RoutedEventArgs e)
         {
+            if (_projects.All(p => !p.IsSelected))
+            {
+                MessageBox.Show("You need to pick at least one project, in which will be searching");
+                return;
+            }
+
             var enteredTags = SearchTextBox.Text.Split(new[] {' '},
                 StringSplitOptions.RemoveEmptyEntries);
 
@@ -161,15 +173,17 @@ namespace ToDoTaskManager
                 return;
             }
 
+            var searchingProjectsNames = _projects.Where(p => p.IsSelected).Select(p => p.Name).ToList();
+
             FoundToDoItems.ItemsSource = null;
 
-            SearchExpander.IsExpanded          = FillFoundListBox(enteredTags);
+            SearchExpander.IsExpanded          = FillFoundListBox(enteredTags, searchingProjectsNames);
             SearchExpander.HorizontalAlignment = HorizontalAlignment.Center;
         }
 
-        private bool FillFoundListBox(IEnumerable<string> tags)
+        private bool FillFoundListBox(IEnumerable<string> tags, List<string> projectsNames)
         {
-            var foundItems = _tagService.GetItemsByTags(tags).ToList();
+            var foundItems = _tagService.GetItemsByTags(tags, projectsNames).ToList();
 
             if (foundItems.Count == 0)
                 return false;
@@ -190,6 +204,7 @@ namespace ToDoTaskManager
 
             if (selectedToDoItem.Date == minDate &&
                 selectedToDoItem.ProjectName != "" &&
+                _projects.Any(p => p.Name == selectedToDoItem.ProjectName && p.IsSelected) &&
                 selectedToDoItem.CompleteDay == minDate)
             {
                 var projectView = _projects.First(i => i.Id == (selectedToDoItem.ProjectId ?? -1));
@@ -201,10 +216,13 @@ namespace ToDoTaskManager
             }
 
             // Inbox page.
-            if (selectedToDoItem.Date == minDate && selectedToDoItem.ProjectName == "")
+            if (selectedToDoItem.Date == minDate && selectedToDoItem.ProjectName == "" &&
+                selectedToDoItem.CompleteDay == minDate)
                 ProjectsListView.SelectedIndex = 0;
             // Today page.
-            else if (selectedToDoItem.Date == DateTime.Today)
+            else if ((selectedToDoItem.Date <= DateTime.Today && selectedToDoItem.Date != minDate ||
+                      selectedToDoItem.Deadline <= DateTime.Today && selectedToDoItem.Deadline != minDate) &&
+                     selectedToDoItem.CompleteDay == minDate)
                 ProjectsListView.SelectedIndex = 1;
             // Upcoming page.
             else if (selectedToDoItem.CompleteDay == minDate)
@@ -226,7 +244,7 @@ namespace ToDoTaskManager
         {
             System.Diagnostics.Process.Start("https://send.monobank.com.ua/nzpHJn4A");
         }
-        
+
         private void LogOutButton_OnClick(object sender, RoutedEventArgs e)
         {
             var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
@@ -269,7 +287,7 @@ namespace ToDoTaskManager
             }
 
             var userLogins = InvitedUsersTextBox.Text.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
-            var projectId = _projectService.InviteUsers(new ProjectModel {Name = ProjectNameTextBox.Text}, 
+            var projectId = _projectService.InviteUsers(new ProjectModel {Name = ProjectNameTextBox.Text},
                 userLogins, true);
 
             if (projectId == -1)
