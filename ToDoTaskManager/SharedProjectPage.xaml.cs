@@ -35,7 +35,7 @@ namespace ToDoTaskManager
             _itemService         = itemService;
             _projectService      = projectService;
             _operations =
-                new SharedToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, userId, _projectId,
+                new SharedToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, _projectId,
                     itemService, tagService);
 
             FillCollection();
@@ -71,7 +71,7 @@ namespace ToDoTaskManager
                 _membersLoaded = true;
             }
         }
-        
+
         private void ToDoItemsListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _operations.Selected();

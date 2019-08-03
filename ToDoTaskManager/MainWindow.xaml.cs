@@ -125,11 +125,11 @@ namespace ToDoTaskManager
                     break;
 
                 case 2:
-                    PagesFrame.Content = new UpcomingPage(this, _userId, _itemService, _tagService);
+                    PagesFrame.Content = new UpcomingPage(this, _itemService, _tagService);
                     break;
 
                 case 3:
-                    PagesFrame.Content = new LogbookPage(this, _userId, _itemService, _tagService);
+                    PagesFrame.Content = new LogbookPage(this, _itemService, _tagService);
                     break;
 
                 default:
@@ -143,12 +143,12 @@ namespace ToDoTaskManager
 
         public void UpdateUpcomingPage()
         {
-            PagesFrame.Content = new UpcomingPage(this, _userId, _itemService, _tagService);
+            PagesFrame.Content = new UpcomingPage(this, _itemService, _tagService);
         }
 
         public void UpdateLogbookPage()
         {
-            PagesFrame.Content = new LogbookPage(this, _userId, _itemService, _tagService);
+            PagesFrame.Content = new LogbookPage(this, _itemService, _tagService);
         }
 
         private void SearchConditionsComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -23,7 +23,7 @@ namespace ToDoTaskManager
 
             _toDoItemsCollection = new ObservableCollection<ToDoItemView>();
             _service             = service;
-            _operations = new InboxToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, userId, null,
+            _operations = new InboxToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, null,
                 service, tagService);
 
             FillCollection();

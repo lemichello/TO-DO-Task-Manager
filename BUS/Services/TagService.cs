@@ -9,29 +9,37 @@ namespace BUS.Services
 {
     public class TagService : Service
     {
-        private readonly IRepository<Tag>     _tagRepository;
-        private readonly IRepository<ItemTag> _itemTagRepository;
-        private readonly int                  _userId;
+        private readonly IRepository<ProjectsUsers> _projectsUsersRepository;
+        private readonly IRepository<Tag>           _tagRepository;
+        private readonly IRepository<ItemTag>       _itemTagRepository;
+        private readonly int                        _userId;
+        private          List<ProjectsUsers>        _projectsUsers;
 
         public TagService(int userId)
         {
-            _tagRepository     = new TagsRepository();
-            _itemTagRepository = new ItemsTagsRepository();
-            _userId            = userId;
+            _projectsUsersRepository = new ProjectsUsersRepository();
+            _projectsUsers           = _projectsUsersRepository.Get().ToList();
+            _tagRepository           = new TagsRepository();
+            _itemTagRepository       = new ItemsTagsRepository();
+            _userId                  = userId;
         }
 
         public override void RefreshRepositories()
         {
+            _projectsUsersRepository.Refresh();
             _tagRepository.Refresh();
             _itemTagRepository.Refresh();
+
+            _projectsUsers = _projectsUsersRepository.Get().ToList();
         }
 
         public void Add(TagModel tag)
         {
             var addingTag = new Tag
             {
-                Text   = tag.Text,
-                UserId = _userId
+                Text      = tag.Text,
+                UserId    = _userId,
+                ProjectId = tag.ProjectId
             };
 
             tag.Id = _tagRepository.Add(addingTag) ? addingTag.Id : -1;
@@ -75,11 +83,16 @@ namespace BUS.Services
         public IEnumerable<TagModel> Get(Func<TagModel, bool> predicate)
         {
             return _tagRepository.Get()
-                .Where(i => i.UserId == _userId)
+                .Where(i => i.UserId == _userId ||
+                            i.ProjectId != null && _projectsUsers.Any(p => p.UserId == _userId &&
+                                                                           p.IsAccepted &&
+                                                                           p.ProjectId == i.ProjectId))
                 .Select(i => new TagModel
                 {
-                    Id   = i.Id,
-                    Text = i.Text
+                    Id           = i.Id,
+                    Text         = i.Text,
+                    ProjectId    = i.ProjectId,
+                    TagTextColor = i.ProjectId != null ? "#2295F2" : "Black"
                 })
                 .Where(predicate);
         }
@@ -90,8 +103,10 @@ namespace BUS.Services
                 .Where(i => i.ItemId == itemId)
                 .Select(i => new TagModel
                 {
-                    Id   = i.TagOf.Id,
-                    Text = i.TagOf.Text
+                    Id           = i.TagOf.Id,
+                    Text         = i.TagOf.Text,
+                    ProjectId    = i.TagOf.ProjectId,
+                    TagTextColor = i.TagOf.ProjectId != null ? "#2295F2" : "Black"
                 });
         }
 
@@ -139,7 +154,11 @@ namespace BUS.Services
             var allItems = _itemTagRepository
                 .Get()
                 .ToList()
-                .Where(i => i.TagOf.UserId == _userId && predicates.Any(p => p.Invoke(i))).ToList();
+                .Where(i => (i.TagOf.UserId == _userId || i.TagOf.ProjectId != null && _projectsUsers.Any(p =>
+                                 p.UserId == _userId &&
+                                 p.IsAccepted &&
+                                 p.ProjectId == i.TagOf.ProjectId)) &&
+                            predicates.Any(p => p.Invoke(i))).ToList();
             var itemsCount = new Dictionary<ToDoItem, int>();
             var tagTexts   = tags.ToList();
 

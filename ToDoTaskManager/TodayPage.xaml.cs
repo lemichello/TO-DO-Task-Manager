@@ -24,7 +24,7 @@ namespace ToDoTaskManager
             _toDoItemsCollection = new ObservableCollection<ToDoItemView>();
             _service             = itemService;
 
-            _toDoItemOperations = new TodayToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, userId, null,
+            _toDoItemOperations = new TodayToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, null,
                 itemService, tagService);
 
             FillCollection();

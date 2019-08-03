@@ -83,6 +83,14 @@
     <Compile Include="Migrations\201907261044570_AddInviterColumn.Designer.cs">
       <DependentUpon>201907261044570_AddInviterColumn.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908031015457_AddBelongsToProjectColumn.cs" />
+    <Compile Include="Migrations\201908031015457_AddBelongsToProjectColumn.Designer.cs">
+      <DependentUpon>201908031015457_AddBelongsToProjectColumn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908031048397_ReplaceBelongsToProjectByProjectId.cs" />
+    <Compile Include="Migrations\201908031048397_ReplaceBelongsToProjectByProjectId.Designer.cs">
+      <DependentUpon>201908031048397_ReplaceBelongsToProjectByProjectId.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IRepository.cs" />
@@ -115,6 +123,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201907261044570_AddInviterColumn.resx">
       <DependentUpon>201907261044570_AddInviterColumn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908031015457_AddBelongsToProjectColumn.resx">
+      <DependentUpon>201908031015457_AddBelongsToProjectColumn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908031048397_ReplaceBelongsToProjectByProjectId.resx">
+      <DependentUpon>201908031048397_ReplaceBelongsToProjectByProjectId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

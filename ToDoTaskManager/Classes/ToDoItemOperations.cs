@@ -12,26 +12,24 @@ namespace ToDoTaskManager.Classes
     {
         private readonly   ListView                           _toDoItemsListView;
         private readonly   ObservableCollection<ToDoItemView> _toDoItemsCollection;
-        protected readonly ToDoItemService                    _itemService;
+        protected readonly ToDoItemService                    ItemService;
         private readonly   TagService                         _tagService;
-        private readonly   int                                _userId;
         private readonly   int?                               _projectId;
 
         internal ToDoItemOperations(ListView toDoItemsListView, ObservableCollection<ToDoItemView> toDoItemsCollection,
-            int userId, int? projectId, ToDoItemService itemService, TagService tagService)
+            int? projectId, ToDoItemService itemService, TagService tagService)
         {
-            _userId    = userId;
             _projectId = projectId;
 
             _toDoItemsListView   = toDoItemsListView;
             _toDoItemsCollection = toDoItemsCollection;
-            _itemService         = itemService;
+            ItemService          = itemService;
             _tagService          = tagService;
         }
 
         public void Add()
         {
-            var itemWindow = new ToDoItemWindow(_userId);
+            var itemWindow = new ToDoItemWindow(_projectId, _tagService);
 
             if (this is TodayToDoItemOperations)
                 itemWindow.ShowDialog(DateTime.Today);
@@ -42,7 +40,7 @@ namespace ToDoTaskManager.Classes
 
             itemWindow.Item.ProjectId = _projectId;
 
-            _itemService.Add(itemWindow.Item);
+            ItemService.Add(itemWindow.Item);
 
             if (itemWindow.Item.Id != -1 && IsCorrect(itemWindow.Item))
                 _toDoItemsCollection.Add(itemWindow.Item);
@@ -59,7 +57,7 @@ namespace ToDoTaskManager.Classes
             if (index == -1) return;
 
             var item       = _toDoItemsCollection[index];
-            var itemWindow = new ToDoItemWindow(item, _userId);
+            var itemWindow = new ToDoItemWindow(_projectId, item, _tagService);
 
             _toDoItemsListView.SelectedItem = null;
 
@@ -67,7 +65,7 @@ namespace ToDoTaskManager.Classes
 
             if (itemWindow.ToDelete)
             {
-                if (_itemService.Remove(item))
+                if (ItemService.Remove(item))
                     _toDoItemsCollection.Remove(item);
 
                 return;
@@ -78,7 +76,7 @@ namespace ToDoTaskManager.Classes
 
             itemWindow.Item.ProjectName = item.ProjectName;
 
-            _itemService.Update(itemWindow.Item);
+            ItemService.Update(itemWindow.Item);
 
             if (IsCorrect(itemWindow.Item))
                 _toDoItemsCollection[index] = itemWindow.Item;
@@ -95,7 +93,7 @@ namespace ToDoTaskManager.Classes
 
             toDoItem.CompleteDay = DateTime.Now;
 
-            _itemService.Update(toDoItem);
+            ItemService.Update(toDoItem);
 
             _toDoItemsCollection.Remove(toDoItem);
 
@@ -142,7 +140,7 @@ namespace ToDoTaskManager.Classes
                 Timer       = item.Timer
             };
         }
-        
+
         public abstract ToDoItemView ConvertToItemView(ToDoItemModel item);
 
         protected abstract bool IsCorrect(ToDoItemView item);
@@ -151,9 +149,9 @@ namespace ToDoTaskManager.Classes
     internal sealed class InboxToDoItemOperations : ToDoItemOperations
     {
         public InboxToDoItemOperations(ListView toDoItemsListView,
-            ObservableCollection<ToDoItemView> toDoItemsCollection,
-            int userId, int? projectId, ToDoItemService itemService, TagService tagService) :
-            base(toDoItemsListView, toDoItemsCollection, userId, projectId, itemService, tagService)
+            ObservableCollection<ToDoItemView> toDoItemsCollection, int? projectId, ToDoItemService itemService,
+            TagService tagService) :
+            base(toDoItemsListView, toDoItemsCollection, projectId, itemService, tagService)
         {
         }
 
@@ -174,7 +172,7 @@ namespace ToDoTaskManager.Classes
             if (itemView.Deadline <= DateTime.Today)
             {
                 itemView.Date = DateTime.Today;
-                _itemService.Update(itemView);
+                ItemService.Update(itemView);
 
                 return null;
             }
@@ -191,9 +189,9 @@ namespace ToDoTaskManager.Classes
     internal sealed class TodayToDoItemOperations : ToDoItemOperations
     {
         public TodayToDoItemOperations(ListView toDoItemsListView,
-            ObservableCollection<ToDoItemView> toDoItemsCollection,
-            int userId, int? projectId, ToDoItemService itemService, TagService tagService) :
-            base(toDoItemsListView, toDoItemsCollection, userId, projectId, itemService, tagService)
+            ObservableCollection<ToDoItemView> toDoItemsCollection, int? projectId, ToDoItemService itemService,
+            TagService tagService) :
+            base(toDoItemsListView, toDoItemsCollection, projectId, itemService, tagService)
         {
         }
 
@@ -231,9 +229,9 @@ namespace ToDoTaskManager.Classes
     internal sealed class SharedToDoItemOperations : ToDoItemOperations
     {
         public SharedToDoItemOperations(ListView toDoItemsListView,
-            ObservableCollection<ToDoItemView> toDoItemsCollection, int userId, int? projectId,
+            ObservableCollection<ToDoItemView> toDoItemsCollection, int? projectId,
             ToDoItemService itemService, TagService tagService) : base(toDoItemsListView,
-            toDoItemsCollection, userId, projectId, itemService, tagService)
+            toDoItemsCollection, projectId, itemService, tagService)
         {
         }
 

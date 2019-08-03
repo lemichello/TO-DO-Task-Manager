@@ -33,10 +33,11 @@ namespace BUS.Models
             }
         }
 
-        public int UserId { get; set; }
-        
+        public int? ProjectId { get; set; }
+        public string TagTextColor { get; set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
-        
+
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

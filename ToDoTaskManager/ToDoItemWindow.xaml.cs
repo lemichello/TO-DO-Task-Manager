@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using BUS.Models;
 using BUS.Services;
+using MaterialDesignThemes.Wpf;
 using ToDoTaskManager.Classes;
 
 namespace ToDoTaskManager
@@ -15,21 +16,30 @@ namespace ToDoTaskManager
         private readonly DateTime                       _minDate = DateTime.MinValue.AddYears(1753);
         private readonly ObservableCollection<TagModel> _tagsList;
         private readonly TagService                     _tagService;
+        private readonly int?                           _projectId;
         public IEnumerable<int> SelectedTagsId { get; set; }
 
         public ToDoItemView Item { get; }
         public bool ToDelete { get; private set; }
 
-        public ToDoItemWindow(int userId)
+        public ToDoItemWindow(int? projectId, TagService tagService)
         {
             InitializeComponent();
+
+            if (projectId != null)
+            {
+                SharedTagButton.Visibility = Visibility.Visible;
+                Height                     = 465;
+            }
+
+            _projectId = projectId;
 
             PickedDate.DisplayDateStart     = DateTime.Now;
             PickedDeadline.DisplayDateStart = DateTime.Now;
             Item                            = new ToDoItemView();
             ToDelete                        = false;
 
-            _tagService = new TagService(userId);
+            _tagService = tagService;
             _tagsList   = new ObservableCollection<TagModel>();
 
             FillTagsCollection();
@@ -44,7 +54,7 @@ namespace ToDoTaskManager
             ShowDialog();
         }
 
-        public ToDoItemWindow(ToDoItemModel item, int userId) : this(userId)
+        public ToDoItemWindow(int? projectId, ToDoItemModel item, TagService tagService) : this(projectId, tagService)
         {
             Item = new ToDoItemView {Id = item.Id};
 
@@ -120,8 +130,10 @@ namespace ToDoTaskManager
 
         private void FillTagsCollection()
         {
-            // Getting all tags.
-            var collection = _tagService.Get(i => true).ToList();
+            // If projectId is null, getting only tags, that don't belong to any project.
+            var collection = _projectId != null
+                ? _tagService.Get(i => i.ProjectId == _projectId || i.ProjectId == null).ToList()
+                : _tagService.Get(i => i.ProjectId == null).ToList();
 
             foreach (var i in collection)
             {
@@ -143,13 +155,17 @@ namespace ToDoTaskManager
         {
             if (TagsListBox.SelectedIndex == -1)
             {
-                EditButton.Visibility   = Visibility.Hidden;
-                DeleteButton.Visibility = Visibility.Hidden;
+                EditButton.Visibility   = Visibility.Collapsed;
+                DeleteButton.Visibility = Visibility.Collapsed;
+
+                Height = 420;
             }
             else
             {
                 EditButton.Visibility   = Visibility.Visible;
                 DeleteButton.Visibility = Visibility.Visible;
+
+                Height = 555;
             }
         }
 
@@ -161,7 +177,25 @@ namespace ToDoTaskManager
 
             var tag = new TagModel
             {
-                Text = window.NewText,
+                Text         = window.NewText,
+                TagTextColor = "Black"
+            };
+
+            _tagService.Add(tag);
+            _tagsList.Add(tag);
+        }
+
+        private void AddSharedTagButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var window = new TagWindow();
+
+            if (window.ShowDialog() == false) return;
+
+            var tag = new TagModel
+            {
+                Text         = window.NewText,
+                ProjectId    = _projectId,
+                TagTextColor = "#2295F2"
             };
 
             _tagService.Add(tag);

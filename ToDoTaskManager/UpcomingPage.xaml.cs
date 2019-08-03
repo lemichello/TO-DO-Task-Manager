@@ -19,13 +19,11 @@ namespace ToDoTaskManager
         private readonly ToDoItemService         _itemService;
         private readonly TagService              _tagService;
         private readonly MainWindow              _parent;
-        private readonly int                     _userId;
 
-        public UpcomingPage(MainWindow window, int userId, ToDoItemService itemService, TagService tagService)
+        public UpcomingPage(MainWindow window, ToDoItemService itemService, TagService tagService)
         {
             InitializeComponent();
 
-            _userId                  = userId;
             _upcomingItemsCollection = new List<UpcomingToDoItems>();
             _itemService             = itemService;
             _tagService              = tagService;
@@ -38,7 +36,7 @@ namespace ToDoTaskManager
 
         private void AddButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var itemWindow = new ToDoItemWindow(_userId);
+            var itemWindow = new ToDoItemWindow(null, _tagService);
 
             itemWindow.ShowDialog();
 
@@ -62,8 +60,8 @@ namespace ToDoTaskManager
 
             if (listView.SelectedIndex == -1) return;
 
-            var item       = listView.SelectedItem as ToDoItemModel;
-            var itemWindow = new ToDoItemWindow(item, _userId);
+            var item       = (ToDoItemModel) listView.SelectedItem;
+            var itemWindow = new ToDoItemWindow(item.ProjectId, item, _tagService);
 
             listView.SelectedItem = null;
 
@@ -138,7 +136,7 @@ namespace ToDoTaskManager
             {
                 _upcomingItemsCollection.Add(new UpcomingToDoItems(ref i, allItems, false));
             }
-            
+
             var yearsItems = allItems
                 .Where(i => i.Date > DateTime.Today.AddMonths(5))
                 .ToDictionary(item => item.Date.Year, item => allItems.Where(i => i.Date.Year == item.Date.Year));
