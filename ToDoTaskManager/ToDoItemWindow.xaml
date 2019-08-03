@@ -38,9 +38,9 @@
                     Click="EditButton_OnClick" Style="{StaticResource MaterialDesignRaisedButton}" />
             <Button Grid.Row="2" Name="DeleteButton" Content="Delete tag" HorizontalAlignment="Center" Width="150"
                     Margin="0 5" Visibility="Collapsed"
-                    Click="DeleteButton_OnClick" Style="{StaticResource MaterialDesignRaisedButton}" />
+                    Click="DeleteTagButton_OnClick" Style="{StaticResource MaterialDesignRaisedButton}" />
             <Button Grid.Row="3" Content="Add tag" HorizontalAlignment="Center" Width="150" Margin="0 5"
-                    Click="AddButton_OnCLick" Style="{StaticResource MaterialDesignRaisedButton}" />
+                    Click="AddTagButton_OnCLick" Style="{StaticResource MaterialDesignRaisedButton}" />
             <Button Grid.Row="4" Name="SharedTagButton" Content="Add shared tag" HorizontalAlignment="Center"
                     Margin="0 5" Width="150" Click="AddSharedTagButton_OnClick"
                     Style="{StaticResource MaterialDesignRaisedButton}" Visibility="Collapsed"
@@ -61,7 +61,7 @@
                         Focusable="False" ToolTip="To unselect deadline date, hold Ctrl and click on selected date" />
             <Button Content="Save" FontSize="16" Height="30" Click="Save_OnClick"
                     Margin="5 29 5 0" Style="{StaticResource MaterialDesignRaisedButton}" />
-            <Button Content="Delete" FontSize="16" Height="30" Click="Delete_OnClick"
+            <Button Content="Delete" FontSize="16" Height="30" Click="DeleteTaskButton_OnClick"
                     Margin="5 19 5 0" Style="{StaticResource MaterialDesignRaisedButton}" />
         </StackPanel>
     </Grid>

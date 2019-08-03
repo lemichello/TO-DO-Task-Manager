@@ -120,9 +120,12 @@ namespace ToDoTaskManager
             return from TagModel i in TagsListBox.SelectedItems select i.Id;
         }
 
-        // Delete TO-DO item.
-        private void Delete_OnClick(object sender, RoutedEventArgs e)
+        private void DeleteTaskButton_OnClick(object sender, RoutedEventArgs e)
         {
+            if (MessageBox.Show("Are you sure you want to delete this task?", "Question",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+                return;
+
             ToDelete = true;
 
             Close();
@@ -169,7 +172,7 @@ namespace ToDoTaskManager
             }
         }
 
-        private void AddButton_OnCLick(object sender, RoutedEventArgs e)
+        private void AddTagButton_OnCLick(object sender, RoutedEventArgs e)
         {
             var window = new TagWindow();
 
@@ -204,8 +207,6 @@ namespace ToDoTaskManager
 
         private void EditButton_OnClick(object sender, RoutedEventArgs e)
         {
-            if (TagsListBox.SelectedItems.Count == 0) return;
-
             var window = new TagWindow();
             var tag    = (TagModel) TagsListBox.SelectedItems[TagsListBox.SelectedItems.Count - 1];
 
@@ -217,9 +218,12 @@ namespace ToDoTaskManager
             _tagService.Update(tag);
         }
 
-        private void DeleteButton_OnClick(object sender, RoutedEventArgs e)
+        private void DeleteTagButton_OnClick(object sender, RoutedEventArgs e)
         {
-            if (TagsListBox.SelectedItems.Count == 0) return;
+            if (MessageBox.Show("Are you sure you want to delete this tag? This will delete all " +
+                                "occurrences of this tag in tasks.", "Question",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+                return;
 
             var tag = _tagsList[TagsListBox.SelectedIndex];
 
