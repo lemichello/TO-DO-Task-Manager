@@ -6,12 +6,11 @@ using System.Windows;
 using System.Windows.Controls;
 using BUS.Models;
 using BUS.Services;
-using MaterialDesignThemes.Wpf;
 using ToDoTaskManager.Classes;
 
 namespace ToDoTaskManager
 {
-    public partial class ToDoItemWindow : Window
+    public partial class ToDoItemWindow
     {
         private readonly DateTime                       _minDate = DateTime.MinValue.AddYears(1753);
         private readonly ObservableCollection<TagModel> _tagsList;
@@ -22,7 +21,7 @@ namespace ToDoTaskManager
         public ToDoItemView Item { get; }
         public bool ToDelete { get; private set; }
 
-        public ToDoItemWindow(int? projectId, TagService tagService)
+        public ToDoItemWindow(int? projectId)
         {
             InitializeComponent();
 
@@ -39,7 +38,7 @@ namespace ToDoTaskManager
             Item                            = new ToDoItemView();
             ToDelete                        = false;
 
-            _tagService = tagService;
+            _tagService = TagService.GetInstance();
             _tagsList   = new ObservableCollection<TagModel>();
 
             FillTagsCollection();
@@ -54,7 +53,7 @@ namespace ToDoTaskManager
             ShowDialog();
         }
 
-        public ToDoItemWindow(int? projectId, ToDoItemModel item, TagService tagService) : this(projectId, tagService)
+        public ToDoItemWindow(int? projectId, ToDoItemModel item) : this(projectId)
         {
             Item = new ToDoItemView {Id = item.Id};
 

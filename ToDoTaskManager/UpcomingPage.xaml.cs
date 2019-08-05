@@ -13,20 +13,20 @@ namespace ToDoTaskManager
     /// <summary>
     /// Interaction logic for UpcomingPage.xaml
     /// </summary>
-    public partial class UpcomingPage : Page
+    public partial class UpcomingPage
     {
         private readonly List<UpcomingToDoItems> _upcomingItemsCollection;
         private readonly ToDoItemService         _itemService;
         private readonly TagService              _tagService;
         private readonly MainWindow              _parent;
 
-        public UpcomingPage(MainWindow window, ToDoItemService itemService, TagService tagService)
+        public UpcomingPage(MainWindow window)
         {
             InitializeComponent();
 
             _upcomingItemsCollection = new List<UpcomingToDoItems>();
-            _itemService             = itemService;
-            _tagService              = tagService;
+            _itemService             = ToDoItemService.GetInstance();
+            _tagService              = TagService.GetInstance();
             _parent                  = window;
 
             FillCollection();
@@ -36,7 +36,7 @@ namespace ToDoTaskManager
 
         private void AddButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var itemWindow = new ToDoItemWindow(null, _tagService);
+            var itemWindow = new ToDoItemWindow(null);
 
             itemWindow.ShowDialog();
 
@@ -61,7 +61,7 @@ namespace ToDoTaskManager
             if (listView.SelectedIndex == -1) return;
 
             var item       = (ToDoItemModel) listView.SelectedItem;
-            var itemWindow = new ToDoItemWindow(item.ProjectId, item, _tagService);
+            var itemWindow = new ToDoItemWindow(item.ProjectId, item);
 
             listView.SelectedItem = null;
 

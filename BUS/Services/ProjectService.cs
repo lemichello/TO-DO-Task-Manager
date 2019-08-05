@@ -14,8 +14,9 @@ namespace BUS.Services
         private readonly IRepository<ProjectsUsers> _projectUserRepository;
         private readonly IRepository<ToDoItem>      _itemRepository;
         private readonly int                        _userId;
+        private static   ProjectService             _self;
 
-        public ProjectService(int userId)
+        private ProjectService(int userId)
         {
             _userRepository        = new UsersRepository();
             _projectRepository     = new ProjectsRepository();
@@ -24,12 +25,22 @@ namespace BUS.Services
             _userId                = userId;
         }
 
-        public override void RefreshRepositories()
+        public void RefreshRepositories()
         {
             _itemRepository.Refresh();
             _userRepository.Refresh();
             _projectRepository.Refresh();
             _projectUserRepository.Refresh();
+        }
+
+        public static void Initialize(int userId)
+        {
+            _self = new ProjectService(userId);
+        }
+
+        public static ProjectService GetInstance()
+        {
+            return _self;
         }
 
         public int InviteUsers(ProjectModel project, IEnumerable<string> userLogins, bool isNewProject)
@@ -42,7 +53,7 @@ namespace BUS.Services
                 MessageBox.Show("One of user logins doesn't exist");
                 return -1;
             }
-            
+
             if (!isNewProject)
             {
                 AddInvitedUsers(logins, users, project.Id);
@@ -77,7 +88,7 @@ namespace BUS.Services
         private bool AddInvitedUsers(IEnumerable<string> logins, List<User> users, int projectId)
         {
             var allProjects = _projectUserRepository.Get().ToList();
-            
+
             foreach (var login in logins)
             {
                 // This user is already invited.
@@ -85,7 +96,7 @@ namespace BUS.Services
                 {
                     continue;
                 }
-                
+
                 if (!_projectUserRepository.Add(new ProjectsUsers
                 {
                     ProjectId  = projectId,
@@ -143,11 +154,11 @@ namespace BUS.Services
                 {
                     _itemRepository.Remove(i);
                 }
-                
+
                 _projectRepository.Remove(_projectRepository.Get().ToList().First(i => i.Id == projectId));
             }
         }
-        
+
         public IEnumerable<ProjectModel> GetProjects()
         {
             return _projectUserRepository.Get().ToList().Where(i => i.UserId == _userId && i.IsAccepted).Select(

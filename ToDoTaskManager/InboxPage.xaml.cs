@@ -11,20 +11,19 @@ namespace ToDoTaskManager
     /// <summary>
     /// Interaction logic for InboxPage.xaml
     /// </summary>
-    public partial class InboxPage : Page
+    public partial class InboxPage
     {
         private readonly ObservableCollection<ToDoItemView> _toDoItemsCollection;
-        private readonly ToDoItemService                    _service;
+        private readonly ToDoItemService                    _itemService;
         private readonly ToDoItemOperations                 _operations;
 
-        public InboxPage(int userId, ToDoItemService service, TagService tagService)
+        public InboxPage()
         {
             InitializeComponent();
 
             _toDoItemsCollection = new ObservableCollection<ToDoItemView>();
-            _service             = service;
-            _operations = new InboxToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, null,
-                service, tagService);
+            _itemService         = ToDoItemService.GetInstance();
+            _operations          = new InboxToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, null);
 
             FillCollection();
 
@@ -53,7 +52,7 @@ namespace ToDoTaskManager
 
         private void FillCollection()
         {
-            var collection = _service.Get(item =>
+            var collection = _itemService.Get(item =>
                 item.Date == DateTime.MinValue.AddYears(1753) &&
                 item.CompleteDay == DateTime.MinValue.AddYears(1753) &&
                 item.ProjectName == "").ToList();

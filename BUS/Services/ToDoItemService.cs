@@ -13,25 +13,36 @@ namespace BUS.Services
         private readonly IRepository<ToDoItem>      _repository;
         private          List<ProjectsUsers>        _projects;
         private readonly int                        _userId;
+        private static   ToDoItemService            _self;
 
-        public ToDoItemService(int userId)
+        private ToDoItemService(int userId)
         {
             _projectUserRepository = new ProjectsUsersRepository();
             _repository            = new ToDoItemsRepository();
-            _userId = userId;
+            _userId                = userId;
             _projects = _projectUserRepository.Get()
                 .Where(i => i.UserId == _userId && i.IsAccepted)
                 .ToList();
         }
 
-        public override void RefreshRepositories()
+        public void RefreshRepositories()
         {
             _repository.Refresh();
             _projectUserRepository.Refresh();
-            
+
             _projects = _projectUserRepository.Get()
                 .Where(i => i.UserId == _userId && i.IsAccepted)
                 .ToList();
+        }
+
+        public static void Initialize(int userId)
+        {
+            _self = new ToDoItemService(userId);
+        }
+
+        public static ToDoItemService GetInstance()
+        {
+            return _self;
         }
 
         public void Add(ToDoItemModel item)

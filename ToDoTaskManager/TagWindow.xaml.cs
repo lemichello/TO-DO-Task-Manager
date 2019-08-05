@@ -2,7 +2,7 @@ using System.Windows;
 
 namespace ToDoTaskManager
 {
-    public partial class TagWindow : Window
+    public partial class TagWindow
     {
         public string NewText { get; private set; }
 

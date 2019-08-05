@@ -17,20 +17,17 @@ namespace ToDoTaskManager
     public partial class MainWindow
     {
         private readonly LoginWindow                                  _parent;
-        private readonly int                                          _userId;
         private readonly TagService                                   _tagService;
-        private readonly ToDoItemService                              _itemService;
         private readonly ProjectService                               _projectService;
         private readonly ObservableCollection<ProjectView>            _projects;
         private readonly ObservableCollection<InvitationRequestModel> _invitations;
         private          bool                                         _isLogOut;
 
-        public MainWindow(LoginWindow parent, int userId)
+        public MainWindow(LoginWindow parent)
         {
             InitializeComponent();
 
-            _projectService = new ProjectService(userId);
-            _itemService    = new ToDoItemService(userId);
+            _projectService = ProjectService.GetInstance();
             _invitations    = new ObservableCollection<InvitationRequestModel>();
             _projects       = new ObservableCollection<ProjectView>();
 
@@ -44,8 +41,7 @@ namespace ToDoTaskManager
 
             _isLogOut   = false;
             _parent     = parent;
-            _userId     = userId;
-            _tagService = new TagService(_userId);
+            _tagService = TagService.GetInstance();
         }
 
         private void ShowDefaultProjects()
@@ -117,38 +113,37 @@ namespace ToDoTaskManager
             switch (selectedIndex)
             {
                 case 0:
-                    PagesFrame.Content = new InboxPage(_userId, _itemService, _tagService);
+                    PagesFrame.Content = new InboxPage();
                     break;
 
                 case 1:
-                    PagesFrame.Content = new TodayPage(_userId, _itemService, _tagService);
+                    PagesFrame.Content = new TodayPage();
                     break;
 
                 case 2:
-                    PagesFrame.Content = new UpcomingPage(this, _itemService, _tagService);
+                    PagesFrame.Content = new UpcomingPage(this);
                     break;
 
                 case 3:
-                    PagesFrame.Content = new LogbookPage(this, _itemService, _tagService);
+                    PagesFrame.Content = new LogbookPage(this);
                     break;
 
                 default:
                     var project = (ProjectView) ProjectsListView.Items[selectedIndex];
 
-                    PagesFrame.Content = new SharedProjectPage(this, project.Id, project.Name, _userId,
-                        _itemService, _projectService, _tagService);
+                    PagesFrame.Content = new SharedProjectPage(this, project.Id, project.Name);
                     break;
             }
         }
 
         public void UpdateUpcomingPage()
         {
-            PagesFrame.Content = new UpcomingPage(this, _itemService, _tagService);
+            PagesFrame.Content = new UpcomingPage(this);
         }
 
         public void UpdateLogbookPage()
         {
-            PagesFrame.Content = new LogbookPage(this, _itemService, _tagService);
+            PagesFrame.Content = new LogbookPage(this);
         }
 
         private void SearchConditionsComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -261,11 +256,13 @@ namespace ToDoTaskManager
 
         private void RefreshButton_OnClick(object sender, RoutedEventArgs e)
         {
-            _tagService.Refresh();
+            Service.RefreshContext();
 
-            _tagService.RefreshRepositories();
-            _projectService.RefreshRepositories();
-            _itemService.RefreshRepositories();
+            _parent.Refresh();
+
+            TagService.GetInstance().RefreshRepositories();
+            ProjectService.GetInstance().RefreshRepositories();
+            ToDoItemService.GetInstance().RefreshRepositories();
 
             PagesListView_OnSelectionChanged(null, null);
 

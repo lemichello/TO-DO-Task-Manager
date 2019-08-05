@@ -15,13 +15,13 @@ namespace ToDoTaskManager
         private readonly TagService                            _tagService;
         private readonly MainWindow                            _parent;
 
-        public LogbookPage(MainWindow window, ToDoItemService itemService, TagService tagService)
+        public LogbookPage(MainWindow window)
         {
             InitializeComponent();
 
             _toDoItemsCollection = new ObservableCollection<LogbookToDoItem>();
-            _itemService         = itemService;
-            _tagService          = tagService;
+            _itemService         = ToDoItemService.GetInstance();
+            _tagService          = TagService.GetInstance();
             _parent              = window;
 
             FillCollection();
@@ -41,7 +41,7 @@ namespace ToDoTaskManager
             if (index == -1) return;
 
             var item       = _toDoItemsCollection[index];
-            var itemWindow = new ToDoItemWindow(item.ProjectId, item, _tagService);
+            var itemWindow = new ToDoItemWindow(item.ProjectId, item);
 
             ToDoItemsListView.SelectedItem = null;
 

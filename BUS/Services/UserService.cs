@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Windows.Forms;
-using BUS.Models;
 using DAO.Entities;
 using DAO.Repositories;
 
@@ -8,16 +7,27 @@ namespace BUS.Services
 {
     public class UserService : Service
     {
-        private readonly IRepository<User> _repository;
+        private readonly        IRepository<User> _repository;
+        private static readonly UserService       Self;
 
-        public UserService()
+        static UserService()
+        {
+            Self = new UserService();
+        }
+
+        private UserService()
         {
             _repository = new UsersRepository();
         }
 
-        public override void RefreshRepositories()
+        public void RefreshRepositories()
         {
             _repository.Refresh();
+        }
+
+        public static UserService GetInstance()
+        {
+            return Self;
         }
 
         public bool Add(string login, string password)

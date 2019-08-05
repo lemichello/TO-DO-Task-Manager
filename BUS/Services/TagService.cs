@@ -14,8 +14,9 @@ namespace BUS.Services
         private readonly IRepository<ItemTag>       _itemTagRepository;
         private readonly int                        _userId;
         private          List<ProjectsUsers>        _projectsUsers;
+        private static   TagService                 _self;
 
-        public TagService(int userId)
+        private TagService(int userId)
         {
             _projectsUsersRepository = new ProjectsUsersRepository();
             _projectsUsers           = _projectsUsersRepository.Get().ToList();
@@ -24,13 +25,23 @@ namespace BUS.Services
             _userId                  = userId;
         }
 
-        public override void RefreshRepositories()
+        public void RefreshRepositories()
         {
             _projectsUsersRepository.Refresh();
             _tagRepository.Refresh();
             _itemTagRepository.Refresh();
 
             _projectsUsers = _projectsUsersRepository.Get().ToList();
+        }
+
+        public static void Initialize(int userId)
+        {
+            _self = new TagService(userId);
+        }
+
+        public static TagService GetInstance()
+        {
+            return _self;
         }
 
         public void Add(TagModel tag)

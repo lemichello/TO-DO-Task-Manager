@@ -11,21 +11,20 @@ namespace ToDoTaskManager
     /// <summary>
     /// Interaction logic for TodayPage.xaml
     /// </summary>
-    public partial class TodayPage : Page
+    public partial class TodayPage
     {
         private readonly ObservableCollection<ToDoItemView> _toDoItemsCollection;
         private readonly TodayToDoItemOperations            _toDoItemOperations;
         private readonly ToDoItemService                    _service;
 
-        public TodayPage(int userId, ToDoItemService itemService, TagService tagService)
+        public TodayPage()
         {
             InitializeComponent();
 
             _toDoItemsCollection = new ObservableCollection<ToDoItemView>();
-            _service             = itemService;
+            _service             = ToDoItemService.GetInstance();
 
-            _toDoItemOperations = new TodayToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, null,
-                itemService, tagService);
+            _toDoItemOperations = new TodayToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, null);
 
             FillCollection();
 

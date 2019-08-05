@@ -11,7 +11,7 @@ using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace ToDoTaskManager
 {
-    public partial class SharedProjectPage : Page
+    public partial class SharedProjectPage
     {
         private readonly ObservableCollection<ToDoItemView> _toDoItemsCollection;
         private readonly ToDoItemService                    _itemService;
@@ -21,8 +21,7 @@ namespace ToDoTaskManager
         private readonly MainWindow                         _parent;
         private          bool                               _membersLoaded;
 
-        public SharedProjectPage(MainWindow parent, int projectId, string projectName, int userId,
-            ToDoItemService itemService, ProjectService projectService, TagService tagService)
+        public SharedProjectPage(MainWindow parent, int projectId, string projectName)
         {
             InitializeComponent();
 
@@ -32,11 +31,10 @@ namespace ToDoTaskManager
             _membersLoaded       = false;
             _projectId           = projectId;
             _toDoItemsCollection = new ObservableCollection<ToDoItemView>();
-            _itemService         = itemService;
-            _projectService      = projectService;
+            _itemService         = ToDoItemService.GetInstance();
+            _projectService      = ProjectService.GetInstance();
             _operations =
-                new SharedToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, _projectId,
-                    itemService, tagService);
+                new SharedToDoItemOperations(ToDoItemsListView, _toDoItemsCollection, _projectId);
 
             FillCollection();
 

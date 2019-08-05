@@ -4,7 +4,7 @@ using BUS.Services;
 
 namespace ToDoTaskManager
 {
-    public partial class LoginWindow : Window
+    public partial class LoginWindow
     {
         private readonly UserService _service;
 
@@ -13,7 +13,7 @@ namespace ToDoTaskManager
             InitializeComponent();
             Hide();
 
-            _service = new UserService();
+            _service = UserService.GetInstance();
 
             IsUserLoggedIn();
         }
@@ -28,7 +28,9 @@ namespace ToDoTaskManager
                 return;
             }
 
-            var window = new MainWindow(this, int.Parse(loginStatus));
+            InitializeServices(int.Parse(loginStatus));
+            
+            var window = new MainWindow(this);
 
             window.Show();
         }
@@ -50,7 +52,9 @@ namespace ToDoTaskManager
                 return;
             }
 
-            var window = new MainWindow(this, id);
+            InitializeServices(id);
+
+            var window = new MainWindow(this);
 
             window.Show();
             Hide();
@@ -67,6 +71,18 @@ namespace ToDoTaskManager
 
             if (RememberPasswordCheckBox != null)
                 RememberPasswordCheckBox.IsChecked = false;
+        }
+
+        private static void InitializeServices(int id)
+        {
+            ProjectService.Initialize(id);
+            TagService.Initialize(id);
+            ToDoItemService.Initialize(id);
+        }
+
+        public void Refresh()
+        {
+            _service.RefreshRepositories();
         }
 
         private static void SetLoginInfo(int id)

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using DAO.Entities;
 
@@ -12,6 +13,8 @@ namespace DAO.Repositories
         public UsersRepository()
         {
             _context = ContextSingleton.GetInstance();
+            
+            _context.Users.Load();
         }
         
         public IEnumerable<User> Get()

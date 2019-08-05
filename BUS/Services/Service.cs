@@ -4,11 +4,9 @@ namespace BUS.Services
 {
     public abstract class Service
     {
-        public void Refresh()
+        public static void RefreshContext()
         {
             ContextSingleton.RefreshContext();
         }
-
-        public abstract void RefreshRepositories();
     }
 }

@@ -17,19 +17,19 @@ namespace ToDoTaskManager.Classes
         private readonly   int?                               _projectId;
 
         internal ToDoItemOperations(ListView toDoItemsListView, ObservableCollection<ToDoItemView> toDoItemsCollection,
-            int? projectId, ToDoItemService itemService, TagService tagService)
+            int? projectId)
         {
             _projectId = projectId;
 
             _toDoItemsListView   = toDoItemsListView;
             _toDoItemsCollection = toDoItemsCollection;
-            ItemService          = itemService;
-            _tagService          = tagService;
+            ItemService          = ToDoItemService.GetInstance();
+            _tagService          = TagService.GetInstance();
         }
 
         public void Add()
         {
-            var itemWindow = new ToDoItemWindow(_projectId, _tagService);
+            var itemWindow = new ToDoItemWindow(_projectId);
 
             if (this is TodayToDoItemOperations)
                 itemWindow.ShowDialog(DateTime.Today);
@@ -57,7 +57,7 @@ namespace ToDoTaskManager.Classes
             if (index == -1) return;
 
             var item       = _toDoItemsCollection[index];
-            var itemWindow = new ToDoItemWindow(_projectId, item, _tagService);
+            var itemWindow = new ToDoItemWindow(_projectId, item);
 
             _toDoItemsListView.SelectedItem = null;
 
@@ -149,9 +149,8 @@ namespace ToDoTaskManager.Classes
     internal sealed class InboxToDoItemOperations : ToDoItemOperations
     {
         public InboxToDoItemOperations(ListView toDoItemsListView,
-            ObservableCollection<ToDoItemView> toDoItemsCollection, int? projectId, ToDoItemService itemService,
-            TagService tagService) :
-            base(toDoItemsListView, toDoItemsCollection, projectId, itemService, tagService)
+            ObservableCollection<ToDoItemView> toDoItemsCollection, int? projectId) :
+            base(toDoItemsListView, toDoItemsCollection, projectId)
         {
         }
 
@@ -189,9 +188,8 @@ namespace ToDoTaskManager.Classes
     internal sealed class TodayToDoItemOperations : ToDoItemOperations
     {
         public TodayToDoItemOperations(ListView toDoItemsListView,
-            ObservableCollection<ToDoItemView> toDoItemsCollection, int? projectId, ToDoItemService itemService,
-            TagService tagService) :
-            base(toDoItemsListView, toDoItemsCollection, projectId, itemService, tagService)
+            ObservableCollection<ToDoItemView> toDoItemsCollection, int? projectId) :
+            base(toDoItemsListView, toDoItemsCollection, projectId)
         {
         }
 
@@ -229,9 +227,8 @@ namespace ToDoTaskManager.Classes
     internal sealed class SharedToDoItemOperations : ToDoItemOperations
     {
         public SharedToDoItemOperations(ListView toDoItemsListView,
-            ObservableCollection<ToDoItemView> toDoItemsCollection, int? projectId,
-            ToDoItemService itemService, TagService tagService) : base(toDoItemsListView,
-            toDoItemsCollection, projectId, itemService, tagService)
+            ObservableCollection<ToDoItemView> toDoItemsCollection, int? projectId) : base(toDoItemsListView,
+            toDoItemsCollection, projectId)
         {
         }
 
