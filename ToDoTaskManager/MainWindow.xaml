@@ -39,7 +39,7 @@
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <CheckBox  Content="{Binding Name}" IsChecked="{Binding IsSelected}" />
+                                <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}" />
                             </StackPanel>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
@@ -50,7 +50,7 @@
                                  materialDesign:HintAssist.Hint="Tags (separate by space)"
                                  Style="{StaticResource MaterialDesignTextBoxBase}" Margin="0" />
                         <Button Content="Search" Width="75" Height="25" Margin="160 5 0 0" Click="Search_OnClick"
-                                ToolTip="Find tasks by their tags" />
+                                ToolTip="Find tasks by their tags" IsDefault="True" />
                     </Canvas>
                     <Expander Name="SearchExpander" MaxWidth="88"
                               Style="{StaticResource MaterialDesignExpander}" Margin="245 0 0 0" Background="#F4F6F8">

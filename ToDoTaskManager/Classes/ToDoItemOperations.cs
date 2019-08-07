@@ -197,7 +197,7 @@ namespace ToDoTaskManager.Classes
         {
             // User chose today's date for task.
             return item.Date.ToShortDateString() == DateTime.Now.ToShortDateString() ||
-                   item.Deadline == DateTime.Today;
+                   item.Deadline <= DateTime.Today;
         }
 
         public override ToDoItemView ConvertToItemView(ToDoItemModel item)

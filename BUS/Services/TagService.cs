@@ -14,15 +14,20 @@ namespace BUS.Services
         private readonly IRepository<ItemTag>       _itemTagRepository;
         private readonly int                        _userId;
         private          List<ProjectsUsers>        _projectsUsers;
+        private          List<Tag>                  _tags;
+        private          List<ItemTag>              _itemTags;
         private static   TagService                 _self;
 
         private TagService(int userId)
         {
             _projectsUsersRepository = new ProjectsUsersRepository();
-            _projectsUsers           = _projectsUsersRepository.Get().ToList();
             _tagRepository           = new TagsRepository();
             _itemTagRepository       = new ItemsTagsRepository();
             _userId                  = userId;
+
+            _projectsUsers = _projectsUsersRepository.Get().ToList();
+            _tags          = _tagRepository.Get().ToList();
+            _itemTags      = _itemTagRepository.Get().ToList();
         }
 
         public void RefreshRepositories()
@@ -32,6 +37,8 @@ namespace BUS.Services
             _itemTagRepository.Refresh();
 
             _projectsUsers = _projectsUsersRepository.Get().ToList();
+            _tags          = _tagRepository.Get().ToList();
+            _itemTags      = _itemTagRepository.Get().ToList();
         }
 
         public static void Initialize(int userId)
@@ -54,27 +61,35 @@ namespace BUS.Services
             };
 
             tag.Id = _tagRepository.Add(addingTag) ? addingTag.Id : -1;
+            _tags.Add(addingTag);
         }
 
         public bool Remove(TagModel tag)
         {
             var foundItem = _tagRepository.Get().First(i => i.Id == tag.Id);
 
-            return _tagRepository.Remove(foundItem);
+            var deleteRes = _tagRepository.Remove(foundItem);
+
+            if (deleteRes)
+                _tagRepository.Remove(foundItem);
+
+            return deleteRes;
         }
 
         public void Update(TagModel tag)
         {
-            var foundItem = _tagRepository.Get().First(i => i.Id == tag.Id);
+            var foundTag = _tagRepository.Get().First(i => i.Id == tag.Id);
 
-            foundItem.Text = tag.Text;
+            _tags[_tags.IndexOf(foundTag)].Text = tag.Text;
+
+            foundTag.Text = tag.Text;
 
             _tagRepository.SaveChanges();
         }
 
         public void ReplaceItemsTags(int itemId, IEnumerable<int> tagId)
         {
-            var itemsTags = _itemTagRepository.Get().Where(i => i.ItemId == itemId).ToList();
+            var itemsTags = _itemTags.Where(i => i.ItemId == itemId).ToList();
 
             foreach (var i in itemsTags)
             {
@@ -89,11 +104,13 @@ namespace BUS.Services
                     TagId  = i
                 });
             }
+
+            _itemTags = _itemTagRepository.Get().ToList();
         }
 
         public IEnumerable<TagModel> Get(Func<TagModel, bool> predicate)
         {
-            return _tagRepository.Get()
+            return _tags
                 .Where(i => i.UserId == _userId ||
                             i.ProjectId != null && _projectsUsers.Any(p => p.UserId == _userId &&
                                                                            p.IsAccepted &&
@@ -110,7 +127,7 @@ namespace BUS.Services
 
         public IEnumerable<TagModel> GetSelected(int itemId)
         {
-            return _itemTagRepository.Get()
+            return _itemTags
                 .Where(i => i.ItemId == itemId)
                 .Select(i => new TagModel
                 {
@@ -121,7 +138,7 @@ namespace BUS.Services
                 });
         }
 
-        private List<Predicate<ItemTag>> GetPredicates(IEnumerable<string> projectNames)
+        private static List<Predicate<ItemTag>> GetPredicates(IEnumerable<string> projectNames)
         {
             var minDate    = DateTime.MinValue.AddYears(1753);
             var predicates = new List<Predicate<ItemTag>>();
@@ -162,9 +179,7 @@ namespace BUS.Services
         public IEnumerable<ToDoItemModel> GetItemsByTags(IEnumerable<string> tags, List<string> projectNames)
         {
             var predicates = GetPredicates(projectNames);
-            var allItems = _itemTagRepository
-                .Get()
-                .ToList()
+            var allItems = _itemTags
                 .Where(i => (i.TagOf.UserId == _userId || i.TagOf.ProjectId != null && _projectsUsers.Any(p =>
                                  p.UserId == _userId &&
                                  p.IsAccepted &&

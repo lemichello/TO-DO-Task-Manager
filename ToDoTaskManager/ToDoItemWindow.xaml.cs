@@ -95,7 +95,7 @@ namespace ToDoTaskManager
 
             Item.CompleteDay = _minDate;
 
-            if (Item.Deadline == DateTime.Today)
+            if (Item.Deadline <= DateTime.Today && Item.Deadline != _minDate)
             {
                 Item.DeadlineColor = "Red";
                 Item.DeadlineShort = "today";
@@ -160,14 +160,14 @@ namespace ToDoTaskManager
                 EditButton.Visibility   = Visibility.Collapsed;
                 DeleteButton.Visibility = Visibility.Collapsed;
 
-                Height = 420;
+                Height = _projectId == null ? 420 : 465;
             }
             else
             {
                 EditButton.Visibility   = Visibility.Visible;
                 DeleteButton.Visibility = Visibility.Visible;
 
-                Height = 555;
+                Height = _projectId == null ? 500 : 555;
             }
         }
 
