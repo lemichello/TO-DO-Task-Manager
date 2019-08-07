@@ -50,7 +50,7 @@
                             <TextBlock Text="{Binding Notes}" FontSize="13" Foreground="Silver" />
                         </StackPanel>
                         <TextBlock Text="{Binding DeadlineShort}" FontSize="17" Foreground="{Binding DeadlineColor}"
-                                   Margin="10 10 0 0" />
+                                   Margin="10 10 0 0" FontWeight="Bold" />
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
