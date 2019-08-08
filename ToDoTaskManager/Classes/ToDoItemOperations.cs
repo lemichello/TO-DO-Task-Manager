@@ -13,6 +13,7 @@ namespace ToDoTaskManager.Classes
         private readonly   ListView                           _toDoItemsListView;
         private readonly   ObservableCollection<ToDoItemView> _toDoItemsCollection;
         protected readonly ToDoItemService                    ItemService;
+        protected readonly DateTime                           MinDate;
         private readonly   TagService                         _tagService;
         private readonly   int?                               _projectId;
 
@@ -25,6 +26,7 @@ namespace ToDoTaskManager.Classes
             _toDoItemsCollection = toDoItemsCollection;
             ItemService          = ToDoItemService.GetInstance();
             _tagService          = TagService.GetInstance();
+            MinDate             = DateTime.MinValue.AddYears(1753);
         }
 
         public void Add()
@@ -125,7 +127,7 @@ namespace ToDoTaskManager.Classes
             toDoItem.Timer.Stop();
         }
 
-        protected ToDoItemView GetItemView(ToDoItemModel item)
+        protected static ToDoItemView GetItemView(ToDoItemModel item)
         {
             return new ToDoItemView
             {
@@ -157,14 +159,14 @@ namespace ToDoTaskManager.Classes
         protected override bool IsCorrect(ToDoItemView item)
         {
             // User didn't choose a date for task.
-            return item.Date == DateTime.MinValue.AddYears(1753);
+            return item.Date == MinDate;
         }
 
         public override ToDoItemView ConvertToItemView(ToDoItemModel item)
         {
             var itemView = GetItemView(item);
 
-            if (itemView.Deadline == DateTime.MinValue.AddYears(1753))
+            if (itemView.Deadline == MinDate)
                 return itemView;
 
             // Moving task, which deadline is today, to TodayPage.
@@ -196,15 +198,15 @@ namespace ToDoTaskManager.Classes
         protected override bool IsCorrect(ToDoItemView item)
         {
             // User chose today's date for task.
-            return item.Date.ToShortDateString() == DateTime.Now.ToShortDateString() ||
-                   item.Deadline <= DateTime.Today;
+            return item.Date == DateTime.Now.Date ||
+                   item.Deadline <= DateTime.Today && item.Deadline != MinDate;
         }
 
         public override ToDoItemView ConvertToItemView(ToDoItemModel item)
         {
             var itemView = GetItemView(item);
 
-            if (itemView.Deadline == DateTime.MinValue.AddYears(1753))
+            if (itemView.Deadline == MinDate)
                 return itemView;
 
             if (itemView.Deadline <= DateTime.Today)
@@ -241,7 +243,7 @@ namespace ToDoTaskManager.Classes
         {
             var itemView = GetItemView(item);
 
-            if (itemView.Deadline == DateTime.MinValue.AddYears(1753))
+            if (itemView.Deadline == MinDate)
                 return itemView;
 
             if (itemView.Deadline <= DateTime.Today)
