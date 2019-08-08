@@ -15,6 +15,7 @@ namespace BUS.Services
         private readonly IRepository<ToDoItem>      _itemRepository;
         private readonly int                        _userId;
         private static   ProjectService             _self;
+        private readonly TagService                 _tagService;
 
         private ProjectService(int userId)
         {
@@ -23,6 +24,7 @@ namespace BUS.Services
             _projectUserRepository = new ProjectsUsersRepository();
             _itemRepository        = new ToDoItemsRepository();
             _userId                = userId;
+            _tagService            = TagService.GetInstance();
         }
 
         public void RefreshRepositories()
@@ -144,19 +146,26 @@ namespace BUS.Services
 
             _projectUserRepository.Remove(record);
 
-            // Project hasn't users.
-            if (_projectUserRepository.Get().ToList().All(i => i.ProjectId != projectId))
-            {
-                // Deleting all items, that belong to this project.
-                var projectItems = _itemRepository.Get().ToList().Where(i => i.ProjectId == projectId).ToList();
+            // Project still has users.
+            if (_projectUserRepository.Get().ToList().Any(i => i.ProjectId == projectId))
+                return;
 
-                foreach (var i in projectItems)
+            // Deleting all items, that belong to this project.
+            var projectItems = _itemRepository.Get().ToList().Where(i => i.ProjectId == projectId).ToList();
+
+            foreach (var i in projectItems)
+            {
+                // Deleting all tags, that has this task.
+                if (!_tagService.RemoveTagsFromTask(i.Id))
                 {
-                    _itemRepository.Remove(i);
+                    MessageBox.Show("Can't delete tags from a task");
+                    return;
                 }
 
-                _projectRepository.Remove(_projectRepository.Get().ToList().First(i => i.Id == projectId));
+                _itemRepository.Remove(i);
             }
+
+            _projectRepository.Remove(_projectRepository.Get().ToList().First(i => i.Id == projectId));
         }
 
         public IEnumerable<ProjectModel> GetProjects()

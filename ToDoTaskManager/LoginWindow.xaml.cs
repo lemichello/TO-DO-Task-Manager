@@ -75,8 +75,8 @@ namespace ToDoTaskManager
 
         private static void InitializeServices(int id)
         {
-            ProjectService.Initialize(id);
             TagService.Initialize(id);
+            ProjectService.Initialize(id);
             ToDoItemService.Initialize(id);
         }
 

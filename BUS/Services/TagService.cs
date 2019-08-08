@@ -76,6 +76,18 @@ namespace BUS.Services
             return deleteRes;
         }
 
+        public bool RemoveTagsFromTask(int taskId)
+        {
+            if (_itemTags.Where(i => i.ItemId == taskId).Any(i => !_itemTagRepository.Remove(i)))
+            {
+                return false;
+            }
+
+            _itemTags = _itemTagRepository.Get().ToList();
+
+            return true;
+        }
+
         public void Update(TagModel tag)
         {
             var foundTag = _tagRepository.Get().First(i => i.Id == tag.Id);

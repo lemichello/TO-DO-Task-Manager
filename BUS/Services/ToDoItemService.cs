@@ -14,6 +14,7 @@ namespace BUS.Services
         private          List<ProjectsUsers>        _projects;
         private readonly int                        _userId;
         private static   ToDoItemService            _self;
+        private readonly TagService                 _tagService;
 
         private ToDoItemService(int userId)
         {
@@ -23,6 +24,8 @@ namespace BUS.Services
             _projects = _projectUserRepository.Get()
                 .Where(i => i.UserId == _userId && i.IsAccepted)
                 .ToList();
+
+            _tagService = TagService.GetInstance();
         }
 
         public void RefreshRepositories()
@@ -65,7 +68,7 @@ namespace BUS.Services
         {
             var foundItem = _repository.Get().First(i => i.Id == item.Id);
 
-            return _repository.Remove(foundItem);
+            return _tagService.RemoveTagsFromTask(foundItem.Id) && _repository.Remove(foundItem);
         }
 
         public void Update(ToDoItemModel item)
@@ -83,7 +86,7 @@ namespace BUS.Services
 
         public IEnumerable<ToDoItemModel> Get(Func<ToDoItemModel, bool> predicate)
         {
-            return _repository.Get()
+            return _repository.Get().ToList()
                 .Where(i => i.UserId == _userId || _projects.Any(p => i.ProjectId == p.ProjectId))
                 .Select(i => new ToDoItemModel
                 {
