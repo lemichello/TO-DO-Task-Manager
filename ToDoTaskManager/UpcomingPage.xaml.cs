@@ -132,7 +132,9 @@ namespace ToDoTaskManager
                 _upcomingItemsCollection.Add(new UpcomingToDoItems(ref i, allItems, true));
             }
 
-            for (var i = 0; i < 6; i++)
+            var iterationsCount = DateTime.Now.AddDays(8).Month != DateTime.Now.Month ? 6 : 5;
+
+            for (var i = 0; i < iterationsCount; i++)
             {
                 _upcomingItemsCollection.Add(new UpcomingToDoItems(ref i, allItems, false));
             }

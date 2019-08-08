@@ -24,7 +24,10 @@ namespace ToDoTaskManager.Classes
                 Date = DateTime.Now.AddDays(8).ToString("MMMM");
                 WeekDay =
                     $"{DateTime.Now.AddDays(8).Day}-{DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month)}";
-                increaser++;
+
+                // When there's no remaining days in current month, showing tasks from the next month.
+                if (DateTime.Now.AddDays(8).Month != DateTime.Now.Month)
+                    increaser++;
             }
             else if (!addToDays)
                 Date = DateTime.Now.AddMonths(increaser).ToString("MMMM");
@@ -38,12 +41,12 @@ namespace ToDoTaskManager.Classes
             else
                 FillToDoItemsByMonths(increaser);
         }
-        
+
         // Fill remaining items.
         public UpcomingToDoItems(int year, List<ToDoItemModel> items)
         {
             ToDoItems = new ObservableCollection<ToDoItemView>();
-            Date = year.ToString();
+            Date      = year.ToString();
 
             AddItems(items);
 
@@ -51,8 +54,8 @@ namespace ToDoTaskManager.Classes
             {
                 var day   = i.Date.Day > 9 ? i.Date.Day.ToString() : $"0{i.Date.Day}";
                 var month = i.Date.Month > 9 ? i.Date.Month.ToString() : $"0{i.Date.Month}";
-                
-                i.ShortDate = $"{day}.{month}";
+
+                i.ShortDate      = $"{day}.{month}";
                 i.DateVisibility = "Visible";
             }
         }
@@ -79,7 +82,7 @@ namespace ToDoTaskManager.Classes
                     ToDoItems.Add(itemView);
                     continue;
                 }
-                
+
                 if (i.Deadline <= DateTime.Today)
                 {
                     itemView.DeadlineColor = "Red";
@@ -88,16 +91,16 @@ namespace ToDoTaskManager.Classes
                 else
                 {
                     var remainingDays = (i.Deadline - DateTime.Today).TotalDays;
-                    
+
                     itemView.DeadlineColor = "Gray";
                     itemView.DeadlineShort = $"{remainingDays}d left";
                 }
-                
+
                 ToDoItems.Add(itemView);
             }
         }
 
-        
+
         private void FillToDoItemsByDays(int dayIncreaser)
         {
             var items = _allItems.Where(i =>
@@ -127,10 +130,10 @@ namespace ToDoTaskManager.Classes
 
             foreach (var i in ToDoItems)
             {
-                var day = i.Date.Day > 9 ? i.Date.Day.ToString() : $"0{i.Date.Day}";
+                var day   = i.Date.Day > 9 ? i.Date.Day.ToString() : $"0{i.Date.Day}";
                 var month = i.Date.Month > 9 ? i.Date.Month.ToString() : $"0{i.Date.Month}";
-                
-                i.ShortDate = $"{day}.{month}";
+
+                i.ShortDate      = $"{day}.{month}";
                 i.DateVisibility = "Visible";
             }
         }
