@@ -38,7 +38,7 @@ namespace ToDoTaskManager
         {
             var itemWindow = new ToDoItemWindow(null);
 
-            itemWindow.ShowDialog();
+            itemWindow.ShowDialog(DateTime.Today.AddDays(1));
 
             if (itemWindow.DialogResult == false) return;
 
