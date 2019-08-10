@@ -89,7 +89,7 @@ namespace ToDoTaskManager
             var toDoItem = (ToDoItemModel) item;
             var timer = new DispatcherTimer
             {
-                Interval = new TimeSpan(0, 0, 1, 300)
+                Interval = new TimeSpan(0, 0, 0, 1, 300)
             };
 
             timer.Tick += Timer_OnTick;
