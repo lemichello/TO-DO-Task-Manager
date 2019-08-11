@@ -62,12 +62,14 @@ namespace BUS.Services
 
         public bool Remove(TagModel tag)
         {
-            var foundItem = _tagRepository.Get().First(i => i.Id == tag.Id);
+            var foundTag = _tagRepository.Get().First(i => i.Id == tag.Id);
 
-            var deleteRes = _tagRepository.Remove(foundItem);
+            DeleteTagFromItemsTags(foundTag.Id);
+            
+            var deleteRes = _tagRepository.Remove(foundTag);
 
             if (deleteRes)
-                _tagRepository.Remove(foundItem);
+                _tags.Remove(foundTag);
 
             return deleteRes;
         }
@@ -79,7 +81,7 @@ namespace BUS.Services
                 return false;
             }
 
-            _itemTags = _itemTagRepository.Get().ToList();
+            _itemTags = FilterTags(_itemTagRepository.Get().ToList());
 
             return true;
         }
@@ -113,7 +115,7 @@ namespace BUS.Services
                 });
             }
 
-            _itemTags = _itemTagRepository.Get().ToList();
+            _itemTags = FilterTags(_itemTagRepository.Get().ToList());
         }
 
         public IEnumerable<TagModel> Get(Func<TagModel, bool> predicate)
@@ -182,6 +184,18 @@ namespace BUS.Services
             _projectsUsers = FilterProjects(_projectsUsersRepository.Get().ToList());
             _tags          = FilterTags(_tagRepository.Get().ToList());
             _itemTags      = FilterTags(_itemTagRepository.Get().ToList());
+        }
+
+        private void DeleteTagFromItemsTags(int tagId)
+        {
+            var itemsTags = _itemTags.Where(i => i.TagId == tagId);
+
+            foreach (var i in itemsTags)
+            {
+                _itemTagRepository.Remove(i);
+            }
+            
+            _itemTags = FilterTags(_itemTagRepository.Get().ToList());
         }
         
         private static List<Predicate<ItemTag>> GetPredicates(IEnumerable<string> projectNames)
