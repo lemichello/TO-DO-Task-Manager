@@ -198,7 +198,7 @@ namespace ToDoTaskManager.Classes
         protected override bool IsCorrect(ToDoItemView item)
         {
             // User chose today's date for task.
-            return item.Date == DateTime.Now.Date ||
+            return item.Date <= DateTime.Now.Date && item.Date != MinDate ||
                    item.Deadline <= DateTime.Today && item.Deadline != MinDate;
         }
 
