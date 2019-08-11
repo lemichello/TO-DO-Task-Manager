@@ -52,9 +52,11 @@ namespace ToDoTaskManager
 
         private void FillCollection()
         {
+            var minDate = DateTime.MinValue.AddYears(1753);
+            
             var collection = _itemService.Get(item =>
-                item.Date == DateTime.MinValue.AddYears(1753) &&
-                item.CompleteDay == DateTime.MinValue.AddYears(1753) &&
+                item.Date == minDate &&
+                item.CompleteDay == minDate &&
                 item.ProjectName == "").ToList();
 
             foreach (var i in collection)

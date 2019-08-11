@@ -14,6 +14,7 @@ namespace ToDoTaskManager
         private readonly ToDoItemService                       _itemService;
         private readonly TagService                            _tagService;
         private readonly MainWindow                            _parent;
+        private readonly DateTime                              _minDate;
 
         public LogbookPage(MainWindow window)
         {
@@ -23,6 +24,7 @@ namespace ToDoTaskManager
             _itemService         = ToDoItemService.GetInstance();
             _tagService          = TagService.GetInstance();
             _parent              = window;
+            _minDate             = DateTime.MinValue.AddYears(1753);
 
             FillCollection();
 
@@ -67,7 +69,7 @@ namespace ToDoTaskManager
 
         private void FillCollection()
         {
-            var items = _itemService.Get(i => i.CompleteDay != DateTime.MinValue.AddYears(1753)).ToList();
+            var items = _itemService.Get(i => i.CompleteDay != _minDate).ToList();
 
             items.Sort((a, b) => -a.CompleteDay.CompareTo(b.CompleteDay));
 
@@ -105,7 +107,7 @@ namespace ToDoTaskManager
             var index        = ToDoItemsListView.Items.IndexOf(selectedItem);
             var toDoItem     = _toDoItemsCollection[index];
 
-            toDoItem.CompleteDay = DateTime.MinValue.AddYears(1753);
+            toDoItem.CompleteDay = _minDate;
 
             _itemService.Update(toDoItem);
             _toDoItemsCollection.RemoveAt(index);

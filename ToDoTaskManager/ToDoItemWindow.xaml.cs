@@ -232,14 +232,5 @@ namespace ToDoTaskManager
             if (_tagService.Remove(tag))
                 _tagsList.Remove(tag);
         }
-
-        /*private void ToDoItemWindow_OnClosing(object sender, CancelEventArgs e)
-        {
-            if (DialogResult == true || !_isTagDeleted) return;
-            
-            MessageBox.Show("You need to click Save button, because you deleted a tag, which" +
-                            " was associated with this task.");
-            e.Cancel = true;
-        }*/
     }
 }

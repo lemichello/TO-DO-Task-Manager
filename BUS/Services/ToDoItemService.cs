@@ -104,8 +104,10 @@ namespace BUS.Services
 
         public IEnumerable<ToDoItemModel> GetSharedProjectItems(int projectId)
         {
+            var minDate = DateTime.MinValue.AddYears(1753);
+            
             return _repository.Get()
-                .Where(i => i.ProjectId == projectId && i.CompleteDate == DateTime.MinValue.AddYears(1753))
+                .Where(i => i.ProjectId == projectId && i.CompleteDate == minDate)
                 .Select(i => new ToDoItemModel
                 {
                     Id          = i.Id,

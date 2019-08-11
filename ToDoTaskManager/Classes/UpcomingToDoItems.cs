@@ -62,6 +62,8 @@ namespace ToDoTaskManager.Classes
 
         private void AddItems(List<ToDoItemModel> items)
         {
+            var minDate = DateTime.MinValue.AddYears(1753);
+            
             foreach (var i in items)
             {
                 var itemView = new ToDoItemView
@@ -77,7 +79,7 @@ namespace ToDoTaskManager.Classes
                     Timer       = i.Timer
                 };
 
-                if (i.Deadline == DateTime.MinValue.AddYears(1753))
+                if (i.Deadline == minDate)
                 {
                     ToDoItems.Add(itemView);
                     continue;
