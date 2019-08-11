@@ -25,9 +25,7 @@ namespace BUS.Services
             _itemTagRepository       = new ItemsTagsRepository();
             _userId                  = userId;
 
-            _projectsUsers = _projectsUsersRepository.Get().ToList();
-            _tags          = _tagRepository.Get().ToList();
-            _itemTags      = _itemTagRepository.Get().ToList();
+            InitializeLists();
         }
 
         public void RefreshRepositories()
@@ -36,9 +34,7 @@ namespace BUS.Services
             _tagRepository.Refresh();
             _itemTagRepository.Refresh();
 
-            _projectsUsers = _projectsUsersRepository.Get().ToList();
-            _tags          = _tagRepository.Get().ToList();
-            _itemTags      = _itemTagRepository.Get().ToList();
+            InitializeLists();
         }
 
         public static void Initialize(int userId)
@@ -123,10 +119,6 @@ namespace BUS.Services
         public IEnumerable<TagModel> Get(Func<TagModel, bool> predicate)
         {
             return _tags
-                .Where(i => i.UserId == _userId ||
-                            i.ProjectId != null && _projectsUsers.Any(p => p.UserId == _userId &&
-                                                                           p.IsAccepted &&
-                                                                           p.ProjectId == i.ProjectId))
                 .Select(i => new TagModel
                 {
                     Id           = i.Id,
@@ -150,6 +142,48 @@ namespace BUS.Services
                 });
         }
 
+        public IEnumerable<ToDoItemModel> GetItemsByTags(IEnumerable<string> tags, List<string> projectNames)
+        {
+            var predicates = GetPredicates(projectNames);
+            var allItems = _itemTags.Where(i => predicates.Any(p => p.Invoke(i))).ToList();
+            var itemsCount = new Dictionary<ToDoItem, int>();
+            var tagTexts   = tags.ToList();
+
+            foreach (var text in tagTexts)
+            {
+                foreach (var item in allItems)
+                {
+                    if (itemsCount.ContainsKey(item.ItemOf) && item.TagOf.Text == text)
+                        itemsCount[item.ItemOf]++;
+                    else if (item.TagOf.Text == text)
+                        itemsCount[item.ItemOf] = 1;
+                }
+            }
+
+            // Selecting ToDoItems, which have all searching-tags (their occurrences count are equal to
+            // searching-tags length).
+            var foundItems = itemsCount.Where(i => i.Value == tagTexts.Count).Select(i => i.Key).ToList();
+
+            return foundItems.Select(i => new ToDoItemModel
+            {
+                Id          = i.Id,
+                Header      = i.Header,
+                Notes       = i.Notes,
+                Date        = i.Date,
+                Deadline    = i.Deadline,
+                CompleteDay = i.CompleteDate,
+                ProjectName = i.ProjectOf?.Name ?? "",
+                ProjectId   = i.ProjectId
+            });
+        }
+
+        private void InitializeLists()
+        {
+            _projectsUsers = FilterProjects(_projectsUsersRepository.Get().ToList());
+            _tags          = FilterTags(_tagRepository.Get().ToList());
+            _itemTags      = FilterTags(_itemTagRepository.Get().ToList());
+        }
+        
         private static List<Predicate<ItemTag>> GetPredicates(IEnumerable<string> projectNames)
         {
             var minDate    = DateTime.MinValue.AddYears(1753);
@@ -188,44 +222,27 @@ namespace BUS.Services
             return predicates;
         }
 
-        public IEnumerable<ToDoItemModel> GetItemsByTags(IEnumerable<string> tags, List<string> projectNames)
+        private List<Tag> FilterTags(IEnumerable<Tag> allTags)
         {
-            var predicates = GetPredicates(projectNames);
-            var allItems = _itemTags
-                .Where(i => (i.TagOf.UserId == _userId || i.TagOf.ProjectId != null && _projectsUsers.Any(p =>
-                                 p.UserId == _userId &&
-                                 p.IsAccepted &&
-                                 p.ProjectId == i.TagOf.ProjectId)) &&
-                            predicates.Any(p => p.Invoke(i))).ToList();
-            var itemsCount = new Dictionary<ToDoItem, int>();
-            var tagTexts   = tags.ToList();
+            return allTags
+                .Where(i => i.UserId == _userId ||
+                            i.ProjectId != null && _projectsUsers.Any(p => p.ProjectId == i.ProjectId))
+                .ToList();
+        }
 
-            foreach (var text in tagTexts)
-            {
-                foreach (var item in allItems)
-                {
-                    if (itemsCount.ContainsKey(item.ItemOf) && item.TagOf.Text == text)
-                        itemsCount[item.ItemOf]++;
-                    else if (item.TagOf.Text == text)
-                        itemsCount[item.ItemOf] = 1;
-                }
-            }
+        private List<ItemTag> FilterTags(IEnumerable<ItemTag> itemTags)
+        {
+            return itemTags
+                .Where(i => i.TagOf.UserId == _userId ||
+                            i.TagOf.ProjectId != null &&
+                            _projectsUsers.Any(p => p.ProjectId == i.TagOf.ProjectId))
+                .ToList();
+        }
 
-            // Selecting ToDoItems, which have all searching-tags (their occurrences count are equal to
-            // searching-tags length).
-            var foundItems = itemsCount.Where(i => i.Value == tagTexts.Count).Select(i => i.Key).ToList();
-
-            return foundItems.Select(i => new ToDoItemModel
-            {
-                Id          = i.Id,
-                Header      = i.Header,
-                Notes       = i.Notes,
-                Date        = i.Date,
-                Deadline    = i.Deadline,
-                CompleteDay = i.CompleteDate,
-                ProjectName = i.ProjectOf?.Name ?? "",
-                ProjectId   = i.ProjectId
-            });
+        private List<ProjectsUsers> FilterProjects(IEnumerable<ProjectsUsers> projectsUsers)
+        {
+            return projectsUsers.Where(p => p.UserId == _userId &&
+                                            p.IsAccepted).ToList();
         }
     }
 }

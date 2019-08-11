@@ -170,8 +170,9 @@ namespace BUS.Services
 
         public IEnumerable<ProjectModel> GetProjects()
         {
-            return _projectUserRepository.Get().ToList().Where(i => i.UserId == _userId && i.IsAccepted).Select(
-                i => new ProjectModel
+            return _projectUserRepository.Get().ToList()
+                .Where(i => i.UserId == _userId && i.IsAccepted)
+                .Select(i => new ProjectModel
                 {
                     Id   = i.ProjectId,
                     Name = i.ProjectOf.Name
