@@ -327,6 +327,8 @@ namespace ToDoTaskManager
                     Name        = invitation.ProjectName,
                     ImageSource = "Resources/shared.png"
                 });
+                
+                TagService.GetInstance().RefreshRepositories();
             }
             else
                 MessageBox.Show("Can't accept invitation");
