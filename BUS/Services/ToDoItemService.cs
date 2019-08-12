@@ -11,7 +11,6 @@ namespace BUS.Services
     {
         private readonly IRepository<ProjectsUsers> _projectUserRepository;
         private readonly IRepository<ToDoItem>      _repository;
-        private          List<ProjectsUsers>        _projects;
         private readonly int                        _userId;
         private static   ToDoItemService            _self;
         private readonly TagService                 _tagService;
@@ -21,9 +20,6 @@ namespace BUS.Services
             _projectUserRepository = new ProjectsUsersRepository();
             _repository            = new ToDoItemsRepository();
             _userId                = userId;
-            _projects = _projectUserRepository.Get()
-                .Where(i => i.UserId == _userId && i.IsAccepted)
-                .ToList();
 
             _tagService = TagService.GetInstance();
         }
@@ -32,10 +28,6 @@ namespace BUS.Services
         {
             _repository.Refresh();
             _projectUserRepository.Refresh();
-
-            _projects = _projectUserRepository.Get()
-                .Where(i => i.UserId == _userId && i.IsAccepted)
-                .ToList();
         }
 
         public static void Initialize(int userId)
@@ -86,8 +78,11 @@ namespace BUS.Services
 
         public IEnumerable<ToDoItemModel> Get(Func<ToDoItemModel, bool> predicate)
         {
+            var projectsUsers = _projectUserRepository.Get().ToList().Where(i => i.UserId == _userId && i.IsAccepted);
+            
             return _repository.Get().ToList()
-                .Where(i => i.UserId == _userId || _projects.Any(p => i.ProjectId == p.ProjectId))
+                .Where(i => i.UserId == _userId && i.ProjectId == null || 
+                            projectsUsers.Any(p => i.ProjectId == p.ProjectId))
                 .Select(i => new ToDoItemModel
                 {
                     Id          = i.Id,
