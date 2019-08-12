@@ -150,7 +150,7 @@ namespace BUS.Services
             if (_projectUserRepository.Get().ToList().Any(i => i.ProjectId == projectId))
                 return;
 
-            // Deleting all items, that belong to this project.
+            // Deleting all tasks, that belong to this project.
             var projectItems = _itemRepository.Get().ToList().Where(i => i.ProjectId == projectId).ToList();
 
             foreach (var i in projectItems)
@@ -161,6 +161,8 @@ namespace BUS.Services
                     MessageBox.Show("Can't delete tags from a task");
                     return;
                 }
+
+                _tagService.RemoveSharedTags(projectId);
 
                 _itemRepository.Remove(i);
             }

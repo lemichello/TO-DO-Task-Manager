@@ -74,6 +74,18 @@ namespace BUS.Services
             return deleteRes;
         }
 
+        public bool RemoveSharedTags(int projectId)
+        {
+            if (_tags.Where(i => i.ProjectId == projectId).Any(i => !_tagRepository.Remove(i)))
+            {
+                return false;
+            }
+
+            _tags = FilterTags(_tagRepository.Get().ToList());
+            
+            return true;
+        }
+
         public bool RemoveTagsFromTask(int taskId)
         {
             if (_itemTags.Where(i => i.ItemId == taskId).Any(i => !_itemTagRepository.Remove(i)))
