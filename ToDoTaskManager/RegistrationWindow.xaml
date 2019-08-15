@@ -6,15 +6,21 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:ToDoTaskManager"
         mc:Ignorable="d"
-        Title="RegistrationWindow" Height="450" Width="800" WindowState="Maximized">
-    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="350">
-        <TextBox Name="LoginTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                 materialDesign:HintAssist.Hint="Login" FontSize="17" />
-        <PasswordBox Name="PasswordBox" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
-                     materialDesign:HintAssist.Hint="Password" FontSize="17" />
-        <PasswordBox Name="RepeatPasswordBox" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
-                     materialDesign:HintAssist.Hint="Repeat password" FontSize="17" />
-        <Button Content="Register" Style="{StaticResource MaterialDesignRaisedButton}" Margin="0 20 0 10"
-                IsDefault="True" Click="RegisterButton_OnClick" />
-    </StackPanel>
+        Title="RegistrationWindow" Height="460" Width="660" WindowStartupLocation="CenterScreen">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 35 0 0">
+            <Image Source="Resources/todoIconPng.png" Height="75" Width="75" />
+            <Label Content="TO-DO Task Manager" FontSize="40" FontWeight="Bold" Margin="10 5 0 0" />
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="350">
+            <TextBox Name="LoginTextBox" Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                     materialDesign:HintAssist.Hint="Login" FontSize="17" />
+            <PasswordBox Name="PasswordBox" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
+                         materialDesign:HintAssist.Hint="Password" FontSize="17" />
+            <PasswordBox Name="RepeatPasswordBox" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
+                         materialDesign:HintAssist.Hint="Repeat password" FontSize="17" />
+            <Button Content="Register" Style="{StaticResource MaterialDesignRaisedButton}" Margin="0 20 0 10"
+                    IsDefault="True" Click="RegisterButton_OnClick" />
+        </StackPanel>
+    </DockPanel>
 </Window>
