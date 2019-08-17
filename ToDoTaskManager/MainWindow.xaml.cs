@@ -151,6 +151,25 @@ namespace ToDoTaskManager
             SearchConditionsComboBox.SelectedIndex = -1;
         }
 
+        private void ConditionChanged()
+        {
+            if (!FoundToDoItems.Items.IsEmpty)
+            {
+                SearchExpander.IsExpanded = false;
+                FoundToDoItems.ItemsSource = null;
+            }
+        }
+
+        private void ConditionCheckBox_OnChecked(object sender, RoutedEventArgs e)
+        {
+            ConditionChanged();
+        }
+
+        private void ConditionCheckBox_OnUnchecked(object sender, RoutedEventArgs e)
+        {
+            ConditionChanged();
+        }
+
         private void Search_OnClick(object sender, RoutedEventArgs e)
         {
             if (_projects.All(p => !p.IsSelected))
@@ -197,9 +216,7 @@ namespace ToDoTaskManager
             var selectedToDoItem = (ToDoItemModel) FoundToDoItems.Items[index];
             var minDate          = DateTime.MinValue.AddYears(1753);
 
-            if (selectedToDoItem.Date == minDate &&
-                selectedToDoItem.ProjectName != "" &&
-                _projects.Any(p => p.Name == selectedToDoItem.ProjectName && p.IsSelected) &&
+            if (_projects.Any(p => p.Name == selectedToDoItem.ProjectName && p.IsSelected) &&
                 selectedToDoItem.CompleteDay == minDate)
             {
                 var projectView = _projects.First(i => i.Id == (selectedToDoItem.ProjectId ?? -1));
@@ -327,7 +344,7 @@ namespace ToDoTaskManager
                     Name        = invitation.ProjectName,
                     ImageSource = "Resources/shared.png"
                 });
-                
+
                 TagService.GetInstance().RefreshRepositories();
             }
             else

@@ -156,13 +156,12 @@ namespace BUS.Services
             foreach (var i in projectItems)
             {
                 // Deleting all tags, that has this task.
-                if (!_tagService.RemoveTagsFromTask(i.Id))
+                if (!_tagService.RemoveTagsFromTask(i.Id) ||
+                    !_tagService.RemoveSharedTags(projectId))
                 {
                     MessageBox.Show("Can't delete tags from a task");
                     return;
                 }
-
-                _tagService.RemoveSharedTags(projectId);
 
                 _itemRepository.Remove(i);
             }

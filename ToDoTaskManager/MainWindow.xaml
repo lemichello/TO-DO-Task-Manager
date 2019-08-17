@@ -39,7 +39,9 @@
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}" />
+                                <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}"
+                                          Checked="ConditionCheckBox_OnChecked"
+                                          Unchecked="ConditionCheckBox_OnUnchecked" />
                             </StackPanel>
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
