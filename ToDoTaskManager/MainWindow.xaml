@@ -54,11 +54,9 @@
                         <Button Content="Search" Width="75" Height="25" Margin="160 5 0 0" Click="Search_OnClick"
                                 ToolTip="Find tasks by their tags" IsDefault="True" />
                     </Canvas>
-                    <Expander Name="SearchExpander" MaxWidth="88"
-                              Style="{StaticResource MaterialDesignExpander}" Margin="245 0 0 0" Background="#F4F6F8">
+                    <Expander Name="SearchExpander" MaxWidth="88" Margin="245 0 0 0" Background="#F4F6F8">
                         <ListBox Name="FoundToDoItems" MaxWidth="88"
-                                 SelectionChanged="FoundToDoItems_OnSelectionChanged"
-                                 Style="{StaticResource MaterialDesignListBox}">
+                                 SelectionChanged="FoundToDoItems_OnSelectionChanged">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <Grid ToolTip="{Binding Header}">
@@ -71,8 +69,7 @@
                 </StackPanel>
             </Grid>
             <ListView Grid.Row="1" Name="ProjectsListView" Background="#F4F6F8" BorderThickness="0" Margin="20 30 0 0"
-                      SelectionChanged="PagesListView_OnSelectionChanged"
-                      Style="{StaticResource MaterialDesignListView}">
+                      SelectionChanged="PagesListView_OnSelectionChanged">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
@@ -84,21 +81,17 @@
             </ListView>
             <StackPanel Grid.Row="2" Margin="0 20 0 20">
                 <StackPanel Name="NewProjectStackPanel" HorizontalAlignment="Center" Visibility="Collapsed">
-                    <TextBox Name="ProjectNameTextBox" Style="{StaticResource MaterialDesignTextBox}"
-                             materialDesign:HintAssist.Hint="Project name" FontSize="15" />
-                    <TextBox Name="InvitedUsersTextBox" Style="{StaticResource MaterialDesignTextBox}" Margin="0 10"
-                             materialDesign:HintAssist.Hint="Invited user logins (separate by space)" FontSize="15" />
+                    <TextBox Name="ProjectNameTextBox" materialDesign:HintAssist.Hint="Project name" FontSize="15" />
+                    <TextBox Name="InvitedUsersTextBox" Margin="0 10" FontSize="15"
+                             materialDesign:HintAssist.Hint="Invited user logins (separate by space)" />
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="Confirm" Click="ConfirmButton_OnClick"
-                                Style="{StaticResource MaterialDesignRaisedButton}" Width="120" />
-                        <Button Content="Cancel" Style="{StaticResource MaterialDesignRaisedButton}"
-                                Click="CancelButton_OnClick" Margin="10 0 0 0" Width="120" />
+                        <Button Content="Confirm" Click="ConfirmButton_OnClick" Width="120" />
+                        <Button Content="Cancel" Click="CancelButton_OnClick" Margin="10 0 0 0" Width="120" />
                     </StackPanel>
                 </StackPanel>
                 <Button Name="AddProjectButton" Content="Add shared project" HorizontalAlignment="Center"
-                        Style="{StaticResource MaterialDesignRaisedButton}" Click="AddSharedProjectButton_OnClick" />
-                <ListView Name="InvitationsListView" Style="{StaticResource MaterialDesignListView}"
-                          Margin="30 20" Visibility="Collapsed">
+                        Click="AddSharedProjectButton_OnClick" />
+                <ListView Name="InvitationsListView" Margin="30 20" Visibility="Collapsed">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>
@@ -111,10 +104,8 @@
                                     </TextBlock.Text>
                                 </TextBlock>
                                 <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
-                                    <Button Content="Accept" Style="{StaticResource MaterialDesignRaisedButton}"
-                                            Margin="0 0 0 5" Click="AcceptButton_OnClick" />
-                                    <Button Content="Decline" Style="{StaticResource MaterialDesignRaisedButton}"
-                                            Margin="15 0 0 5" Click="DeclineButton_OnClick" />
+                                    <Button Content="Accept" Margin="0 0 0 5" Click="AcceptButton_OnClick" />
+                                    <Button Content="Decline" Margin="15 0 0 5" Click="DeclineButton_OnClick" />
                                 </StackPanel>
                             </StackPanel>
                         </DataTemplate>
@@ -140,8 +131,7 @@
             <Grid DockPanel.Dock="Top">
                 <Button Content="Support project" HorizontalAlignment="Center" Click="SupportButton_OnClick"
                         Margin="0 10 0 0" />
-                <Button Content="Log out" HorizontalAlignment="Right" Margin="5 10 5 5"
-                        Style="{StaticResource MaterialDesignRaisedButton}" Click="LogOutButton_OnClick" />
+                <Button Content="Log out" HorizontalAlignment="Right" Margin="5 10 5 5" Click="LogOutButton_OnClick" />
                 <Button HorizontalAlignment="Left" Margin="10 20 5 5" ToolTip="Refresh"
                         Style="{StaticResource MaterialDesignFloatingActionMiniButton}" Click="RefreshButton_OnClick">
                     <Grid>

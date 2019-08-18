@@ -10,20 +10,17 @@
     <DockPanel Margin="50 60 0 0">
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
             <Image Source="Resources/today.png" Width="40" Height="40" />
-            <Label Content="Today" Margin="10 0 0 0" FontWeight="Bold" FontSize="30"
-                   Style="{StaticResource MaterialDesignLabel}" />
+            <Label Content="Today" Margin="10 0 0 0" FontWeight="Bold" FontSize="30" />
         </StackPanel>
         <Button DockPanel.Dock="Bottom" Height="60" Width="60" FontSize="19" Margin="0 0 50 20" Content="+"
                 Click="AddButton_OnClick" Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
                 HorizontalAlignment="Right" ToolTip="Add new task" />
         <ListView Name="ToDoItemsListView" Margin="0 20 0 0" BorderThickness="0"
-                  SelectionChanged="ToDoItemsListView_OnSelectionChanged"
-                  Style="{StaticResource MaterialDesignListView}">
+                  SelectionChanged="ToDoItemsListView_OnSelectionChanged">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Margin="0 5" Orientation="Horizontal">
-                        <CheckBox Checked="ToDoItem_OnChecked" Unchecked="ToDoItem_OnUnchecked" Margin="0 10 10 0"
-                                  Style="{StaticResource MaterialDesignCheckBox}" />
+                        <CheckBox Checked="ToDoItem_OnChecked" Unchecked="ToDoItem_OnUnchecked" Margin="0 10 10 0" />
                         <StackPanel>
                             <TextBlock Text="{Binding Header}" FontSize="17" />
                             <TextBlock Text="{Binding Notes}" FontSize="13" Foreground="Silver" />

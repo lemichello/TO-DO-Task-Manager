@@ -9,17 +9,14 @@
     <DockPanel Margin="50 60 0 0">
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
             <Image Source="Resources/logbook.png" Width="40" Height="40" />
-            <Label Content="Logbook" Margin="10 0 0 0" FontWeight="Bold" FontSize="30"
-                   Style="{StaticResource MaterialDesignLabel}" />
+            <Label Content="Logbook" Margin="10 0 0 0" FontWeight="Bold" FontSize="30" />
         </StackPanel>
         <ListView Name="ToDoItemsListView" Margin="0 20 0 0" BorderThickness="0"
-                  SelectionChanged="ToDoItemsListView_OnSelectionChanged"
-                  Style="{StaticResource MaterialDesignListView}">
+                  SelectionChanged="ToDoItemsListView_OnSelectionChanged">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Margin="0 5" Orientation="Horizontal">
-                        <CheckBox Unchecked="ToDoItem_OnUnchecked" IsChecked="True" Margin="0 8"
-                                  Style="{StaticResource MaterialDesignCheckBox}" />
+                        <CheckBox Unchecked="ToDoItem_OnUnchecked" IsChecked="True" Margin="0 8" />
                         <TextBlock Text="{Binding CompleteDateStr}" FontSize="15" Foreground="Blue" Margin="10 5 0 0" />
                         <TextBlock Text="{Binding Header}" FontSize="20" Margin="10 0 0 0" />
                         <Label Content="{Binding ProjectName}" FontSize="17" Foreground="#2295F2" Margin="10 0 0 0" />

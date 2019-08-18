@@ -24,8 +24,7 @@
             <StackPanel>
                 <TextBlock Text="Tags" FontSize="20" HorizontalAlignment="Center" />
                 <ListBox Name="TagsListBox" BorderThickness="0" Height="297" SelectionMode="Multiple" FontSize="20"
-                         Margin="0 10 0 0" Style="{StaticResource MaterialDesignListBox}"
-                         SelectionChanged="TagsListBox_OnSelectionChanged">
+                         Margin="0 10 0 0" SelectionChanged="TagsListBox_OnSelectionChanged">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Text}" Foreground="{Binding TagTextColor}" />
@@ -35,15 +34,14 @@
             </StackPanel>
             <Button Grid.Row="1" Name="EditButton" Content="Edit tag" HorizontalAlignment="Center" Width="150"
                     Margin="0 5" Visibility="Collapsed"
-                    Click="EditButton_OnClick" Style="{StaticResource MaterialDesignRaisedButton}" />
+                    Click="EditButton_OnClick" />
             <Button Grid.Row="2" Name="DeleteButton" Content="Delete tag" HorizontalAlignment="Center" Width="150"
                     Margin="0 5" Visibility="Collapsed"
-                    Click="DeleteTagButton_OnClick" Style="{StaticResource MaterialDesignRaisedButton}" />
+                    Click="DeleteTagButton_OnClick" />
             <Button Grid.Row="3" Content="Add tag" HorizontalAlignment="Center" Width="150" Margin="0 5"
-                    Click="AddTagButton_OnCLick" Style="{StaticResource MaterialDesignRaisedButton}" />
+                    Click="AddTagButton_OnCLick" />
             <Button Grid.Row="4" Name="SharedTagButton" Content="Add shared tag" HorizontalAlignment="Center"
-                    Margin="0 5" Width="150" Click="AddSharedTagButton_OnClick"
-                    Style="{StaticResource MaterialDesignRaisedButton}" Visibility="Collapsed"
+                    Margin="0 5" Width="150" Click="AddSharedTagButton_OnClick" Visibility="Collapsed"
                     ToolTip="Shared tags will be visible for all members of the project" />
         </Grid>
         <StackPanel Grid.Column="1" Background="{DynamicResource MaterialDesignPaper}">
@@ -53,16 +51,16 @@
             <TextBox Name="NotesText" Margin="5" FontSize="14"
                      Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                      materialDesign:HintAssist.Hint="Notes" />
-            <Label Content="Date" FontSize="17" Margin="5" Height="30" Style="{StaticResource MaterialDesignLabel}" />
-            <DatePicker Name="PickedDate" Margin="5" Height="30" Style="{StaticResource MaterialDesignDatePicker}"
-                        Focusable="False" ToolTip="To unselect date, hold Ctrl and click on selected date" />
-            <Label Content="Deadline" FontSize="17" Margin="5" Height="30" Style="{StaticResource MaterialDesignLabel}" />
-            <DatePicker Name="PickedDeadline" Margin="5" Height="30" Style="{StaticResource MaterialDesignDatePicker}"
-                        Focusable="False" ToolTip="To unselect deadline date, hold Ctrl and click on selected date" />
+            <Label Content="Date" FontSize="17" Margin="5" Height="30" />
+            <DatePicker Name="PickedDate" Margin="5" Height="30" Focusable="False"
+                        ToolTip="To unselect date, hold Ctrl and click on selected date" />
+            <Label Content="Deadline" FontSize="17" Margin="5" Height="30" />
+            <DatePicker Name="PickedDeadline" Margin="5" Height="30" Focusable="False"
+                        ToolTip="To unselect deadline date, hold Ctrl and click on selected date" />
             <Button Content="Save" FontSize="16" Height="30" Click="Save_OnClick"
-                    Margin="5 29 5 0" Style="{StaticResource MaterialDesignRaisedButton}" />
+                    Margin="5 29 5 0" />
             <Button Content="Delete" FontSize="16" Height="30" Click="DeleteTaskButton_OnClick"
-                    Margin="5 19 5 0" Style="{StaticResource MaterialDesignRaisedButton}" />
+                    Margin="5 19 5 0" />
         </StackPanel>
     </Grid>
 </Window>

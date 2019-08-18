@@ -17,12 +17,9 @@
                      materialDesign:HintAssist.Hint="Login" FontSize="17" />
             <PasswordBox Name="PasswordBox" Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
                          materialDesign:HintAssist.Hint="Password" FontSize="17" />
-            <CheckBox Name="RememberPasswordCheckBox" Content="Remember password"
-                      Style="{StaticResource MaterialDesignCheckBox}" FontSize="14" Margin="0 10" />
-            <Button Content="Enter" Style="{StaticResource MaterialDesignRaisedButton}"
-                    Margin="0 20 0 10" IsDefault="True" Click="EnterButton_OnClick" />
-            <Button Content="Register" Style="{StaticResource MaterialDesignRaisedButton}" Margin="0 10"
-                    Click="RegisterButton_OnClick" />
+            <CheckBox Name="RememberPasswordCheckBox" Content="Remember password" FontSize="14" Margin="0 10" />
+            <Button Content="Enter" Margin="0 20 0 10" IsDefault="True" Click="EnterButton_OnClick" />
+            <Button Content="Register" Margin="0 10" Click="RegisterButton_OnClick" />
         </StackPanel>
     </DockPanel>
 </Window>

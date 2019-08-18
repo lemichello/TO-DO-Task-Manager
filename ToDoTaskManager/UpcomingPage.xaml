@@ -10,14 +10,12 @@
     <DockPanel Margin="50 60 0 0">
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
             <Image Source="Resources/upcoming.png" Width="40" Height="40" />
-            <Label Content="Upcoming" Margin="10 0 0 0" FontWeight="Bold" FontSize="30"
-                   Style="{StaticResource MaterialDesignLabel}" />
+            <Label Content="Upcoming" Margin="10 0 0 0" FontWeight="Bold" FontSize="30" />
         </StackPanel>
         <Button DockPanel.Dock="Bottom" Height="60" Width="60" FontSize="19" Margin="0 0 50 20" Content="+"
                 Click="AddButton_OnClick" Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
                 HorizontalAlignment="Right" ToolTip="Add new task" />
-        <ListView Name="UpcomingListView" Margin="0 20 0 0" BorderThickness="0"
-                  Style="{StaticResource MaterialDesignListView}">
+        <ListView Name="UpcomingListView" Margin="0 20 0 0" BorderThickness="0">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel>
@@ -27,14 +25,12 @@
                         </StackPanel>
                         <ListView Name="ToDoItemsListView" Margin="0 10 0 0"
                                   SelectionChanged="ToDoItemsListView_OnSelectionChanged"
-                                  BorderThickness="0" ItemsSource="{Binding ToDoItems}"
-                                  Style="{StaticResource MaterialDesignListView}">
+                                  BorderThickness="0" ItemsSource="{Binding ToDoItems}">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Margin="0 5" Orientation="Horizontal">
                                         <CheckBox Checked="ToDoItem_OnChecked" Unchecked="ToDoItem_OnUnchecked"
-                                                  Margin="0 10 0 0"
-                                                  Style="{StaticResource MaterialDesignCheckBox}" />
+                                                  Margin="0 10 0 0" />
                                         <Border CornerRadius="5" BorderThickness="1" BorderBrush="#EFF0F1" Height="25"
                                                 Width="45" Margin="5 9 0 0" Visibility="{Binding DateVisibility}">
                                             <Grid Background="#EFF0F1" Height="25" Width="45">
