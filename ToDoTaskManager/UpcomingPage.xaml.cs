@@ -113,7 +113,7 @@ namespace ToDoTaskManager
             var timer    = (DispatcherTimer) sender;
             var toDoItem = (ToDoItemModel) timer.Tag;
 
-            toDoItem.CompleteDay = DateTime.Now;
+            toDoItem.CompleteDay = DateTime.UtcNow;
 
             _itemService.Update(toDoItem);
 

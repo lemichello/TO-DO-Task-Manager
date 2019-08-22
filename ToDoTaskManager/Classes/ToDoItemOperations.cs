@@ -26,7 +26,7 @@ namespace ToDoTaskManager.Classes
             _toDoItemsCollection = toDoItemsCollection;
             ItemService          = ToDoItemService.GetInstance();
             _tagService          = TagService.GetInstance();
-            MinDate             = DateTime.MinValue.AddYears(1753);
+            MinDate              = DateTime.MinValue.AddYears(1753);
         }
 
         public void Add()
@@ -93,7 +93,7 @@ namespace ToDoTaskManager.Classes
             var timer    = (DispatcherTimer) sender;
             var toDoItem = (ToDoItemView) timer.Tag;
 
-            toDoItem.CompleteDay = DateTime.Now;
+            toDoItem.CompleteDay = DateTime.UtcNow;
 
             ItemService.Update(toDoItem);
 
@@ -198,7 +198,7 @@ namespace ToDoTaskManager.Classes
         protected override bool IsCorrect(ToDoItemView item)
         {
             // User chose today's date for task.
-            return item.Date <= DateTime.Now.Date && item.Date != MinDate ||
+            return item.Date <= DateTime.Today && item.Date != MinDate ||
                    item.Deadline <= DateTime.Today && item.Deadline != MinDate;
         }
 
