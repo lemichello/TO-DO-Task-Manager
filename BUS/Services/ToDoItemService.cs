@@ -17,8 +17,8 @@ namespace BUS.Services
 
         private ToDoItemService(int userId)
         {
-            _projectUserRepository = new ProjectsUsersRepository();
-            _repository            = new ToDoItemsRepository();
+            _projectUserRepository = new EfRepository<ProjectsUsers>();
+            _repository            = new EfRepository<ToDoItem>();
             _userId                = userId;
 
             _tagService = TagService.GetInstance();

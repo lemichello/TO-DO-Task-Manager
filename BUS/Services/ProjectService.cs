@@ -19,10 +19,10 @@ namespace BUS.Services
 
         private ProjectService(int userId)
         {
-            _userRepository        = new UsersRepository();
-            _projectRepository     = new ProjectsRepository();
-            _projectUserRepository = new ProjectsUsersRepository();
-            _itemRepository        = new ToDoItemsRepository();
+            _userRepository        = new EfRepository<User>();
+            _projectRepository     = new EfRepository<Project>();
+            _projectUserRepository = new EfRepository<ProjectsUsers>();
+            _itemRepository        = new EfRepository<ToDoItem>();
             _userId                = userId;
             _tagService            = TagService.GetInstance();
         }

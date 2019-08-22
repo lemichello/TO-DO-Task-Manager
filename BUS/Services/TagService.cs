@@ -20,9 +20,9 @@ namespace BUS.Services
 
         private TagService(int userId)
         {
-            _projectsUsersRepository = new ProjectsUsersRepository();
-            _tagRepository           = new TagsRepository();
-            _itemTagRepository       = new ItemsTagsRepository();
+            _projectsUsersRepository = new EfRepository<ProjectsUsers>();
+            _tagRepository           = new EfRepository<Tag>();
+            _itemTagRepository       = new EfRepository<ItemTag>();
             _userId                  = userId;
 
             InitializeLists();

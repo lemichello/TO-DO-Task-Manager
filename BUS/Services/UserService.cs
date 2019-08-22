@@ -17,7 +17,7 @@ namespace BUS.Services
 
         private UserService()
         {
-            _repository = new UsersRepository();
+            _repository = new EfRepository<User>();
         }
 
         public void RefreshRepositories()

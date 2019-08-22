@@ -1,29 +1,28 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
-using DAO.Entities;
 
 namespace DAO.Repositories
 {
-    public class ItemsTagsRepository : IRepository<ItemTag>
+    public class EfRepository<T> : IRepository<T> where T : class
     {
-        private EfContext _context;
-
-        public ItemsTagsRepository()
+        public EfRepository()
         {
             _context = ContextSingleton.GetInstance();
+            _set     = _context.Set<T>();
         }
 
-        public IEnumerable<ItemTag> Get()
+        public IEnumerable<T> Get()
         {
-            return _context.ItemsTags.AsEnumerable();
+            return _set.AsEnumerable();
         }
 
-        public bool Add(ItemTag itemTag)
+        public bool Add(T item)
         {
             try
             {
-                _context.ItemsTags.Add(itemTag);
+                _set.Add(item);
                 _context.SaveChanges();
             }
             catch (Exception e)
@@ -36,11 +35,11 @@ namespace DAO.Repositories
             return true;
         }
 
-        public bool Remove(ItemTag itemTag)
+        public bool Remove(T item)
         {
             try
             {
-                _context.ItemsTags.Remove(itemTag);
+                _set.Remove(item);
                 _context.SaveChanges();
             }
             catch (Exception e)
@@ -61,6 +60,10 @@ namespace DAO.Repositories
         public void Refresh()
         {
             _context = ContextSingleton.GetInstance();
+            _set     = _context.Set<T>();
         }
+
+        private EfContext _context;
+        private DbSet<T>  _set;
     }
 }
