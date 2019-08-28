@@ -62,10 +62,10 @@ namespace BUS.Services
 
         public bool Remove(TagModel tag)
         {
-            var foundTag = _tagRepository.Get().First(i => i.Id == tag.Id);
+            var foundTag = _tagRepository.GetByPredicate(i => i.Id == tag.Id).First();
 
             DeleteTagFromItemsTags(foundTag.Id);
-            
+
             var deleteRes = _tagRepository.Remove(foundTag);
 
             if (deleteRes)
@@ -82,7 +82,7 @@ namespace BUS.Services
             }
 
             _tags = FilterTags(_tagRepository.Get().ToList());
-            
+
             return true;
         }
 
@@ -159,7 +159,7 @@ namespace BUS.Services
         public IEnumerable<ToDoItemModel> GetItemsByTags(IEnumerable<string> tags, List<string> projectNames)
         {
             var predicates = GetPredicates(projectNames);
-            var allItems = _itemTags.Where(i => predicates.Any(p => p.Invoke(i))).ToList();
+            var allItems   = _itemTags.Where(i => predicates.Any(p => p.Invoke(i))).ToList();
             var itemsCount = new Dictionary<ToDoItem, int>();
             var tagTexts   = tags.ToList();
 
@@ -206,10 +206,10 @@ namespace BUS.Services
             {
                 _itemTagRepository.Remove(i);
             }
-            
+
             _itemTags = FilterTags(_itemTagRepository.Get().ToList());
         }
-        
+
         private static List<Predicate<ItemTag>> GetPredicates(IEnumerable<string> projectNames)
         {
             var minDate    = DateTime.MinValue.AddYears(1753);

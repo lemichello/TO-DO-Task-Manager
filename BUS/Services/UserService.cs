@@ -32,7 +32,7 @@ namespace BUS.Services
 
         public bool Add(string login, string password)
         {
-            if (_repository.Get().Any(i => i.Login == login))
+            if (_repository.GetByPredicate(i => i.Login == login).Any())
             {
                 MessageBox.Show("This login already exists. Try another");
                 return false;
@@ -47,8 +47,8 @@ namespace BUS.Services
 
         public int GetUserId(string login, string password)
         {
-            return _repository.Get()
-                       .FirstOrDefault(i => i.Login == login && i.Password == password)?.Id ?? -1;
+            return _repository.GetByPredicate(i => i.Login == login && i.Password == password)
+                       .FirstOrDefault()?.Id ?? -1;
         }
     }
 }

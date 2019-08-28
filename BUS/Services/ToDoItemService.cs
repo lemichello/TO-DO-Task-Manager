@@ -58,14 +58,14 @@ namespace BUS.Services
 
         public bool Remove(ToDoItemModel item)
         {
-            var foundItem = _repository.Get().First(i => i.Id == item.Id);
+            var foundItem = _repository.GetByPredicate(i => i.Id == item.Id).First();
 
             return _tagService.RemoveTagsFromTask(foundItem.Id) && _repository.Remove(foundItem);
         }
 
         public void Update(ToDoItemModel item)
         {
-            var foundItem = _repository.Get().First(i => i.Id == item.Id);
+            var foundItem = _repository.GetByPredicate(i => i.Id == item.Id).First();
 
             foundItem.Header       = item.Header;
             foundItem.Notes        = item.Notes;
@@ -78,11 +78,10 @@ namespace BUS.Services
 
         public IEnumerable<ToDoItemModel> Get(Func<ToDoItemModel, bool> predicate)
         {
-            var projectsUsers = _projectUserRepository.Get().ToList().Where(i => i.UserId == _userId && i.IsAccepted);
-            
-            return _repository.Get().ToList()
-                .Where(i => i.UserId == _userId && i.ProjectId == null || 
-                            projectsUsers.Any(p => i.ProjectId == p.ProjectId))
+            var projectsUsers = _projectUserRepository.GetByPredicate(i => i.UserId == _userId && i.IsAccepted);
+
+            return _repository.GetByPredicate(i => i.UserId == _userId && i.ProjectId == null ||
+                                                   projectsUsers.Any(p => i.ProjectId == p.ProjectId))
                 .Select(i => new ToDoItemModel
                 {
                     Id          = i.Id,
@@ -100,9 +99,9 @@ namespace BUS.Services
         public IEnumerable<ToDoItemModel> GetSharedProjectItems(int projectId)
         {
             var minDate = DateTime.MinValue.AddYears(1753);
-            
-            return _repository.Get()
-                .Where(i => i.ProjectId == projectId && i.CompleteDate == minDate)
+
+            return _repository
+                .GetByPredicate(i => i.ProjectId == projectId && i.CompleteDate == minDate)
                 .Select(i => new ToDoItemModel
                 {
                     Id          = i.Id,

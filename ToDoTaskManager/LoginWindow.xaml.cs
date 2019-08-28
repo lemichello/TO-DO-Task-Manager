@@ -29,7 +29,7 @@ namespace ToDoTaskManager
             }
 
             InitializeServices(int.Parse(loginStatus));
-            
+
             var window = new MainWindow(this);
 
             window.Show();

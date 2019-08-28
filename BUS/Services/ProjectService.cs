@@ -116,9 +116,8 @@ namespace BUS.Services
 
         public bool AcceptInvitation(InvitationRequestModel invitation)
         {
-            var invite = _projectUserRepository.Get().ToList().FirstOrDefault(i =>
-                i.ProjectId == invitation.ProjectId &&
-                i.UserId == _userId);
+            var invite = _projectUserRepository.GetByPredicate(i => i.ProjectId == invitation.ProjectId &&
+                                                                    i.UserId == _userId).FirstOrDefault();
 
             if (invite == null)
                 return false;
@@ -132,26 +131,25 @@ namespace BUS.Services
 
         public bool DeclineInvitation(InvitationRequestModel invitation)
         {
-            var invite = _projectUserRepository.Get().First(i =>
-                i.ProjectId == invitation.ProjectId &&
-                i.UserId == _userId);
+            var invite = _projectUserRepository.GetByPredicate(i => i.ProjectId == invitation.ProjectId &&
+                                                                    i.UserId == _userId).First();
 
             return _projectUserRepository.Remove(invite);
         }
 
         public void LeaveProject(int projectId)
         {
-            var record = _projectUserRepository.Get().ToList()
-                .First(i => i.ProjectId == projectId && i.UserId == _userId);
+            var record = _projectUserRepository.GetByPredicate(i => i.ProjectId == projectId &&
+                                                                    i.UserId == _userId).First();
 
             _projectUserRepository.Remove(record);
 
             // Project still has users.
-            if (_projectUserRepository.Get().ToList().Any(i => i.ProjectId == projectId))
+            if (_projectUserRepository.GetByPredicate(i => i.ProjectId == projectId).Any())
                 return;
 
             // Deleting all tasks, that belong to this project.
-            var projectItems = _itemRepository.Get().ToList().Where(i => i.ProjectId == projectId).ToList();
+            var projectItems = _itemRepository.GetByPredicate(i => i.ProjectId == projectId).ToList();
 
             foreach (var i in projectItems)
             {
@@ -166,13 +164,13 @@ namespace BUS.Services
                 _itemRepository.Remove(i);
             }
 
-            _projectRepository.Remove(_projectRepository.Get().ToList().First(i => i.Id == projectId));
+            _projectRepository.Remove(_projectRepository.GetByPredicate(i => i.Id == projectId).First());
         }
 
         public IEnumerable<ProjectModel> GetProjects()
         {
-            return _projectUserRepository.Get().ToList()
-                .Where(i => i.UserId == _userId && i.IsAccepted)
+            return _projectUserRepository.GetByPredicate(i => i.UserId == _userId && i.IsAccepted)
+                .ToList()
                 .Select(i => new ProjectModel
                 {
                     Id   = i.ProjectId,
@@ -182,21 +180,21 @@ namespace BUS.Services
 
         public IEnumerable<InvitationRequestModel> GetInvitations()
         {
-            return _projectUserRepository.Get().ToList().Where(i => i.UserId == _userId && !i.IsAccepted).Select(i =>
-                new InvitationRequestModel
-                {
-                    InviterName = i.InviterOf.Login,
-                    ProjectId   = i.ProjectId,
-                    ProjectName = i.ProjectOf.Name
-                }).ToList();
+            return _projectUserRepository.GetByPredicate(i => i.UserId == _userId && !i.IsAccepted)
+                .ToList()
+                .Select(i =>
+                    new InvitationRequestModel
+                    {
+                        InviterName = i.InviterOf.Login,
+                        ProjectId   = i.ProjectId,
+                        ProjectName = i.ProjectOf.Name
+                    });
         }
 
         public IEnumerable<string> GetProjectMembers(int projectId)
         {
             return _projectUserRepository
-                .Get()
-                .ToList()
-                .Where(i => i.ProjectId == projectId && i.IsAccepted)
+                .GetByPredicate(i => i.ProjectId == projectId && i.IsAccepted).ToList()
                 .Select(i => i.UserOf.Login);
         }
     }
