@@ -1,5 +1,5 @@
 # TO-DO Task Manager
-### NOTE: To install application use a website: https://to-do-tasks-manager.herokuapp.com/ or this link: https://drive.google.com/drive/folders/184y6W8_cxUSUFzpPoo6Xf8ma3YvnsIE2?usp=sharing
+### NOTE: To install application use a website: https://todo-tasks-manager.herokuapp.com/ or this link: https://drive.google.com/drive/folders/184y6W8_cxUSUFzpPoo6Xf8ma3YvnsIE2?usp=sharing
 
 Hi, this is a TO-DO Task Manager, which will help you to manage your tasks.
 
